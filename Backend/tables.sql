@@ -12,5 +12,6 @@ CREATE TABLE Posts(
     species VARCHAR(50),
     quantity INTEGER,
     comments VARCHAR(50),
-    dt TIMESTAMP
+    dt TIMESTAMP,
+    coordinates POINT
 );
