@@ -1,8 +1,8 @@
-const http = require('http')
-const port = process.env.port || 3000
+const http = require('http');
+const port = process.env.port || 3000; //goes to localhost:3000 if not defined
 
-const app = require('./app')
+const app = require('./app');
 
-const server = http.createServer(app)
+const server = http.createServer(app);
 
-server.listen(port)
+server.listen(port);

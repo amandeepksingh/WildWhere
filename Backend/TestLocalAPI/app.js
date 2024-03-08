@@ -1,13 +1,15 @@
-const express = require('express')
+const express = require('express');
 
 const app = express();
 
-app.use(
-    (req, res, next) => {
-        res.status(200).json({
-            testingInfo: 'info'
-        })
-    }
-)
+const router = require('./api/router');
+const morgan = require('morgan');
+const bodyParser = require('body-parser');
 
-module.exports = app
+app.use(morgan('dev'));
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json({}));
+
+app.use("/", router);
+
+module.exports = app;
