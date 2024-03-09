@@ -12,17 +12,10 @@ const pool = new Pool({
 });
 
 const posts = express();
-posts.post('/add', (req, res, next) => {
-    pool.query("...", [], (error, result) => {
-            if (error) {
-                return res.status(400).json({
-                    "message": error
-                })
-            }
-            res.status(200).json({
-                respQuery: result
-            })
-    });
-});
+
+// posts.post('/get') TODO
+// posts.get('/get') TODO
+// posts.put('/update') TODO
+// posts.delete('/delete') TODO
 
 module.exports = posts;

@@ -2,6 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const router = require('./router');
+const env = require('dotenv').config();
 
 const app = express();
 app.use(morgan('dev'));

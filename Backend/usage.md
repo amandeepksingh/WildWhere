@@ -1,29 +1,100 @@
-Accepted body objects:  
-post: 
-```  
-{  
-    author: string (must exist in users(username)),  
-    species: string,  
-    quantity: int/number,  
-    comments: string,  
-    dt: timestamp/_, 
-    coordinate: point/_
-}
-```  
-TODO - still working out what json datatypes correspond to the sql datatypes for timestamp and coordinate
+# USAGE
 
-user: 
+## HOW TO
+ - Use endpoint from: host/posts, host/users, or host/dbTesting
+ - Use method from: POST, GET, PUT, DELETE
+ - Use JSON body with names and types that correspond to the selected endpoint and method
+ - Formatted as...
+### Endpoint
+ - method
+ ```
+ {
+    body
+ }
+ ```
+
+## Endpoints, methods, and bodies
+
+### host/posts:
+ - POST (INSERT): 
 ```  
 {  
-    username: string (must be unique),  
-    email: string,
-    radius: int/number,
-    notify: boolean,
-    bio: string
+    author: string (required, must exist in users(username)),  
+    species: string (optional),  
+    quantity: number (optional),  
+    comments: string (optional),  
+    dt: _ (optional), 
+    coordinate: _ (optional)
+} TODO - still working out what json datatypes correspond to the sql datatypes for timestamp and coordinate
+```  
+ - GET (SELECT):
+ ```
+ {
+    condition: string (optional),
+    limit: int (optional)
+ } TODO - fix so don't need the single quotes around strings like "condition": "email = 'jdoe@umass.edu'"
+ ```
+ - PUT (UPDATE):
+ ```
+ {
+    condition: string (optional),
+    updates: [
+        [param, newVal], (optional)
+        [param, newVal], (optional)
+        [param, newVal] (optional)
+    ] (optional)
+ }
+ ```
+ - DELETE (DELETE):
+ ```
+ {
+    condition: string (optional)
+ }
+ ```
+
+### host/users: 
+ - POST (INSERT):
+```  
+{  
+    username: string (required, unique),  
+    email: string (optional),
+    radius: int/number (optional),
+    notify: boolean (optional),
+    bio: string (optional)
 }  
 ```  
+ - GET (SELECT):
+ ```
+ {
+    condition: string (optional),
+    limit: int (optional)
+ } TODO - fix so don't need the single quotes around strings like "condition": "email = 'jdoe@umass.edu'"
+ ```
+ - PUT (UPDATE):
+ ```
+ {
+    condition: string (optional),
+    updates: [
+        [param, newVal], (optional)
+        [param, newVal], (optional)
+        [param, newVal] (optional)
+    ] (optional)
+ }
+ ```
+ - DELETE (DELETE):
+ ```
+ {
+    condition: string (optional)
+ }
+ ```
 
-Accepted endpoints with corresponding body parts => responses:  
-posts: ```POST posts/add with body=post => returns {status = 200, post} on success, {status = 400, error} on fail```  
-users: ```POST users/add with body=user => returns {status = 200, user} on success, {status = 400, error} on fail```  
-dbTesting (temporary and dangerous): ```GET dbTesting/query with body=user => return {status = 200, queryResp} on success, {status = 400, error} on fail```  
+### host/dbTesting:
+ - GET (any):
+ ```
+ {
+    "query": string (required)
+ }
+ ```
+
+ ## Example
+ ![alt text](images/exampleQuery.png)

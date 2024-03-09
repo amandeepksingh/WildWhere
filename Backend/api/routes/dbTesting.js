@@ -1,7 +1,6 @@
 const bodyParser = require('body-parser');
 const express = require('express');
 
-const env = require('dotenv').config();
 const Pool = require('pg').Pool;
 const pool = new Pool({
     user: process.env.dbUser,
