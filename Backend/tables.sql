@@ -1,14 +1,13 @@
 CREATE TABLE Users(
-    id VARCHAR(50) PRIMARY KEY,
-    username VARCHAR(50) NOT NULL,
-    email VARCHAR(50) NOT NULL,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(50),
     radius INTEGER,
     notify BOOLEAN,
     bio VARCHAR(500)
 );
 
 CREATE TABLE Posts(
-    id VARCHAR(50) REFERENCES Users(id),
+    author VARCHAR(50) REFERENCES Users(username),
     species VARCHAR(50),
     quantity INTEGER,
     comments VARCHAR(50),

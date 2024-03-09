@@ -1,29 +1,29 @@
 const bodyParser = require('body-parser');
 const express = require('express');
 
-const pg = require('pg'); //TODO look into pools
-const client = new pg.Client({
-    user: "wildwhere", //env.dbUser,
-    host: "localhost", //env.dbHost,
-    database: "wildwhere", //env.dbName,
-    password: "CS320ROCKS!!", //env.dbPass,
-    port: "5432"//env.dbPort,
+const env = require('dotenv').config();
+const Pool = require('pg').Pool;
+const pool = new Pool({
+    user: process.env.dbUser,
+    host: process.env.dbHost,
+    database: process.env.dbName,
+    password: process.env.dbPass,
+    port: process.env.dbPort,
 });
 
 const dbTesting = express();
-dbTesting.get('/', async (req, res, next) => {
-    const dbTesting = { query: req.body.query }
-    try {
-        await client.connect();
-        const queryResp = client.query(dbTesting.query);
-        await client.end();
-    } catch (error) {
-        return res.status(400).json({"error":error})
-    }
-    return res.status(200).json({
-        queryResp: "not defined yet"
-        // queryResp: queryResp
-    })
+dbTesting.get('/', (req, res, next) => {
+    const query = req.body.query
+    pool.query(query, (error, results) => {
+        if (error) {
+            return res.status(400).json({
+                "message": error
+            })
+        }
+        res.status(200).json({
+            queryResp: results.rows
+        })
+    }); 
 });
 
 module.exports = dbTesting;
