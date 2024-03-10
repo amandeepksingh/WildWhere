@@ -4,11 +4,9 @@ const router = express();
 
 const posts = require('./routes/posts');
 const users = require('./routes/users');
-const dbTesting = require('./routes/dbTesting');
 
 router.use('/posts', posts);
 router.use('/users', users);
-router.use('/dbTesting', dbTesting);
 
 router.use((res, req, next) => {
     req.header('Access-Control-Allow-Origin', '*') //TODO change * to the site that should have access. Currently allows any

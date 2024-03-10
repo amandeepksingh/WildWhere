@@ -10,6 +10,7 @@ const pool = new Pool({
 });
 
 const users = express();
+
 users.post('/', (req, res, next) => {
     const username = req.body.username || null;
     const email = req.body.email || null;
