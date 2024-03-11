@@ -13,14 +13,16 @@ flowchart TD
 ### Requests Chain
 ```mermaid
 flowchart TD
-    External
+    FrontendAPIcalls
     -->server
     -->app
     -->router;
     
     router-->posts;
     router-->users;
-    
+
+    posts-->database;
+    users-->database;
 
 ```
 
