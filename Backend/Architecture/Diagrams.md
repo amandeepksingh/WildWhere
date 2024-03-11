@@ -26,6 +26,29 @@ flowchart TD
 
 ```
 
+```mermaid
+sequenceDiagram
+Client->>Server: Request to add user & userPost JSON;
+Server->>Router: Request to add user & userPost JSON;
+Router->>Users: Request to add user & userPost JSON;
+Users->>DB: POST & userPost JSON;
+DB-->>Users: 200 OK & Succ JSON;
+Users-->>Router: 200 OK & Succ JSON;
+Router-->>Server: 200 OK & Succ JSON;
+Server-->>Client: 200 OK & Succ JSON;
+```
+```mermaid
+sequenceDiagram
+Client->>Server: Request to delete post & postDelete JSON;
+Server->>Router: Request to delete post & postDelete JSON;
+Router->>Posts: Request to delete post & postDelete JSON;
+Posts->>DB: DELETE & postDelete JSON;
+DB-->>Posts: 400 Bad & Error JSON;
+Posts-->>Router: 400 Bad & Error JSON;
+Router-->>Server: 400 Bad & Error JSON;
+Server-->>Client: 400 Bad & Error JSON;
+```
+
 ### Classes
 ```mermaid
 classDiagram
