@@ -64,6 +64,7 @@ Posts : quantity - int/number [optional],
 Posts : comments - string [optional],
 Posts : dt - timestamp/string [optional],
 Posts : coordinates - point/[float,float] [optional]
+Posts : image - href/string [optional]
 
 Posts <|-- Create : Post
 Posts <|-- Read : Get
@@ -76,6 +77,7 @@ Create : quantity - int/number [optional],
 Create : comments - string [optional],
 Create : dt - timestamp/string [optional],
 Create : coordinates - point/[float,float] [optional]
+Create : image - href/string [optional]
 
 Read : condition - string [optional],
 Read : limit - int [optional]
@@ -108,6 +110,7 @@ erDiagram
         comments string "optional"
         dt timestamp "optional"
         coordinates point "optional"        
+        image href "optional"
     }
 
     Users ||--o{ Posts : "Exactly one - 0 or many"
