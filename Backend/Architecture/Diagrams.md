@@ -26,6 +26,24 @@ flowchart TD
 
 ```
 
+### Classes
+```mermaid
+classDiagram
+Users : username - string [required, unique],  
+Users : email - string [optional],
+Users : radius - int/number [optional],
+Users : notify - boolean [optional],
+Users : bio - string [optional]
+
+Posts : author - string [required, references users[username]], 
+Posts : species - string [optional],
+Posts : quantity - int/number [optional],
+Posts : comments - string [optional],
+Posts : dt - timestamp/string [optional],
+Posts : coordinates - point/[float,float] [optional]
+Posts : image - href/string [optional]
+```
+
 ### Endpoints
 #### Users
 ```mermaid
