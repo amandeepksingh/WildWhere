@@ -10,8 +10,13 @@ const pool = new Pool({
 });
 
 const users = express();
+users.post('/', (req,res,next) => createUser(req,res,next));
+users.get('/', (req, res, next) => selectUser(req, res, next))
+users.put("/", (req, res, next) => updateUser(req, res, next))
+users.delete("/", (req, res, next) => deleteUser(req, res, next))
 
-users.post('/', (req, res, next) => {
+function createUser(req, res, next) {
+    console.log(req)
     const username = req.body.username || null;
     const email = req.body.email || null;
     const radius = parseInt(req.body.radius) || null;
@@ -27,13 +32,13 @@ users.post('/', (req, res, next) => {
                 "message": error
             })
         }
-        res.status(200).json({
+        return res.status(200).json({
             respQuery: "User " + req.body.username + " successfully added"
         })
     });
-});
+}
 
-users.get('/', (req, res, next) => {
+function selectUser(req, res, next) {
     var query = "SELECT * FROM users"
     
     if (req.body.condition) {
@@ -49,13 +54,13 @@ users.get('/', (req, res, next) => {
                 "message": error
             })
         }
-        res.status(200).json({
+        return res.status(200).json({
             respQuery: result
         })
     })
-})
+}
 
-users.put("/", (req, res, next) => {
+function updateUser(req, res, next) {
     if (req.body.updates === undefined) {
         return res.status(200).json({
             respQuery: "no updates to be made"
@@ -80,13 +85,13 @@ users.put("/", (req, res, next) => {
                 "message": error
             })
         }
-        res.status(200).json({
+        return res.status(200).json({
             respQuery: result
         })
     })
-})
+}
 
-users.delete("/", (req, res, next) => {
+function deleteUser(req, res, next) {
     var query = "DELETE FROM users";
 
     if (req.body.condition) {
@@ -101,12 +106,12 @@ users.delete("/", (req, res, next) => {
                 "message": error
             })
         }
-        res.status(200).json({
+        return res.status(200).json({
             respQuery: result
         })
     })
 
-})
+}
 
 
 module.exports = users;

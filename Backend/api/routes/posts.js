@@ -1,7 +1,6 @@
-const bodyParser = require('body-parser');
 const express = require('express')
-
 const env = require('dotenv').config();
+
 const Pool = require('pg').Pool;
 const pool = new Pool({
     user: process.env.dbUser,
@@ -12,8 +11,12 @@ const pool = new Pool({
 });
 
 const posts = express();
+posts.post('/', (req,res,next) => createPost(req,res,next));
+posts.get('/', (req, res, next) => selectPost(req, res, next))
+posts.put("/", (req, res, next) => updatePost(req, res, next))
+posts.delete("/", (req, res, next) => deletePost(req, res, next))
 
-posts.post('/', (req, res, next) => {
+function createPost(req, res, next) {
     const author = req.body.author || null;
     const species = req.body.species || null;
     const quantity = parseInt(req.body.quantity) || null;
@@ -33,13 +36,13 @@ posts.post('/', (req, res, next) => {
                 "message": error
             })
         }
-        res.status(200).json({
+        return res.status(200).json({
             respQuery: "Post by " + req.body.author + " successfully added"
         })
     });
-});
+}
 
-posts.get('/', (req, res, next) => {
+function selectPost(req, res, next) {
     var query = "SELECT * FROM posts"
     
     if (req.body.condition) {
@@ -55,13 +58,13 @@ posts.get('/', (req, res, next) => {
                 "message": error
             })
         }
-        res.status(200).json({
+        return res.status(200).json({
             respQuery: result
         })
     })
-})
+}
 
-posts.put("/", (req, res, next) => {
+function updatePost(req, res, next) {
     if (req.body.updates === undefined) {
         return res.status(200).json({
             respQuery: "no updates to be made"
@@ -84,13 +87,13 @@ posts.put("/", (req, res, next) => {
                 "message": error
             })
         }
-        res.status(200).json({
+        return res.status(200).json({
             respQuery: result
         })
     })
-})
+}
 
-posts.delete("/", (req, res, next) => {
+function deletePost(req, res, next) {
     var query = "DELETE FROM posts";
 
     if (req.body.condition) {
@@ -103,11 +106,11 @@ posts.delete("/", (req, res, next) => {
                 "message": error
             })
         }
-        res.status(200).json({
+        return res.status(200).json({
             respQuery: result
         })
     })
 
-})
+}
 
 module.exports = posts;
