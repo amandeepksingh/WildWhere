@@ -8,13 +8,13 @@ const pool = new Pool({
     database: process.env.dbName,
     password: process.env.dbPass,
     port: process.env.dbPort,
-	ssl: {
-		rejectUnauthorized:false
-	}
+	// ssl: {
+	// 	rejectUnauthorized:process.env.rejectUnauthorized
+	// }
 });
 
-const db = express();
-db.get('/db', (req, res, next) => selectPost(req, res, next))
+const app = express();
+app.get('/app', (req, res, next) => selectPost(req, res, next))
 
 function selectPost(req, res, next) {
     var query = "SELECT * FROM users"
@@ -31,4 +31,4 @@ function selectPost(req, res, next) {
     })
 }
 
-module.exports = db;
+module.exports = app;
