@@ -1,5 +1,5 @@
 const request = require('supertest');
-const mocha = require('mocha')
+const assert = require('assert');
 const { describe } = require('node:test');
 const Pool = require('pg').Pool;
 const app = require('../src/app');
@@ -17,67 +17,25 @@ const pool = new Pool({
 	// 	rejectUnauthorized:process.env.rejectUnauthorized
 	// } //used only on EC2
 });
-before(async () => {  
+async function teardown() { //TODO before each run. Using before() or after() seems to cause async issues
     await pool.query("DELETE FROM users")
     await pool.query("DELETE FROM posts")
-})
+}
 
-describe("selecting posts by post id", () => {
-    it("", () => {
-        //TODO
-    })
-    it("", () => {
-        //TODO
-    })
-    it("", () => {
-        //TODO
-    })
+describe("selecting posts", () => {
+    //TODO
+    //Note that this may be complicated due to coordinates.
+    //May need another function to select posts that are within a certain coordinate circle
 })
 
 describe("creating posts", () => {
-    it("", () => {
-        //TODO
-    })
-    it("", () => {
-        //TODO
-    })
-    it("", () => {
-        //TODO
-    })
+    //TODO
 })
 
 describe("updating posts", () => {
-    it("", () => {
-        //TODO
-    })
-    it("", () => {
-        //TODO
-    })
-    it("", () => {
-        //TODO
-    })
+    //TODO
 })
 
 describe("deleting posts", () => {
-    it("", () => {
-        //TODO
-    })
-    it("", () => {
-        //TODO
-    })
-    it("", () => {
-        //TODO
-    })
-})
-
-describe("selecting posts by user id", () => {
-    it("", () => {
-        //TODO
-    })
-    it("", () => {
-        //TODO
-    })
-    it("", () => {
-        //TODO
-    })
+    //TODO
 })

@@ -8,7 +8,7 @@ const users = require('./users')
 const app = express();
 
 //enables app to parse JSON bodies
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json({})); //allows parsing body from requests
 
 //sends /posts to posts, /users to users

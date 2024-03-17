@@ -1,5 +1,5 @@
 const request = require('supertest');
-const mocha = require('mocha')
+const assert = require('assert');
 const { describe } = require('node:test');
 const Pool = require('pg').Pool;
 const app = require('../src/app');
@@ -17,89 +17,148 @@ const pool = new Pool({
 	// 	rejectUnauthorized:process.env.rejectUnauthorized
 	// } //used only on EC2
 });
-before(async () => {  
+async function teardown() { //TODO before each run. Using before() or after() seems to cause async issues
     await pool.query("DELETE FROM users")
     await pool.query("DELETE FROM posts")
-})
+}
 
 
-describe("selecting users by id", () => {
-    /*
-    tests:
-        Endpoint: /users/selectUserByID
-        Method: GET
-        Params:
-            uid int (required)
-    */
-    it("test select without uid", (done) => {
-        request(app)
-        .get('/users/selectUserByID') //specify endpoint
-        .expect('Content-Type', /json/) //needs to be json
-        .expect(400, {
-            message: "missing uid field" 
-        }) //this is the status and response json
-        .end(function(err,res) {
-            done(err) //fails if err is defined
-        })
-    })
-    it("test select with unlisted id", (done) => {
-        request(app)
-        .get('/users/selectUserByID')
+describe("selecting users", () => {
+    it("test select with empty", async () => {
+        teardown()
+        const resp = await request(app)
+        .get('/users/selectUser')
         .send('uid=1') //send body parameters
-        .expect('Content-Type', /json/)
-        .expect(200, {
-            message: [] 
-        })
-        .end(function(err,res) {
-            done(err)
-        })
+        assert.strictEqual(resp.status,200)
+        assert.deepStrictEqual(resp.body.message, [])
+    })
+    it("test select with too strict constraints", async () => {
+        teardown()
+        const resp1 = await request(app)
+        .post('/users/createUser')
+        .send('uid=1')
+        .send('email=jj@umass')
+        const resp2 = await request(app)
+        .get('/users/selectUser')
+        .send('uid=1') //send body parameters
+        .send('email=jj@umas') //send body parameters
+        assert.strictEqual(resp2.status,200)
+        assert.deepStrictEqual(resp2.body.message, [])
+    })
+    it("test select with many constraints", async () => {
+        teardown()
+        const resp1 = await request(app)
+        .post('/users/createUser')
+        .send('uid=1')
+        .send('email=jj@umass')
+        const resp2 = await request(app)
+        .get('/users/selectUser')
+        .send('uid=1') //send body parameters
+        .send('email=jj@umass') //send body parameters
+        assert.strictEqual(resp2.status,200)
+        assert.deepStrictEqual(resp2.body.message, [
+            {
+                "uid": 1,
+                "email": "jj@umass",
+                "username": null,
+                "bio": null,
+                "pfplink": null,
+                "superuser": null,
+                "locationperm": null,
+                "notificationperm": null,
+                "colorblindrating": null
+            }
+        ])
+    })
+    it("test select with few constraints", async () => {
+        teardown()
+        const resp1 = await request(app)
+        .post('/users/createUser')
+        .send('uid=1')
+        .send('email=jj@umass')
+        const resp2 = await request(app)
+        .get('/users/selectUser')
+        .send('uid=1') //send body parameters
+        .send('email=jj@umass') //send body parameters
+        assert.strictEqual(resp2.status,200)
+        assert.deepStrictEqual(resp2.body.message, [
+            {
+                "uid": 1,
+                "email": "jj@umass",
+                "username": null,
+                "bio": null,
+                "pfplink": null,
+                "superuser": null,
+                "locationperm": null,
+                "notificationperm": null,
+                "colorblindrating": null
+            }
+        ])
+    })
+    it("test select with many users", async () => {
+        teardown()
+        const resp1 = await request(app)
+        .post('/users/createUser')
+        .send('uid=1')
+        .send('email=jj@umass')
+        const resp1b = await request(app)
+        .post('/users/createUser')
+        .send('uid=2')
+        .send('email=jj@umass')
+        const resp2 = await request(app)
+        .get('/users/selectUser')
+        .send('email=jj@umass')
+        assert.strictEqual(resp2.status,200)
+        assert.deepStrictEqual(resp2.body.message, [
+            {
+                "uid": 1,
+                "email": "jj@umass",
+                "username": null,
+                "bio": null,
+                "pfplink": null,
+                "superuser": null,
+                "locationperm": null,
+                "notificationperm": null,
+                "colorblindrating": null
+            },
+            {
+                "uid": 2,
+                "email": "jj@umass",
+                "username": null,
+                "bio": null,
+                "pfplink": null,
+                "superuser": null,
+                "locationperm": null,
+                "notificationperm": null,
+                "colorblindrating": null
+            }
+        ])
     })
 })
 
 describe("creating users", () => {
-    /*
-    tests:
-        Endpoint: /users/createrUser
-        Method: POST
-        Parms:
-            uid int (required)
-            email string (optional)
-            username string (optional)
-            bio string (optional)
-            pfplink linkToImg (optional)
-            superUser boolean (optional)
-            locationPerms boolean (optional)
-            notificationPerms boolean (optional)
-            colorblindrating boolean (optional)
-    */
-   it("test create without uid", (done) => {
-        request(app)
+   it("test create without uid", async () => {
+        teardown()
+        const resp = await request(app)
         .post('/users/createUser')
-        .expect('Content-Type', /json/)
-        .expect(400, {
-            message: "missing uid"
-        })
-        .end(function(err,res) {
-            done(err)
-        })
+        assert.strictEqual(resp.status, 400)
+        assert.strictEqual(resp.body.message, "missing uid")
    })
-   it("test create with only uid", (done) => {
+   it("test create with only uid", async () => {
+        teardown()
         testInput = {
             uid: 4
         }
-        request(app)
+        const resp = await request(app)
         .post('/users/createUser')
         .send(`uid=${testInput.uid}`)
-        .expect(200, {
-            message: `user with uid ${testInput.uid} created`
-        })
-        .end(function(err,res) {
-            done(err)
-        })
+        assert.strictEqual(resp.status, 200)
+        assert.strictEqual(resp.body.message, `user with uid ${testInput.uid} created`)
    })
-   it("test create with all params", (done) => {
+   it("test create with all params", async () => {
+        teardown()
         testInput = {
-            uid: 5, //note that there is a little overlap between tests even with the before functioning clearing it all out.
+            uid: 4, 
             email: 'jj@umass.edu',
             username: 'jamesbarr',
             bio: 'bio',
@@ -109,7 +168,7 @@ describe("creating users", () => {
             notificationPerm: true,
             colorBlindRating: 2
         }
-        request(app)
+        const resp = await request(app)
         .post('/users/createUser')
         .send(`uid=${testInput.uid}`)
         .send(`email=${testInput.email}`)
@@ -120,23 +179,20 @@ describe("creating users", () => {
         .send(`locationPerm=${testInput.locationPerm}`)
         .send(`notificationPerm=${testInput.notificationPerm}`)
         .send(`colorBlindRating=${testInput.colorBlindRating}`)
-        .expect(200, {
-            message: `user with uid ${testInput.uid} created`
-        })
-        .end(function(err,res) {
-            done(err)
-        })
+        assert.strictEqual(resp.body.message, `user with uid ${testInput.uid} created`)
+        assert.strictEqual(resp.status, 200)
    })
-   it("test create with some but not all params", (done) => {
+   it("test create with some but not all params", async () => {
+    teardown()
     testInput = {
-        uid: 6, //note that there is a little overlap between tests even with the before functioning clearing it all out.
+        uid: 4,
         email: 'jj@umass.edu',
         username: 'jamesbarr',
         pfpLink: 'just a link rn',
         notificationPerm: true,
         colorBlindRating: 2
     }
-    request(app)
+    const resp = await request(app)
     .post('/users/createUser')
     .send(`uid=${testInput.uid}`)
     .send(`email=${testInput.email}`)
@@ -144,35 +200,79 @@ describe("creating users", () => {
     .send(`pfpLink=${testInput.pfpLink}`)
     .send(`notificationPerm=${testInput.notificationPerm}`)
     .send(`colorBlindRating=${testInput.colorBlindRating}`)
-    .expect(200, {
-        message: `user with uid ${testInput.uid} created`
-    })
-    .end(function(err,res) {
-        done(err)
-    })
+    assert.strictEqual(resp.body.message, `user with uid ${testInput.uid} created`)
+    assert.strictEqual(resp.status, 200)
    })
 })
 
 describe("updating users", () => {
-    it("", () => {
-        //TODO
-    })
-    it("", () => {
-        //TODO
-    })
-    it("", () => {
-        //TODO
+    it("update user with email", async () => {
+        teardown()
+        const uid = 4,
+            email = "jj@umass.edu"
+        const resp1 = await request(app)
+        .post('/users/createUser')
+        .send(`uid=${uid}`)
+        assert.strictEqual(resp1.status, 200)
+        assert.strictEqual(resp1.body.message, `user with uid ${uid} created`)
+        
+        const resp2 = await request(app)
+        .put('/users/updateUserByUID')
+        .send(`uid=${uid}`)
+        .send(`email=${email}`)
+        assert.strictEqual(resp2.status, 200)
+        assert.strictEqual(resp2.body.message, `user with uid ${uid} updated`)
+
+        const resp3 = await request(app)
+        .get('/users/selectUser')
+        .send(`uid=${uid}`)
+        assert.strictEqual(resp3.status, 200)
+        assert.deepStrictEqual(resp3.body.message, 
+            [
+                {
+                    "uid": uid,
+                    "email": email,
+                    "username": null,
+                    "bio": null,
+                    "pfplink": null,
+                    "superuser": null,
+                    "locationperm": null,
+                    "notificationperm": null,
+                    "colorblindrating": null
+                }
+            ]
+        ) 
     })
 })
 
 describe("deleting users", () => {
-    it("", () => {
-        //TODO
-    })
-    it("", () => {
-        //TODO
-    })
-    it("", () => {
-        //TODO
-    })
+    it("delete user by ID", async () => {
+        teardown()
+        const uid = 4
+        const resp1 = await request(app)
+        .post('/users/createUser')
+        .send(`uid=${uid}`)
+        assert.strictEqual(resp1.status, 200)
+        assert.strictEqual(resp1.body.message, `user with uid ${uid} created`)
+
+        const resp2 = await request(app)
+        .delete('/users/deleteUserByUID')
+        .send(`uid=${uid}`)
+        assert.strictEqual(resp2.status, 200)
+        assert.strictEqual(resp2.body.message, `user with uid ${uid} deleted if existed`)
+
+        const resp3 = await request(app)
+        .get('/users/selectUser')
+        .send(`uid=${uid}`)
+        assert.strictEqual(resp3.status, 200)
+        assert.deepStrictEqual(resp3.body.message, [])
+    }) 
+    it("delete user by ID where ID not listed", async () => {
+        teardown()
+        const resp2 = await request(app)
+        .delete('/users/deleteUserByUID')
+        .send(`uid=5`)
+        assert.strictEqual(resp2.status, 200)
+        assert.strictEqual(resp2.body.message, `user with uid 5 deleted if existed`)
+    }) 
 })
