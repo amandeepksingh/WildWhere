@@ -10,9 +10,9 @@ const pool = new Pool({
     database: process.env.dbName,
     password: process.env.dbPass,
     port: process.env.dbPort,
-	// ssl: {
-	// 	rejectUnauthorized:process.env.rejectUnauthorized
-	// }
+	ssl: {
+		rejectUnauthorized:false
+	}
 });
 
 //creates posts and routes methods and endpoints to functions
