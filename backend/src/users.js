@@ -70,7 +70,7 @@ users.put('/updateUserByUID', (req, res, next) => updateUserByUID(req, res, next
         superUser boolean (optional)
         locationPerm boolean (optional)
         notificationPerm boolean (optional)
-        colorBlindrating int (optional)
+        colorBlindRating int (optional)
     @returns:
         message string:
             `user with uid ${uid} updated`
