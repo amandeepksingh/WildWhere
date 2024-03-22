@@ -14,7 +14,7 @@ Test that you can run the server and the tests
 
 ### Backend API
 
-To run against the backend api, use the endpoint listed for the EC2. This varies since it changes everytime it's started up, but right now it is https://ec2-3-138-136-228.us-east-2.compute.amazonaws.com/. From here on out, we will just refer to this as _ec2Host_.  
+To run against the backend api, use the endpoint listed for the EC2. This varies since it changes everytime it's started up, but right now it is https://ec2-18-118-3-67.us-east-2.compute.amazonaws.com . From here on out, we will just refer to this as _ec2Host_.  
 
 You can add endpoints such as _/users/createUser_ onto the end to reach different endpoints the backend has set up. Each endpoint will support some method (_Post_, _Get_, _Put_, or _Delete_) and accept some input JSON body. These are specified below.
 
