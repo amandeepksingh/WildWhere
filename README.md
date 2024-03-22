@@ -92,7 +92,7 @@ _selecting users_: Used to select all users matching input JSON body and return 
 _creating users_: Used to create user with attributes matching the input JSON body.
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :-------------: | :------------------: | :---------------: |
-| _ec2Host/users/createUser | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string |
+| _ec2Host/users/createUser_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string |
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---: |
 ||| uid int | requried || user with uid ${testInput.uid} created
 ||| email string | optional || _or_
@@ -107,7 +107,7 @@ _creating users_: Used to create user with attributes matching the input JSON bo
 _updating users_: Used to update user with given UID so the match the input JSON body.
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :-------------: | :------------------: | :---------------: |
-| _ec2Host/users/updateUserByUID | _put_ | _JSON body of following_ | _optional or required_ | _200_ | string |
+| _ec2Host/users/updateUserByUID_ | _put_ | _JSON body of following_ | _optional or required_ | _200_ | string |
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---: |
 ||| uid int | requried || user with uid ${testInput.uid} updated
 ||| email string | optional || _or_
@@ -122,7 +122,7 @@ _updating users_: Used to update user with given UID so the match the input JSON
 _deleting users_: Used to delete user with given UID.
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
-| _ec2Host/users/updateUserByUID | _put_ | _JSON body of following_ | _optional or required_ | _200_ | string
+| _ec2Host/users/deleteUserByUID_ | _delete_ | _JSON body of following_ | _optional or required_ | _200_ | string
 | :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
 ||| uid int | requried || user with uid ${testInput.uid} deleted if existed
 |||||| _or_
