@@ -87,7 +87,7 @@ users.delete('/deleteUserByUID', (req, res, next) => deleteUserByUID(req, res, n
 */
 
 function selectUser(req, res, next) {
-    var condits = []
+    var condits = ["1 = 1"] //in case nothing sent
     if (req.body.uid) {
         condits.push(`uid = ${req.body.uid}`)
     }

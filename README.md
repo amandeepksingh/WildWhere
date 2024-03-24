@@ -6,15 +6,15 @@
 
 ### Backend Setup
 
-Clone the git repo  
-Install Postgresql  
-Create a database called wildwhere  
-Run genTables.sql in the wildwhere database  
-Test that you can run the server and the tests
+- Clone the git repo  
+- Install Postgresql  
+- Create a database called wildwhere  
+- Run genTables.sql in the wildwhere database  
+= Test that you can run the server and the tests
 
 ### Backend API
 
-To run against the backend api, use the endpoint listed for the EC2. This varies since it changes every time it's started up, but right now it is https://ec2-18-118-3-67.us-east-2.compute.amazonaws.com . From here on out, we will just refer to this as _ec2Host_.  
+To run against the backend api, use the host listed for the EC2. This varies since it changes every time it's started up, but right now it is https://ec2-18-188-63-218.us-east-2.compute.amazonaws.com
 
 You can add endpoints such as _/users/createUser_ onto the end to reach different endpoints the backend has set up. Each endpoint will support some method (_Post_, _Get_, _Put_, or _Delete_) and accept some input JSON body. These are specified below.
 
@@ -22,18 +22,13 @@ After sending a request to an endpoint with a method and input JSON body, you'll
 
 #### Example
 
-You could run a request to the endpoint _ec2Host/users/createUser_ that uses a _Post_ method and send _{uid: 4, username: John254}_ as its input JSON body.
+Then you could  run a request to the endpoint _ec2Host/users/createUser_ that uses a _Post_ method and send _{uid: 4, username: John254}_ as its input JSON body.
 
 ##### In browser
 
 - Navigate to https://reqbin.com/  
-- Insert ec2-18-118-3-67.us-east-2.compute.amazonaws.com/users/createUser as the url
+- Insert ec2-18-188-63-218.us-east-2.compute.amazonaws.com/users/createUser as the url
 - Specify POST as the method
-- Insert {"uid":5,"username":"John"} as the JSON body
-- Click Send
-
-- Replace ec2-18-118-3-67.us-east-2.compute.amazonaws.com/users/**selectUser** as the url
-- Specify GET as the method
 - Insert {"uid":5,"username":"John"} as the JSON body
 - Click Send
 
