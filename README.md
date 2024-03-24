@@ -22,14 +22,14 @@ After sending a request to an endpoint with a method and input JSON body, you'll
 
 #### Example
 
-Then you could  run a request to the endpoint _ec2Host/users/createUser_ that uses a _Post_ method and send _{uid: 4, username: John254}_ as its input JSON body.
+Then you could  run a request to the endpoint _ec2Host/users/createUser_ that uses a _Post_ method and send _{uid: 582, username: John254}_ as its input JSON body.
 
 ##### In browser
 
 - Navigate to https://reqbin.com/  
 - Insert ec2-18-188-63-218.us-east-2.compute.amazonaws.com/users/createUser as the url
 - Specify POST as the method
-- Insert {"uid":5,"username":"John"} as the JSON body
+- Insert {"uid":502,"username":"John"} as the JSON body
 - Click Send
 
 ##### In Dart (frontend language)
@@ -42,7 +42,7 @@ void main() async {
 
   // Define your JSON payload
   Map<String, dynamic> jsonBody = {
-    'uid': 4,
+    'uid': 502,
     'username': 'John254'
   };
 
@@ -67,7 +67,7 @@ The request will return a response that has a status code and a message, which c
     //returns 200
     
     print(response.message) 
-    //returns "user with UID 5 created"
+    //returns "user with UID 502 created"
 ```
 
 #### Users
