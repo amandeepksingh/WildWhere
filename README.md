@@ -67,17 +67,7 @@ The request will return a response that has a status code and a message, which c
     //returns 200
     
     print(response.message) 
-    /*returns
-    {
-        'uid': 4,
-        'email': null,
-        'username': 'John254',
-        'bio': null,
-        'pfpLink': null,
-        'superUser': null,
-        'notificationPerm' null,
-        'colorBlindRating': null
-    }
+    /*returns "user with UID 5 created"
     */
 ```
 
