@@ -67,8 +67,7 @@ The request will return a response that has a status code and a message, which c
     //returns 200
     
     print(response.message) 
-    /*returns "user with UID 5 created"
-    */
+    //returns "user with UID 5 created"
 ```
 
 #### Users
