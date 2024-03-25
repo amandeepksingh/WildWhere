@@ -1,26 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const SettingApp());
-}
-
-class SettingApp extends StatelessWidget {
-  const SettingApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Settings Page',
-      theme: ThemeData(
-        colorScheme:
-            ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 141, 217, 74)),
-        useMaterial3: true,
-      ),
-      home: const SettingsPage(),
-    );
-  }
-}
-
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
