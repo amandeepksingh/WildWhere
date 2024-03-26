@@ -10,9 +10,9 @@ const pool = new Pool({
     database: process.env.dbName,
     password: process.env.dbPass,
     port: process.env.dbPort,
-	// ssl: {
-	// 	rejectUnauthorized:process.env.rejectUnauthorized
-	// } //used only on EC2
+	ssl: {
+		rejectUnauthorized:false
+	}
 });
 
 //creates users and routes methods and endpoints to functions
@@ -70,7 +70,7 @@ users.put('/updateUserByUID', (req, res, next) => updateUserByUID(req, res, next
         superUser boolean (optional)
         locationPerm boolean (optional)
         notificationPerm boolean (optional)
-        colorBlindrating int (optional)
+        colorBlindRating int (optional)
     @returns:
         message string:
             `user with uid ${uid} updated`
@@ -87,7 +87,7 @@ users.delete('/deleteUserByUID', (req, res, next) => deleteUserByUID(req, res, n
 */
 
 function selectUser(req, res, next) {
-    var condits = []
+    var condits = ["1 = 1"] //in case nothing sent
     if (req.body.uid) {
         condits.push(`uid = ${req.body.uid}`)
     }
