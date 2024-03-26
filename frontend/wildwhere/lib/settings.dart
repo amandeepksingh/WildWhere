@@ -19,10 +19,6 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(
         title: const Text('Settings'),
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () { },
-        ),
       ),
       body: Container(
         decoration: const BoxDecoration(
