@@ -46,7 +46,12 @@ class Login extends StatelessWidget {
 //Facebook sign in button
 Widget fbSignIn(BuildContext context) {
   return ElevatedButton.icon(
-    onPressed: () => Navigator.pushNamed(context, "/"),
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const MapScreen()),
+      );
+    },
     icon: Image.asset(
       'assets/images/fb.png',
       width: 30,
@@ -58,17 +63,21 @@ Widget fbSignIn(BuildContext context) {
       child: Text('Sign in with Facebook', style: TextStyle(fontSize: 20)),
     ),
     style: OutlinedButton.styleFrom(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-      foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-      elevation: 5
-    ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+        elevation: 5),
   );
 }
 
 //Google sign in button
 Widget googleSignIn(BuildContext context) {
   return ElevatedButton.icon(
-    onPressed: () => Navigator.pushNamed(context, "/"),
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const MapScreen()),
+      );
+    },
     icon: Image.asset(
       'assets/images/google.png',
       width: 30,
@@ -80,36 +89,34 @@ Widget googleSignIn(BuildContext context) {
       child: Text('Sign in with Google', style: TextStyle(fontSize: 20)),
     ),
     style: OutlinedButton.styleFrom(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-      foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-      elevation: 5
-    ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+        elevation: 5),
   );
 }
 
 //Apple sign in button
 Widget appleSignIn(BuildContext context) {
   return ElevatedButton.icon(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) =>  const MapScreen()),
-        );
-      },
-      icon: Image.asset(
-        'assets/images/apple.png',
-        width: 30,
-        height: 30,
-      ),
-      label: const SizedBox(
-        width: 213,
-        height: 30,
-        child: Text('Sign in with Apple', style: TextStyle(fontSize: 20)),
-      ),
-      style: OutlinedButton.styleFrom(
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const MapScreen()),
+      );
+    },
+    icon: Image.asset(
+      'assets/images/apple.png',
+      width: 30,
+      height: 30,
+    ),
+    label: const SizedBox(
+      width: 213,
+      height: 30,
+      child: Text('Sign in with Apple', style: TextStyle(fontSize: 20)),
+    ),
+    style: OutlinedButton.styleFrom(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-        elevation: 5
-    ),
+        elevation: 5),
   );
 }
