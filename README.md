@@ -29,7 +29,7 @@ Then you could  run a request to the endpoint _ec2Host/users/createUser_ that us
 - Navigate to https://reqbin.com/  
 - Insert ec2-18-188-63-218.us-east-2.compute.amazonaws.com/users/createUser as the url
 - Specify POST as the method
-- Insert {"uid":502,"username":"John"} as the JSON body
+- Insert {"username":"John"} as the JSON body
 - Click Send
 
 ##### In Dart (frontend language)
@@ -42,7 +42,6 @@ void main() async {
 
   // Define your JSON payload
   Map<String, dynamic> jsonBody = {
-    'uid': 502,
     'username': 'John254'
   };
 
@@ -67,7 +66,7 @@ The request will return a response that has a status code and a message, which c
     //returns 200
     
     print(response.message) 
-    //returns "user with UID 502 created"
+    //returns "user created"
 ```
 
 #### Users
@@ -93,7 +92,7 @@ _creating users_: Used to create user with attributes matching the input JSON bo
 | :-------: | :----: | :-------------: | :-------------: | :------------------: | :---------------: |
 | _ec2Host/users/createUser_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string |
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---: |
-||| uid int | requried || user with uid ${testInput.uid} created
+||| uid int | AUTO-GENERATED (starts from 1) || user created
 ||| email string | optional || _or_
 ||| username string | optional || error message
 ||| bio string | optional || 
@@ -108,7 +107,7 @@ _updating users_: Used to update user with given UID so the match the input JSON
 | :-------: | :----: | :-------------: | :-------------: | :------------------: | :---------------: |
 | _ec2Host/users/updateUserByUID_ | _put_ | _JSON body of following_ | _optional or required_ | _200_ | string |
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---: |
-||| uid int | requried || user with uid ${testInput.uid} updated
+||| uid int | required || user with uid ${testInput.uid} updated
 ||| email string | optional || _or_
 ||| username string | optional || error message
 ||| bio string | optional || 
@@ -131,7 +130,50 @@ _deleting users_: Used to delete user with given UID.
 
 #### Posts
 
-We're working on this.
+_selecting posts_: Used to select all posts matching input JSON body and return an array of each of those posts' attributes.
+| Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
+| :-------: | :----: | :-------------: | :---: |  :------------------: | :---------------: |
+| _ec2Host/users/selectUser_ | _get_ | _JSON body of following_ | _optional or required_ | _200_ | _array of JSON bodies of following_ |
+| :-------: | :----: | :-------------: | :------------------: | :---------------: | :---: |
+||| pid int | optional || pid int
+||| uid int | optional || uid int
+||| radius int | optional || radius int 
+||| imgLink string | optional || imgLink string
+||| starttime timestamp 'YYYY/MM/DD/HH24/MI/ss' | optional || starttime timestamp
+||| endtime timestamp 'YYYY/MM/DD/HH24/MI/ss' | optional || endtime timestamp
+||| coordinate point '(longitude [-180, 180], latitude [-90, 90]) e.g. (-169.2, 25.0)' | optional (required for non-null radius) || coordinate point
+
+
+_creating posts_: Used to create post with attributes matching the input JSON body.
+| Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
+| :-------: | :----: | :-------------: | :-------------: | :------------------: | :---------------: |
+| _ec2Host/users/createUser_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string |
+| :-------: | :----: | :-------------: | :------------------: | :---------------: | :---: |
+||| pid int | AUTO-GENERATED (starts from 1) || post created
+||| uid int | REQUIRED || uid int
+||| imgLink string | optional || imgLink string
+||| datetime timestamp 'YYYY-MM-DD HH:MM:SS' | optional || datetime timestamp
+||| coordinate point '(longitude [-180, 180], latitude [-90, 90]) e.g. (-169.2, 25.0)' | REQUIRED || coordinate point
+
+_updating posts_: Used to update post with given PID so the match the input JSON body.
+| Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
+| :-------: | :----: | :-------------: | :-------------: | :------------------: | :---------------: |
+| _ec2Host/users/updateUserByUID_ | _put_ | _JSON body of following_ | _optional or required_ | _200_ | string |
+| :-------: | :----: | :-------------: | :------------------: | :---------------: | :---: |
+||| pid int | AUTO-GENERATED || post with pid ${testInput.pid} updated
+||| uid int | optional || uid int
+||| imgLink string | optional || imgLink string
+||| datetime timestamp | optional || datetime timestamp
+||| coordinate point | optional || coordinate point
+
+_deleting posts_: Used to delete post with given PID.
+| Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
+| :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
+| _ec2Host/users/deleteUserByUID_ | _delete_ | _JSON body of following_ | _optional or required_ | _200_ | string
+| :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
+||| pid int | REQUIRED || user with pid ${testInput.pid} deleted if existed
+|||||| _or_
+|||||| error message
 
 
 

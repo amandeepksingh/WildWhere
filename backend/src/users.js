@@ -131,13 +131,7 @@ function selectUser(req, res, next) {
 
 function createUser(req, res, next) {
     var dict = {}
-    if (req.body.uid) {
-        dict['uid'] = parseInt(req.body.uid)
-    } else {
-        return res.status(400).json({
-            "message": "missing uid"
-        }) //handles misformatted input
-    }
+    //NO UID, AUTO-INCREMENT STARTING FROM 2
     if (req.body.email) {
         dict['email'] = `'${req.body.email}'`
     }
@@ -164,7 +158,7 @@ function createUser(req, res, next) {
     }
     const fields = Object.keys(dict).join(','),
         vals = Object.values(dict).join(',')
-    const query = `INSERT INTO users(${fields}) VALUES(${vals})`
+    const query = Object.keys(dict).length == 0 ? `INSERT INTO users VALUES(DEFAULT)` : `INSERT INTO users(${fields}) VALUES(${vals})`
     return pool.query(query, (error, result) => {
         if (error) {
             return res.status(400).json({
@@ -172,7 +166,7 @@ function createUser(req, res, next) {
             })
         }
         return res.status(200).json({
-            message: `user with uid ${req.body.uid} created`
+            message: `user created`
         })
     })
 }
