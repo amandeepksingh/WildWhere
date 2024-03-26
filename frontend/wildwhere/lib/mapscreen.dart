@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:wildwhere/data.dart';
+import 'package:wildwhere/map_preferences.dart';
 import 'package:wildwhere/profile.dart';
 import 'package:wildwhere/report.dart';
 import 'package:wildwhere/settings.dart';
@@ -25,7 +26,8 @@ class _MapState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var overlayController = OverlayPortalController();
+    var reportOverlayControl = OverlayPortalController();
+    var prefOverlayControl = OverlayPortalController();
     return Stack(children: <Widget>[
       Scaffold(
         appBar: AppBar(
@@ -57,13 +59,12 @@ class _MapState extends State<MapScreen> {
             padding: const EdgeInsets.fromLTRB(0, 0, 10, 20)),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton.large(
-          onPressed: overlayController.toggle,
+          onPressed: reportOverlayControl.toggle,
           elevation: 10,
-          
           shape: const CircleBorder(),
           backgroundColor: const Color.fromARGB(255, 255, 255, 255),
           child: OverlayPortal(
-            controller: overlayController,
+            controller: reportOverlayControl,
             overlayChildBuilder: (BuildContext context) {
               return const ReportPage();
             },
@@ -84,13 +85,21 @@ class _MapState extends State<MapScreen> {
             ),
             const SizedBox(height: 10),
             FloatingActionButton(
-              onPressed: () => {},
+              onPressed: prefOverlayControl.toggle,
               shape: const CircleBorder(),
               elevation: 2,
               backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-              child: const Icon(Icons.layers_outlined),
+              child: OverlayPortal(
+                controller: prefOverlayControl,
+                overlayChildBuilder: (BuildContext context) {
+                  return const MapPreferences();
+                },
+                child: const Icon(Icons.layers_outlined),
+              )
             )
-          ]))
+          ]
+        )
+      )
     ]);
   }
 }
