@@ -18,8 +18,10 @@ const pool = new Pool({
 	// } //used only on EC2
 });
 async function teardown() { //TODO before each run. Using before() or after() seems to cause async issues
-    await pool.query("DELETE FROM users")
-    await pool.query("DELETE FROM posts")
+    await pool.query("DELETE FROM users;")
+    await pool.query("DELETE FROM posts;")
+    await pool.query("ALTER SEQUENCE users_uid_seq RESTART WITH 1;")
+    await pool.query("ALTER SEQUENCE posts_pid_seq RESTART WITH 1;")
 }
 
 
@@ -36,7 +38,6 @@ describe("selecting users", () => {
         teardown()
         const resp1 = await request(app)
         .post('/users/createUser')
-        .send('uid=1')
         .send('email=jj@umass')
         const resp2 = await request(app)
         .get('/users/selectUser')
@@ -49,8 +50,8 @@ describe("selecting users", () => {
         teardown()
         const resp1 = await request(app)
         .post('/users/createUser')
-        .send('uid=1')
         .send('email=jj@umass')
+        assert.deepStrictEqual(resp1.body.message,`user created`)
         const resp2 = await request(app)
         .get('/users/selectUser')
         .send('uid=1') //send body parameters
@@ -59,7 +60,7 @@ describe("selecting users", () => {
         assert.deepStrictEqual(resp2.body.message, [
             {
                 "uid": 1,
-                "email": "jj@umass",
+                "email": 'jj@umass',
                 "username": null,
                 "bio": null,
                 "pfplink": null,
@@ -74,7 +75,6 @@ describe("selecting users", () => {
         teardown()
         const resp1 = await request(app)
         .post('/users/createUser')
-        .send('uid=1')
         .send('email=jj@umass')
         const resp2 = await request(app)
         .get('/users/selectUser')
@@ -99,11 +99,9 @@ describe("selecting users", () => {
         teardown()
         const resp1 = await request(app)
         .post('/users/createUser')
-        .send('uid=1')
         .send('email=jj@umass')
         const resp1b = await request(app)
         .post('/users/createUser')
-        .send('uid=2')
         .send('email=jj@umass')
         const resp2 = await request(app)
         .get('/users/selectUser')
@@ -137,28 +135,16 @@ describe("selecting users", () => {
 })
 
 describe("creating users", () => {
-   it("test create without uid", async () => {
+   it("test create", async () => {
         teardown()
         const resp = await request(app)
         .post('/users/createUser')
-        assert.strictEqual(resp.status, 400)
-        assert.strictEqual(resp.body.message, "missing uid")
-   })
-   it("test create with only uid", async () => {
-        teardown()
-        testInput = {
-            uid: 4
-        }
-        const resp = await request(app)
-        .post('/users/createUser')
-        .send(`uid=${testInput.uid}`)
         assert.strictEqual(resp.status, 200)
-        assert.strictEqual(resp.body.message, `user with uid ${testInput.uid} created`)
+        assert.strictEqual(resp.body.message, `user created`)
    })
    it("test create with all params", async () => {
         teardown()
         testInput = {
-            uid: 4, 
             email: 'jj@umass.edu',
             username: 'jamesbarr',
             bio: 'bio',
@@ -170,7 +156,6 @@ describe("creating users", () => {
         }
         const resp = await request(app)
         .post('/users/createUser')
-        .send(`uid=${testInput.uid}`)
         .send(`email=${testInput.email}`)
         .send(`username=${testInput.username}`)
         .send(`bio=${testInput.bio}`)
@@ -179,13 +164,12 @@ describe("creating users", () => {
         .send(`locationPerm=${testInput.locationPerm}`)
         .send(`notificationPerm=${testInput.notificationPerm}`)
         .send(`colorBlindRating=${testInput.colorBlindRating}`)
-        assert.strictEqual(resp.body.message, `user with uid ${testInput.uid} created`)
+        assert.strictEqual(resp.body.message, `user created`)
         assert.strictEqual(resp.status, 200)
    })
    it("test create with some but not all params", async () => {
     teardown()
     testInput = {
-        uid: 4,
         email: 'jj@umass.edu',
         username: 'jamesbarr',
         pfpLink: 'just a link rn',
@@ -194,13 +178,12 @@ describe("creating users", () => {
     }
     const resp = await request(app)
     .post('/users/createUser')
-    .send(`uid=${testInput.uid}`)
     .send(`email=${testInput.email}`)
     .send(`username=${testInput.username}`)
     .send(`pfpLink=${testInput.pfpLink}`)
     .send(`notificationPerm=${testInput.notificationPerm}`)
     .send(`colorBlindRating=${testInput.colorBlindRating}`)
-    assert.strictEqual(resp.body.message, `user with uid ${testInput.uid} created`)
+    assert.strictEqual(resp.body.message, `user created`)
     assert.strictEqual(resp.status, 200)
    })
 })
@@ -208,13 +191,12 @@ describe("creating users", () => {
 describe("updating users", () => {
     it("update user with email", async () => {
         teardown()
-        const uid = 4,
+        const uid = 1,
             email = "jj@umass.edu"
         const resp1 = await request(app)
         .post('/users/createUser')
-        .send(`uid=${uid}`)
         assert.strictEqual(resp1.status, 200)
-        assert.strictEqual(resp1.body.message, `user with uid ${uid} created`)
+        assert.strictEqual(resp1.body.message, `user created`)
         
         const resp2 = await request(app)
         .put('/users/updateUserByUID')
@@ -248,12 +230,11 @@ describe("updating users", () => {
 describe("deleting users", () => {
     it("delete user by ID", async () => {
         teardown()
-        const uid = 4
+        const uid = 1
         const resp1 = await request(app)
         .post('/users/createUser')
-        .send(`uid=${uid}`)
         assert.strictEqual(resp1.status, 200)
-        assert.strictEqual(resp1.body.message, `user with uid ${uid} created`)
+        assert.strictEqual(resp1.body.message, `user created`)
 
         const resp2 = await request(app)
         .delete('/users/deleteUserByUID')
