@@ -14,7 +14,7 @@
 
 ### Backend API
 
-To run against the backend api, use the host listed for the EC2. This varies since it changes every time it's started up, but right now it is https://ec2-18-188-63-218.us-east-2.compute.amazonaws.com
+To run against the backend api, use the host listed for the EC2. This varies since it changes every time it's started up, but right now it is ec2-13-58-233-86.us-east-2.compute.amazonaws.com
 
 You can add endpoints such as _/users/createUser_ onto the end to reach different endpoints the backend has set up. Each endpoint will support some method (_Post_, _Get_, _Put_, or _Delete_) and accept some input JSON body. These are specified below.
 
@@ -27,7 +27,7 @@ Then you could  run a request to the endpoint _ec2Host/users/createUser_ that us
 ##### In browser
 
 - Navigate to https://reqbin.com/  
-- Insert ec2-18-188-63-218.us-east-2.compute.amazonaws.com/users/createUser as the url
+- Insert ec2-13-58-233-86.us-east-2.compute.amazonaws.com/users/createUser as the url
 - Specify POST as the method
 - Insert {"username":"John"} as the JSON body
 - Click Send
