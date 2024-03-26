@@ -26,16 +26,16 @@ async function teardown() { //TODO before each run. Using before() or after() se
 
 
 describe("selecting users", () => {
-    it("test select with empty", async () => {
-        teardown()
+    it("USER: test select with empty", async () => {
+        await teardown()
         const resp = await request(app)
         .get('/users/selectUser')
         .send('uid=1') //send body parameters
         assert.strictEqual(resp.status,200)
         assert.deepStrictEqual(resp.body.message, [])
     })
-    it("test select with too strict constraints", async () => {
-        teardown()
+    it("USER: test select with too strict constraints", async () => {
+        await teardown()
         const resp1 = await request(app)
         .post('/users/createUser')
         .send('email=jj@umass')
@@ -46,8 +46,8 @@ describe("selecting users", () => {
         assert.strictEqual(resp2.status,200)
         assert.deepStrictEqual(resp2.body.message, [])
     })
-    it("test select with many constraints", async () => {
-        teardown()
+    it("USER: test select with many constraints", async () => {
+        await teardown()
         const resp1 = await request(app)
         .post('/users/createUser')
         .send('email=jj@umass')
@@ -71,8 +71,8 @@ describe("selecting users", () => {
             }
         ])
     })
-    it("test select with few constraints", async () => {
-        teardown()
+    it("USER: test select with few constraints", async () => {
+        await teardown()
         const resp1 = await request(app)
         .post('/users/createUser')
         .send('email=jj@umass')
@@ -95,8 +95,8 @@ describe("selecting users", () => {
             }
         ])
     })
-    it("test select with many users", async () => {
-        teardown()
+    it("USER: test select with many users", async () => {
+        await teardown()
         const resp1 = await request(app)
         .post('/users/createUser')
         .send('email=jj@umass')
@@ -135,15 +135,15 @@ describe("selecting users", () => {
 })
 
 describe("creating users", () => {
-   it("test create", async () => {
-        teardown()
+   it("USER: test create", async () => {
+        await teardown()
         const resp = await request(app)
         .post('/users/createUser')
         assert.strictEqual(resp.status, 200)
         assert.strictEqual(resp.body.message, `user created`)
    })
-   it("test create with all params", async () => {
-        teardown()
+   it("USER: test create with all params", async () => {
+        await teardown()
         testInput = {
             email: 'jj@umass.edu',
             username: 'jamesbarr',
@@ -167,8 +167,8 @@ describe("creating users", () => {
         assert.strictEqual(resp.body.message, `user created`)
         assert.strictEqual(resp.status, 200)
    })
-   it("test create with some but not all params", async () => {
-    teardown()
+   it("USER: test create with some but not all params", async () => {
+    await teardown()
     testInput = {
         email: 'jj@umass.edu',
         username: 'jamesbarr',
@@ -189,8 +189,8 @@ describe("creating users", () => {
 })
 
 describe("updating users", () => {
-    it("update user with email", async () => {
-        teardown()
+    it("USER: update user with email", async () => {
+        await teardown()
         const uid = 1,
             email = "jj@umass.edu"
         const resp1 = await request(app)
@@ -228,8 +228,8 @@ describe("updating users", () => {
 })
 
 describe("deleting users", () => {
-    it("delete user by ID", async () => {
-        teardown()
+    it("USER: delete user by ID", async () => {
+        await teardown()
         const uid = 1
         const resp1 = await request(app)
         .post('/users/createUser')
@@ -248,8 +248,8 @@ describe("deleting users", () => {
         assert.strictEqual(resp3.status, 200)
         assert.deepStrictEqual(resp3.body.message, [])
     }) 
-    it("delete user by ID where ID not listed", async () => {
-        teardown()
+    it("USER: delete user by ID where ID not listed", async () => {
+        await teardown()
         const resp2 = await request(app)
         .delete('/users/deleteUserByUID')
         .send(`uid=5`)

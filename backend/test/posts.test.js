@@ -32,7 +32,7 @@ describe("selecting posts", () => {
     //May need another function to select posts that are within a certain coordinate circle
     
         it("POST: test select with empty", async () => {
-            teardown()
+            await teardown()
             const resp = await request(app)
             .get('/posts/selectPost')
             .send('coordinate=(0.0, 0.0)') //send body parameters
@@ -40,7 +40,7 @@ describe("selecting posts", () => {
             assert.deepStrictEqual(resp.body.message, [])
         })
         it("POST: test select with too strict constraints", async () => {
-            teardown()
+            await teardown()
             
             const create_user = await request(app)
             .post('/users/createUser')
@@ -68,7 +68,7 @@ describe("selecting posts", () => {
             ])
         })
         it("POST: test select with ALL constraints", async () => {
-            teardown()
+            await teardown()
 
             const create_user = await request(app)
             .post('/users/createUser')
@@ -97,7 +97,7 @@ describe("selecting posts", () => {
             ])
         })
         it("POST: test select with multiple posts", async () => {
-            teardown()
+            await teardown()
 
             const create_user = await request(app)
             .post('/users/createUser')
@@ -133,7 +133,7 @@ describe("selecting posts", () => {
             ])
         })
         it("POST: null radius", async () => {
-            teardown()
+            await teardown()
 
             const create_user = await request(app)
             .post('/users/createUser')
@@ -161,7 +161,7 @@ describe("selecting posts", () => {
             ])
         })
         it("POST: zero radius", async () => {
-            teardown()
+            await teardown()
 
             const create_user = await request(app)
             .post('/users/createUser')
@@ -190,7 +190,7 @@ describe("selecting posts", () => {
             ])
         })
         it("POST: non-zero radius", async () => {
-            teardown()
+            await teardown()
 
             const create_user = await request(app)
             .post('/users/createUser')
@@ -241,7 +241,7 @@ describe("selecting posts", () => {
             ])
         })
         it("POST: after a time", async () => {
-            teardown()
+            await teardown()
 
             const create_user = await request(app)
             .post('/users/createUser')
@@ -271,7 +271,7 @@ describe("selecting posts", () => {
             ])
         })
         it("POST: before a time", async () => {
-            teardown()
+            await teardown()
 
             const create_user = await request(app)
             .post('/users/createUser')
@@ -302,7 +302,7 @@ describe("selecting posts", () => {
             ])
         })
         it("POST: between a time", async () => {
-            teardown()
+            await teardown()
 
             const create_user = await request(app)
             .post('/users/createUser')
@@ -342,7 +342,7 @@ describe("selecting posts", () => {
 
 describe("creating posts", () => {
    it("POST: test create without uid", async () => {
-    teardown()
+    await teardown()
     const resp = await request(app)
     .post('/posts/createPost')
     .send('coordinate=(0.5, 0.5)')
@@ -351,7 +351,7 @@ describe("creating posts", () => {
 })
 
 it("POST: test create without coordinates", async () => {
-    teardown()
+    await teardown()
 
     const create_user = await request(app)
             .post('/users/createUser')
@@ -364,7 +364,7 @@ it("POST: test create without coordinates", async () => {
 })
 //missing coordinates
    it("POST: test create with only pid and uid and coordinates", async () => {
-        teardown()
+        await teardown()
         const resp2 = await request(app)
         .post('/users/createUser')
         assert.strictEqual(resp2.status, 200)
@@ -376,7 +376,7 @@ it("POST: test create without coordinates", async () => {
         assert.strictEqual(resp.body.message, "post created")
    })
    it("POST: test create POST with all params", async () => {
-        teardown()
+        await teardown()
         const resp1 = await request(app)
         .post('/users/createUser')
         
@@ -390,7 +390,7 @@ it("POST: test create without coordinates", async () => {
         assert.strictEqual(resp2.status, 200)
    })
    it("POST: test create with some but not all params", async () => {
-    teardown()
+    await teardown()
     const create_user = await request(app)
     .post('/users/createUser')
 
@@ -407,7 +407,7 @@ it("POST: test create without coordinates", async () => {
 
 describe("updating posts", () => {
     it("POST: update post with imgLink", async () => {//test with coordinate and datetime later on
-        teardown()
+        await teardown()
 
         const b = await request(app)
         .post('/users/createUser')
@@ -446,12 +446,15 @@ describe("updating posts", () => {
 
 describe("deleting posts", () => {
     it("POST: delete post by PID", async () => {
-        teardown()
+        await teardown()
 
         const create_user = await request(app)
             .post('/users/createUser')
 
-            const resp1 = await request(app)
+        assert.strictEqual(create_user.body.message,'user created')
+        assert.strictEqual(create_user.status, 200)
+
+        const resp1 = await request(app)
             .post('/posts/createPost')
             .send('uid=1')
             .send('coordinate=(0.0, 0.0)')
@@ -478,7 +481,7 @@ describe("deleting posts", () => {
         assert.deepStrictEqual(resp3.body.message, [])
     }) 
     it("POST: delete post by ID where ID not listed", async () => {
-        teardown()
+        await teardown()
         const resp2 = await request(app)
         .delete('/posts/deletePostByPID')
         .send('pid=5')
