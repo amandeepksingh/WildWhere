@@ -65,7 +65,7 @@ class _ProfilePageState extends State<Profile> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
-                      '/Users/ruth/Downloads/wildwhere/assets/images/defaultUserProfileImg.jpeg',
+                      'assets/images/defaultUserProfileImg.jpeg',
                       width: 100,
                       height: 100,
                     ),
