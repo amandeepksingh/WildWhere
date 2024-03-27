@@ -6,6 +6,7 @@ pipeline {
             steps{
                 sh 'echo "filtering out excess files"'
                 script {
+                    echo "starting script"
                     def workspace = pwd()
                     def keep = ['.env', 'backend']
 
