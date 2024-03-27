@@ -88,7 +88,7 @@ Row textFields(String title) {
       Text(title, style: const TextStyle(fontSize: 16)),
       const SizedBox(width: 10),
       const SizedBox(
-        width: 200,
+        width: 150,
         child: TextField(
           decoration: InputDecoration(border: OutlineInputBorder()),
         ),
