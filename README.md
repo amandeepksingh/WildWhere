@@ -46,7 +46,7 @@ import 'package:http/http.dart' as http;
 
 void main() async {
   // Define the URL you want to request to
-  var url = Uri.parse('https://ec2-3-138-136-228.us-east-2.compute.amazonaws.com/users/createUser');
+  var url = Uri.parse('http://ec2-3-138-136-228.us-east-2.compute.amazonaws.com/users/createUser');
 
   // Define your JSON payload
   Map<String, dynamic> jsonBody = {
