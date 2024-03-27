@@ -2,12 +2,32 @@ pipeline {
     agent any
     
     stages {
+        stage('filter') {
+            steps{
+                sh 'echo "filtering out excess files"'
+                script {
+                    def workspace = pwd()
+                    def keep = ['.env', 'backend']
+
+                    def dr = fileTree(dir: workspace)
+
+                    dr.each { fd -> 
+                        def name = fd.getName()
+
+                        if(!keep.contains(name)) {
+                            echo "removing: ${name}"
+                            fd.delete()
+                        }
+                    }
+                }
+            }
+        }
+
         stage('Build') {
             steps {
                sh 'echo "Building..."'
                sh 'echo "jenkins sees the following files"'
                sh 'ls -l -a'
-               sh 'rm -r frontend'
             }
         }
         stage('Test') {
