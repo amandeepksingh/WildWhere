@@ -20,7 +20,7 @@ pipeline {
     }
     
     // Only run this pipeline for branches with names starting with 'feature/'
-    when {
-        branch 'feature/*'
-    }
+    // when {
+    //     branch 'feature/*'
+    // }
 }
