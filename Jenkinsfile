@@ -7,4 +7,8 @@ pipeline {
       }
     }
   }
+
+  when {
+        branch 'feature/*'
+  }
 }
