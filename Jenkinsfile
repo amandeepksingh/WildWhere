@@ -4,11 +4,14 @@ pipeline {
     stages {
         stage('filter') {
             steps{
+                //until i can figure out how to programmatically do this hardcode                
                 sh 'echo "filtering out excess files"'
-                sh """
-                    find . -mindepth 1 -maxdepth 1 ! !  -name "${namesToKeep[0]}" ! -name "${namesToKeep[1]}" 
-                """
- 
+                sh 'rm -r frontend'
+                sh 'rm .gitignore'
+                sh 'rm genTables.sql'
+                sh 'rm README.md'
+                sh 'cd backend'
+                sh 'rm -r test'
             }
         }
 
@@ -17,6 +20,8 @@ pipeline {
                sh 'echo "Building..."'
                sh 'echo "jenkins sees the following files"'
                sh 'ls -l -a'
+                sh 'cd backend'
+                sh 'ls -l -a'
             }
         }
         stage('Test') {
