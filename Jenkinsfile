@@ -11,9 +11,10 @@ pipeline {
                     
                     // Execute shell command to remove files and directories
                     sh """
-                        find . -mindepth 1 -maxdepth 1 ! -name "${namesToKeep[0]}" \
-                        $(printf "! -name %s " "${namesToKeep[@]:1}") -exec rm -rf {} +
+                        find . -mindepth 1 -maxdepth 1 ! -name "${namesToKeep[0]}"
                     """
+                    //  \
+                    //     $(printf "! -name %s " "${namesToKeep[@]:1}") -exec rm -rf {} +
                 }
             }
         }
