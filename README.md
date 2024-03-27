@@ -8,17 +8,17 @@
 
 - Clone the git repo  
 - Install Postgresql  
-- Create a database called wildwhere  
-- Run genTables.sql in the wildwhere database  
-= Test that you can run the server and the tests
+- Create a database called Wildwhere  
+- Run genTables.sql in the Wildwhere database  
+- Test that you can run the server and the tests
 
 ### Backend API
 
-To run against the backend api, use the host listed for the EC2. This varies since it changes every time it's started up, but right now it is ec2-13-58-233-86.us-east-2.compute.amazonaws.com
+To run against the backend API, use the host listed for the EC2. This varies since it changes every time it's started up, but right now it is ec2-13-58-233-86.us-east-2.compute.amazonaws.com
 
 You can add endpoints such as _/users/createUser_ onto the end to reach different endpoints the backend has set up. Each endpoint will support some method (_Post_, _Get_, _Put_, or _Delete_) and accept some input JSON body. These are specified below.
 
-After sending a request to an endpoint with a method and input JSON body, you'll recieve a response (most of the time. Unless we haven't hit that edge case yet).
+After sending a request to an endpoint with a method and input JSON body, you'll receive a response (most of the time. Unless we haven't hit that edge case yet).
 
 #### Example
 
@@ -27,9 +27,9 @@ Then you could  run a request to the endpoint _ec2Host/users/createUser_ that us
 ##### In browser
 
 - Navigate to https://reqbin.com/  
-- Insert ec2-13-58-233-86.us-east-2.compute.amazonaws.com/users/createUser as the url
+- Insert ec2-13-58-233-86.us-east-2.compute.amazonaws.com/users/createUser as the URL
 - Specify POST as the method
-- Insert {"username":"John"} as the JSON body
+- Insert {"username": "John"} as the JSON body
 - Click Send
 
 ##### In Dart (frontend language)
@@ -37,7 +37,7 @@ Then you could  run a request to the endpoint _ec2Host/users/createUser_ that us
 import 'package:http/http.dart' as http;
 
 void main() async {
-  // Define the URL you want to make the request to
+  // Define the URL you want to request to
   var url = Uri.parse('https://ec2-3-138-136-228.us-east-2.compute.amazonaws.com/users/createUser');
 
   // Define your JSON payload
@@ -139,9 +139,9 @@ _selecting posts_: Used to select all posts matching input JSON body and return 
 ||| uid int | optional || uid int
 ||| radius int | optional || radius int 
 ||| imgLink string | optional || imgLink string
-||| starttime timestamp 'YYYY/MM/DD/HH24/MI/ss' | optional || starttime timestamp
-||| endtime timestamp 'YYYY/MM/DD/HH24/MI/ss' | optional || endtime timestamp
-||| coordinate point '(longitude [-180, 180], latitude [-90, 90]) e.g. (-169.2, 25.0)' | optional (required for non-null radius) || coordinate point
+||| starttime timestamp YYYY/MM/DD/HH24/MI/ss | optional || starttime timestamp
+||| endtime timestamp YYYY/MM/DD/HH24/MI/ss | optional || endtime timestamp
+||| coordinate point (longitude [-180, 180], latitude [-90, 90]) e.g. (-169.2, 25.0) | optional (required for non-null radius) || coordinate point
 
 
 _creating posts_: Used to create post with attributes matching the input JSON body.
@@ -152,8 +152,8 @@ _creating posts_: Used to create post with attributes matching the input JSON bo
 ||| pid int | AUTO-GENERATED (starts from 1) || post created
 ||| uid int | REQUIRED || uid int
 ||| imgLink string | optional || imgLink string
-||| datetime timestamp 'YYYY-MM-DD HH:MM:SS' | optional || datetime timestamp
-||| coordinate point '(longitude [-180, 180], latitude [-90, 90]) e.g. (-169.2, 25.0)' | REQUIRED || coordinate point
+||| datetime timestamp YYYY-MM-DD HH:MM:SS | optional || datetime timestamp
+||| coordinate point (longitude [-180, 180], latitude [-90, 90]) e.g. (-169.2, 25.0) | REQUIRED || coordinate point
 
 _updating posts_: Used to update post with given PID so the match the input JSON body.
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
@@ -174,9 +174,3 @@ _deleting posts_: Used to delete post with given PID.
 ||| pid int | REQUIRED || user with pid ${testInput.pid} deleted if existed
 |||||| _or_
 |||||| error message
-
-
-
-### Important bugs / not yet implemented features
- - pfpLink is not an image just yet, just a string since we will probably implement this as a link later. Right now it is just a string
- - You have to supply a UID when creating the user. Please just select a large enough random number. Later, we'll set up cognito to work this out.
