@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:wildwhere/login.dart';
-import 'package:wildwhere/mapscreen.dart';
 
 //Runs the application
 void main() => runApp(const MyApp());
