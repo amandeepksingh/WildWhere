@@ -10,7 +10,7 @@ pipeline {
                     def workspace = pwd()
                     def keep = ['.env', 'backend']
 
-                    // def dr = fileTree(dir: workspace)
+                    def dr = fileTree(dir: workspace)
 
                     // dr.each { fd -> 
                     //     def name = fd.getName()
