@@ -21,10 +21,7 @@ class MapScreen extends StatefulWidget {
 
 class _MapState extends State<MapScreen> {
   late GoogleMapController mapController;
-
-  final LatLng _center = const LatLng(42.381030, -72.529010); //centers the map on Amherst, MA
   final Set<Marker> _markers = {}; //makes set of markers
-
   Set<String> _tappedMarkerIds = {};
   CameraPosition _currentCameraPosition = CameraPosition(
     target: const LatLng(42.381030, -72.529010),
