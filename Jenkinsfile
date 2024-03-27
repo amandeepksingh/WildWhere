@@ -6,13 +6,14 @@ pipeline {
             steps {
                sh 'echo "Building..."'
                sh 'echo "jenkins sees the following files"'
-               sh 'ls -l'
+               sh 'ls -l -a'
                sh 'rm frontend'
             }
         }
         stage('Test') {
             steps {
                sh 'echo "Testing..."'
+               sh 'echo "test sees" & ls -l -a'
             }
         }
         stage('Deploy') {
