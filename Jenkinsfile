@@ -10,7 +10,9 @@ pipeline {
                 sh 'rm .gitignore'
                 sh 'rm genTables.sql'
                 sh 'rm README.md'
-                sh 'cd backend'
+                sh 'rm .DS_Store'
+                sh 'rm .git'
+                sh 'rm -r backend/test'
                 sh 'ls -l -a'
                 //sh 'rm -r test'
             }
