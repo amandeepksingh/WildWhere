@@ -11,7 +11,7 @@ pipeline {
                 sh 'rm genTables.sql'
                 sh 'rm README.md'
                 sh 'rm .DS_Store'
-                sh 'rm .git'
+                sh 'rm -r .git'
                 sh 'rm -r backend/test'
                 sh 'ls -l -a'
                 //sh 'rm -r test'
