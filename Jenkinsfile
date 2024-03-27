@@ -7,7 +7,7 @@ pipeline {
                sh 'echo "Building..."'
                sh 'echo "jenkins sees the following files"'
                sh 'ls -l -a'
-               sh 'rm frontend'
+               sh 'rm -r frontend'
             }
         }
         stage('Test') {
