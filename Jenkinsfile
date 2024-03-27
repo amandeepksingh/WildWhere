@@ -5,6 +5,8 @@ pipeline {
         stage('Build') {
             steps {
                sh 'echo "Building..."'
+               sh 'echo "jenkins sees the following files"'
+               sh 'ls -l'
             }
         }
         stage('Test') {
