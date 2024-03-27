@@ -6,20 +6,14 @@ pipeline {
             steps{
                 sh 'echo "filtering out excess files"'
                 script {
-                    echo "starting script"
-                    def workspace = pwd()
-                    def keep = ['.env', 'backend']
-
-                    def dr = fileTree(workspace)
-
-                    // dr.each { fd -> 
-                    //     def name = fd.getName()
-
-                    //     if(!keep.contains(name)) {
-                    //         echo "removing: ${name}"
-                    //         fd.delete()
-                    //     }
-                    // }
+                    // Define the list of names to keep
+                    def namesToKeep = [".env", "backend"]
+                    
+                    // Execute shell command to remove files and directories
+                    sh """
+                        find . -mindepth 1 -maxdepth 1 ! -name "${namesToKeep[0]}" \
+                        $(printf "! -name %s " "${namesToKeep[@]:1}") -exec rm -rf {} +
+                    """
                 }
             }
         }
