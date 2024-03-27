@@ -11,7 +11,8 @@ pipeline {
                 sh 'rm genTables.sql'
                 sh 'rm README.md'
                 sh 'cd backend'
-                sh 'rm -r test'
+                sh 'ls -l -a'
+                //sh 'rm -r test'
             }
         }
 
