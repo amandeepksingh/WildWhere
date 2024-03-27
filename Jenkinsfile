@@ -8,7 +8,7 @@ pipeline {
                 script {
                     echo "starting script"
                     def workspace = pwd()
-                    // def keep = ['.env', 'backend']
+                    def keep = ['.env', 'backend']
 
                     // def dr = fileTree(dir: workspace)
 
