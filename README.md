@@ -174,3 +174,6 @@ _deleting posts_: Used to delete post with given PID.
 ||| pid int | REQUIRED || user with pid ${testInput.pid} deleted if existed
 |||||| _or_
 |||||| error message
+
+#### Database infrastructure
+
