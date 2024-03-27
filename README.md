@@ -185,4 +185,5 @@ _deleting posts_: Used to delete post with given PID.
 
 #### Database infrastructure
 
-TODO
+Our PostgreSQL database is hosted on RDS as a part of the AWS suite. We use an EC2 to interact with it and the tables we use in the database are shown below:
+![image](https://github.com/amandeepksingh/WildWhere/assets/89215822/5f569ade-4fd8-4555-b45d-6d43839828b6)
