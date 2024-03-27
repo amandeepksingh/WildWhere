@@ -4,18 +4,11 @@ pipeline {
     stages {
         stage('filter') {
             steps{
-                sh 'echo "filtering out excess files"'
-                script {
-                    // Define the list of names to keep
-                    def namesToKeep = [".env", "backend"]
-                    
-                    // Execute shell command to remove files and directories
-                    sh """
-                        find . -mindepth 1 -maxdepth 1 ! ! ( -name "${namesToKeep[0]}" -o -name "${namesToKeep[1]}" )
-                    """
-                    //  \
-                    //     $(printf "! -name %s " "${namesToKeep[@]:1}") -exec rm -rf {} +
-                }
+                sh 'echo "filtering out excess files"'s
+                sh """
+                    find . -mindepth 1 -maxdepth 1 ! !  -name "${namesToKeep[0]}" ! -name "${namesToKeep[1]}" 
+                """
+ 
             }
         }
 
