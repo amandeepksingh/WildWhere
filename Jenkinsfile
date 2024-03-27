@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('filter') {
             steps{
-                sh 'echo "filtering out excess files"'s
+                sh 'echo "filtering out excess files"'
                 sh """
                     find . -mindepth 1 -maxdepth 1 ! !  -name "${namesToKeep[0]}" ! -name "${namesToKeep[1]}" 
                 """
