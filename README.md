@@ -1,5 +1,7 @@
 # WildWhere
 
+## Webpage: https://sites.google.com/umass.edu/wildwhere/home
+
 ## Frontend
 
 ### Build Process
@@ -20,7 +22,21 @@ This README provides instructions on how to find the WildWhere project’s build
               - Important (Windows): Ensure you have added Flutter to the PATH environment variable in order to use Flutter commands
                  in the Terminal https://www.liquidweb.com/kb/how-to-install-and-configure-flutter-sdk-windows-10/ (step 3)
       - Check your development setup by running the “flutter doctor” command in your terminal. You do not need both development kits            for both operating systems. For example, this is a valid output for MacOS:
+        
+         ![alt text](https://github.com/amandeepksingh/WildWhere/blob/main/frontend/wildwhere/assets/images/sc1.png)
+   
+3. ##### Clone the Github Repository
 
+4. ##### Build and Run the Application
+   
+      - Using your terminal, cd into “/Wildwhere-main/frontend/wildwhere”
+      - Begin a simulator either through XCode or AndroidStudio
+      - Run “flutter devices” and copy the device id of the simulator
+      - Run “flutter run -d DEVICEID” to build and run the application
+      - Example build and run process on MacOS using XCode simulator:
+   
+         ![alt text](https://github.com/amandeepksingh/WildWhere/blob/main/frontend/wildwhere/assets/images/sc2.png)
+   
 
  
   
