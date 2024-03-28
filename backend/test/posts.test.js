@@ -472,7 +472,7 @@ describe("deleting posts", () => {
         assert.strictEqual(resp2.status, 200)
 
         const resp3 = await request(app)
-        .get('/posts/selectPosts')
+        .get('/posts/selectPost')
         .send('pid=1')
 
         
