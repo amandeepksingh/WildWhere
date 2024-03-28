@@ -4,7 +4,26 @@
 
 ### Build Process
 
+#### Introduction
 
+This README provides instructions on how to find the WildWhere project’s build system, check out its source files, and build them. Please note that these instructions pertain to the frontend.
+
+#### Build System Setup
+
+1. ##### Prerequisities
+      - In order to successfully run the project, the following tools need to be installed:
+         - Install Flutter: https://docs.flutter.dev/get-started/install
+            - Select your development platform
+            - If your platform is macOS, choose iOS; If your platform is Windows, choose Android
+            - Follow the corresponding installation steps to download the Flutter SDK
+              - Important (MacOS): Ensure you have added Flutter to the PATH environment variable in order to use Flutter commands in                   the Terminal https://www.codecademy.com/article/install-flutter-sdk-for-mac
+              - Important (Windows): Ensure you have added Flutter to the PATH environment variable in order to use Flutter commands
+                 in the Terminal https://www.liquidweb.com/kb/how-to-install-and-configure-flutter-sdk-windows-10/ (step 3)
+      - Check your development setup by running the “flutter doctor” command in your terminal. You do not need both development kits            for both operating systems. For example, this is a valid output for MacOS:
+
+
+ 
+  
 
 ## Backend
 
