@@ -14,7 +14,7 @@ This README provides instructions on how to find the WildWhere project’s build
 
 1. ##### Prerequisities
       - In order to successfully run the project, the following tools need to be installed:
-         - Install Flutter: https://docs.flutter.dev/get-started/install
+         - Install Flutter & OS Specific IDE: https://docs.flutter.dev/get-started/install
             - Select your development platform
             - If your platform is macOS, choose iOS; If your platform is Windows, choose Android
             - Follow the corresponding installation steps to download the Flutter SDK
