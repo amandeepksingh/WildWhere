@@ -157,16 +157,26 @@ function createPost(req, res, next) {
 */
 
 function updatePostByPID(req, res, next) {
-    var updates = []
-    if (req.body.pid === undefined) return res.status(400).json({"message": "missing pid"}) //handles misformatted input
-    if (req.body.uid) updates.push(`uid = '${req.body.uid}'`)
-    if (req.body.imgLink) updates.push(`imgLink = '${req.body.imgLink}'`)
-    if (req.body.datetime) updates.push(`datetime = '${req.body.datetime}'`) //check postgres format
-    if (req.body.coordinate) updates.push(`coordinate = '${req.body.coordinate}'`) //check postgres format
+    if (req.body.pid === undefined) {
+        return res.status(400).json({
+            "message": "missing pid"
+        }) //handles misformatted input
+    }
 
-    vals = updates.join(', ')
-    if (vals.length != 0) {
-        const query = `UPDATE posts SET ${vals} WHERE pid = ${parseInt(req.body.pid)}`
+    const updates = {}
+    if (req.body.uid) updates["uid"] = req.body.uid
+    if (req.body.imgLink) updates["imgLink"] = req.body.imgLink
+    if (req.body.datetime) updates["datetime"] = req.body.datetime //check postgres format
+    if (req.body.coordinate) updates["coordinate"] = req.body.coordinate //check postgres format
+
+    const len = Object.keys(updates).length
+    if(len > 0) {
+        const updateString = Object.keys(updates).map((col, i) => `${col} = $${i + 1}`).join(", ")
+        const query = {
+            text: `UPDATE posts SET ${updateString} WHERE pid = $${len + 1}`,
+            values: Object.values(updates).concat([ req.body.pid ])
+        }
+        
         return pool.query(query, (error, result) => {
             if (error) {
                 return res.status(400).json({

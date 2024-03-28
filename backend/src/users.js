@@ -172,48 +172,37 @@ function createUser(req, res, next) {
 }
 
 function updateUserByUID(req, res, next) {
-    var updates = []
     if (req.body.uid === undefined) {
         return res.status(400).json({
             "message": "missing uid"
         }) //handles misformatted input
     }
-    if (req.body.email) {
-        updates.push(`email = '${req.body.email}'`)
+
+    const columns = ["email", "username", "bio", "pfpLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
+    const updates = {}
+    for(const col of columns) {
+        updates[col] = req.body[col]
     }
-    if (req.body.username) {
-        updates.push(`username = '${req.body.username}'`)
-    }
-    if (req.body.bio) {
-        updates.push(`bio = '${req.body.bio}'`)
-    }
-    if (req.body.pfpLink) {
-        updates.push(`pfpLink = '${req.body.pfpLink}'`)
-    }
-    if (req.body.superUser) {
-        updates.push(`superUser = ${req.body.superUser}`)
-    }
-    if (req.body.locationPerm) {
-        updates.push(`locationPerm = ${req.body.locationPerm}`)
-    }
-    if (req.body.notificationPerm) {
-        updates.push(`notificationPerm = ${req.body.notificationPerm}`)
-    }
-    if (req.body.colorBlindRating) {
-        updates.push(`colorBlindRating = ${parseInt(req.body.colorBlindRating)}`)
-    }
-    vals = updates.join(', ')
-    const query = `UPDATE users SET ${vals} WHERE uid = ${parseInt(req.body.uid)}`
-    return pool.query(query, (error, result) => {
-        if (error) {
-            return res.status(400).json({
-                "message": error.message
-            })
+
+    const len = Object.keys(updates).length
+    if(len > 0) {
+        const updateString = Object.keys(updates).map((col, i) => `${col} = $${i + 1}`).join(", ")
+        const query = {
+            text: `UPDATE users SET ${updateString} WHERE uid = $${len + 1}`,
+            values: Object.values(updates).concat([ req.body.uid ])
         }
-        return res.status(200).json({
-            message: `user with uid ${req.body.uid} updated`
+
+        return pool.query(query, (error, result) => {
+            if (error) {
+                return res.status(400).json({
+                    "message": error.message
+                })
+            }
+            return res.status(200).json({
+                message: `user with uid ${req.body.uid} updated`
+            })
         })
-    })
+    }    
 }
 
 function deleteUserByUID(req, res, next) {
