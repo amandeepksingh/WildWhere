@@ -50,7 +50,7 @@ describe("selecting posts", () => {
             .send('uid=1')
             .send('coordinate=(0.0, 0.0)')
 
-            console.log("POST CREATE TEST: ", resp1.body.message)
+            assert.strictEqual(resp1.body.message, "post created")
 
             const resp2 = await request(app)
             .get('/posts/selectPost')
