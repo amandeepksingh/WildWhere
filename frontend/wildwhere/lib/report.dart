@@ -58,11 +58,11 @@ class _ReportPageState extends State<ReportPage> {
                 ],
               ),
               const SizedBox(height: 20),
-              textFields('Type of animal: '),
+              textFields('Type of animal: ', MediaQuery.of(context).size.width * 0.35),
               const SizedBox(height: 20),
-              textFields('Number of animals: '),
+              textFields('Number of animals: ', MediaQuery.of(context).size.width * 0.35),
               const SizedBox(height: 20),
-              textFields('Additional comments: '),
+              textFields('Additional comments: ', MediaQuery.of(context).size.width * 0.35),
               const SizedBox(height: 40),
               Center(
                 child: ElevatedButton(
@@ -81,15 +81,15 @@ class _ReportPageState extends State<ReportPage> {
   }
 }
 
-Row textFields(String title) {
+Row textFields(String title, double size) {
   return Row(
     children: [
       const SizedBox(width: 10),
       Text(title, style: const TextStyle(fontSize: 16)),
       const SizedBox(width: 10),
-      const SizedBox(
-        width: 150,
-        child: TextField(
+      SizedBox(
+        width: size,
+        child: const TextField(
           decoration: InputDecoration(border: OutlineInputBorder()),
         ),
       ),
