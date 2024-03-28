@@ -2,13 +2,9 @@
 
 ## Frontend
 
-### URL for download
+### Build Process
 
-TODO
 
-### build process
-
-TODO
 
 ## Backend
 
