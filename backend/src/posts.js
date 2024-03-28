@@ -81,28 +81,49 @@ DOCUMENTATION:
 
 function selectPost(req, res, next) {
     var condits = []
+    var values = []
+    var i = 1
 
-    if (req.body.pid) condits.push(`pid = ${req.body.pid}`)
-    if (req.body.uid) condits.push(`uid = ${req.body.uid}`)
+    if (req.body.pid) {
+        condits.push(`pid = $${i++}`)
+        values.push(req.body.pid)
+    }
+    if (req.body.uid) {
+        condits.push(`uid = $${i++}`)
+        values.push(req.body.uid)
+    }
 
     if (req.body.coordinate) {
         radius = req.body.radius ? req.body.radius : 0
         //RADIUS in MILES
-        condits.push(`coordinate<@>point${req.body.coordinate} <= abs(${radius})`)
+        condits.push(`coordinate<@>$${i++}::point <= abs($${i++})`)
+        values.push(req.body.coordinate)
+        values.push(radius)
         //condits.push(`length('coordinate :: POINT, point(${req.body.coordinate}) :: POINT' :: PATH) <= abs(${radius})`)
         //condits.push(`\|((coordinate[0] - ${req.body.coordinate}[0]) ^ 2 + (coordinate[1] - ${req.body.coordinate}[1]) ^ 2)  <= abs(${radius})`) 
         //condits.push(`(@-@ path '(coordinate, ${req.body.coordinate})') <= abs(${radius})`)
     } else if (req.body.radius) return res.status(400).json({"message": "non-null search radius entered with null coordinates"})
     
-    if (req.body.imgLink) condits.push(`imgLink = ${req.body.imgLink}`)
+    if (req.body.imgLink) {
+        condits.push(`imgLink = $${i++}`)
+        values.push(req.body.imgLink)
+    }
 
     //FRONT END CAN IMPLEMENT INTERVAL FUCTIONALITY IF THEY WISH TO
-    if (req.body.starttime) condits.push(`TO_TIMESTAMP('${req.body.starttime}', 'YYYY/MM/DD/HH24:MI:ss') <= datetime`)
-    if (req.body.endtime) condits.push(`datetime <= TO_TIMESTAMP('${req.body.endtime}', 'YYYY/MM/DD/HH24:MI:ss')`)
+    if (req.body.starttime) {
+        condits.push(`TO_TIMESTAMP($${i++}, 'YYYY/MM/DD/HH24:MI:ss') <= datetime`)
+        values.push(req.body.starttime)
+    }
+    if (req.body.endtime) {
+        condits.push(`datetime <= TO_TIMESTAMP($${i++}, 'YYYY/MM/DD/HH24:MI:ss')`)
+        values.push(req.body.endtime)
+    }
 
-    vals = condits.join(' AND ')
-
-    const query = condits.length == 0 ? `SELECT * FROM posts` : `SELECT * FROM posts WHERE ${vals}`
+    const query = condits.length === 0 ? "SELECT * FROM posts" 
+        : {
+            text: `SELECT * FROM posts WHERE ${condits.join(' AND ')}`,
+            values: values
+        }
 
     return pool.query(query, (error, result) => {
         if (error) {
