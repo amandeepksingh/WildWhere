@@ -222,8 +222,8 @@ function deleteUserByUID(req, res, next) {
             "message": "missing uid"
         }) //handles misformatted input
     }
-    const query = `DELETE FROM users WHERE uid = ${parseInt(req.body.uid)}`
-    return pool.query(query, (error, result) => {
+    
+    return pool.query("DELETE FROM users WHERE uid = $1", [req.body.uid], (error, result) => {
         if (error) {
             return res.status(400).json({
                 "message": error.message

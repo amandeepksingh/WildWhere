@@ -186,8 +186,8 @@ function deletePostByPID(req, res, next) {
             "message": "missing pid"
         }) //handles misformatted input
     }
-    const query = `DELETE FROM posts WHERE pid = ${parseInt(req.body.pid)}`
-    return pool.query(query, (error, result) => {
+
+    return pool.query("DELETE FROM posts WHERE pid = $1", [req.body.pid], (error, result) => {
         if (error) {
             return res.status(400).json({
                 "message": error.message
