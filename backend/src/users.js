@@ -87,36 +87,21 @@ users.delete('/deleteUserByUID', (req, res, next) => deleteUserByUID(req, res, n
 */
 
 function selectUser(req, res, next) {
-    var condits = ["1 = 1"] //in case nothing sent
-    if (req.body.uid) {
-        condits.push(`uid = ${req.body.uid}`)
+    const columns = ["uid", "email", "username", "bio", "pfpLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
+    var condits = {}
+    for(const col of columns) {
+        if(req.body[col]) {
+            condits[col] = req.body[col]
+        }
     }
-    if (req.body.email) {
-        condits.push(`email = '${req.body.email}'`)
-    }
-    if (req.body.username) {
-        condits.push(`username = '${req.body.username}'`)
-    }
-    if (req.body.bio) {
-        condits.push(`bio = '${req.body.bio}'`)
-    }
-    if (req.body.pfpLink) {
-        condits.push(`pfpLink = '${req.body.pfpLink}'`)
-    }
-    if (req.body.superUser) {
-        condits.push(`superUser = ${req.body.superUser}`)
-    }
-    if (req.body.locationPerm) {
-        condits.push(`locationPerm = ${req.body.locationPerm}`)
-    }
-    if (req.body.notificationPerm) {
-        condits.push(`notificationPerm = ${req.body.notificationPerm}`)
-    }
-    if (req.body.colorBlindRating) {
-        condits.push(`colorBlindRating = ${parseInt(req.body.colorBlindRating)}`)
-    }
-    vals = condits.join(' AND ')
-    const query = `SELECT * FROM users WHERE ${vals}`
+
+    const conditString = Object.keys(condits).map((col, i) => `${col} = $${i + 1}`).join(" AND ")
+    const query = Object.keys(condits).length === 0 ? "SELECT * FROM users"
+        : {
+            text: `SELECT * FROM users WHERE ${conditString}`,
+            values: Object.values(condits)
+        }
+
     return pool.query(query, (error, result) => {
         if (error) {
             return res.status(400).json({
@@ -130,35 +115,23 @@ function selectUser(req, res, next) {
 }
 
 function createUser(req, res, next) {
-    var dict = {}
     //NO UID, AUTO-INCREMENT STARTING FROM 2
-    if (req.body.email) {
-        dict['email'] = `'${req.body.email}'`
+    const columns = ["email", "username", "bio", "pfpLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
+    var dict = {}
+    for(const col of columns) {
+        if(req.body[col]) {
+            dict[col] = req.body[col]
+        }
     }
-    if (req.body.username) {
-        dict['username'] = `'${req.body.username}'`
-    }
-    if (req.body.bio) {
-        dict['bio'] = `'${req.body.bio}'`
-    }
-    if (req.body.pfpLink) {
-        dict['pfpLink'] = `'${req.body.pfpLink}'`
-    }
-    if (req.body.superUser) {
-        dict['superUser'] = req.body.superUser
-    }
-    if (req.body.locationPerm) {
-        dict['locationPerm'] = req.body.locationPerm
-    }
-    if (req.body.notificationPerm) {
-        dict['notificationPerm'] = req.body.notificationPerm
-    }
-    if (req.body.colorBlindRating) {
-        dict['colorBlindRating'] = parseInt(req.body.colorBlindRating)
-    }
-    const fields = Object.keys(dict).join(','),
-        vals = Object.values(dict).join(',')
-    const query = Object.keys(dict).length == 0 ? `INSERT INTO users VALUES(DEFAULT)` : `INSERT INTO users(${fields}) VALUES(${vals})`
+
+    const fields = Object.keys(dict).join(', ')
+    const placeholders = Object.keys(dict).map((_, i) => `$${i + 1}`).join(', ')
+    const query = 
+        Object.keys(dict).length === 0 ? "INSERT INTO users VALUES(DEFAULT)"
+        : {
+            text: `INSERT INTO users(${fields}) VALUES(${placeholders})`,
+            values: Object.values(dict)
+        }
     return pool.query(query, (error, result) => {
         if (error) {
             return res.status(400).json({
@@ -172,48 +145,39 @@ function createUser(req, res, next) {
 }
 
 function updateUserByUID(req, res, next) {
-    var updates = []
     if (req.body.uid === undefined) {
         return res.status(400).json({
             "message": "missing uid"
         }) //handles misformatted input
     }
-    if (req.body.email) {
-        updates.push(`email = '${req.body.email}'`)
-    }
-    if (req.body.username) {
-        updates.push(`username = '${req.body.username}'`)
-    }
-    if (req.body.bio) {
-        updates.push(`bio = '${req.body.bio}'`)
-    }
-    if (req.body.pfpLink) {
-        updates.push(`pfpLink = '${req.body.pfpLink}'`)
-    }
-    if (req.body.superUser) {
-        updates.push(`superUser = ${req.body.superUser}`)
-    }
-    if (req.body.locationPerm) {
-        updates.push(`locationPerm = ${req.body.locationPerm}`)
-    }
-    if (req.body.notificationPerm) {
-        updates.push(`notificationPerm = ${req.body.notificationPerm}`)
-    }
-    if (req.body.colorBlindRating) {
-        updates.push(`colorBlindRating = ${parseInt(req.body.colorBlindRating)}`)
-    }
-    vals = updates.join(', ')
-    const query = `UPDATE users SET ${vals} WHERE uid = ${parseInt(req.body.uid)}`
-    return pool.query(query, (error, result) => {
-        if (error) {
-            return res.status(400).json({
-                "message": error.message
-            })
+
+    const columns = ["email", "username", "bio", "pfpLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
+    const updates = {}
+    for(const col of columns) {
+        if(req.body[col]) {
+            updates[col] = req.body[col]
         }
-        return res.status(200).json({
-            message: `user with uid ${req.body.uid} updated`
+    }
+
+    const len = Object.keys(updates).length
+    if(len > 0) {
+        const updateString = Object.keys(updates).map((col, i) => `${col} = $${i + 1}`).join(", ")
+        const query = {
+            text: `UPDATE users SET ${updateString} WHERE uid = $${len + 1}`,
+            values: Object.values(updates).concat([ req.body.uid ])
+        }
+
+        return pool.query(query, (error, result) => {
+            if (error) {
+                return res.status(400).json({
+                    "message": error.message
+                })
+            }
+            return res.status(200).json({
+                message: `user with uid ${req.body.uid} updated`
+            })
         })
-    })
+    }    
 }
 
 function deleteUserByUID(req, res, next) {
@@ -222,8 +186,8 @@ function deleteUserByUID(req, res, next) {
             "message": "missing uid"
         }) //handles misformatted input
     }
-    const query = `DELETE FROM users WHERE uid = ${parseInt(req.body.uid)}`
-    return pool.query(query, (error, result) => {
+    
+    return pool.query("DELETE FROM users WHERE uid = $1", [req.body.uid], (error, result) => {
         if (error) {
             return res.status(400).json({
                 "message": error.message
