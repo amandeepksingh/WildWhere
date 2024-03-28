@@ -133,16 +133,16 @@ function createUser(req, res, next) {
     var dict = {}
     //NO UID, AUTO-INCREMENT STARTING FROM 2
     if (req.body.email) {
-        dict['email'] = `'${req.body.email}'`
+        dict['email'] = req.body.email
     }
     if (req.body.username) {
-        dict['username'] = `'${req.body.username}'`
+        dict['username'] = req.body.username
     }
     if (req.body.bio) {
-        dict['bio'] = `'${req.body.bio}'`
+        dict['bio'] = req.body.bio
     }
     if (req.body.pfpLink) {
-        dict['pfpLink'] = `'${req.body.pfpLink}'`
+        dict['pfpLink'] = req.body.pfpLink
     }
     if (req.body.superUser) {
         dict['superUser'] = req.body.superUser
@@ -154,11 +154,17 @@ function createUser(req, res, next) {
         dict['notificationPerm'] = req.body.notificationPerm
     }
     if (req.body.colorBlindRating) {
-        dict['colorBlindRating'] = parseInt(req.body.colorBlindRating)
+        dict['colorBlindRating'] = req.body.colorBlindRating
     }
-    const fields = Object.keys(dict).join(','),
-        vals = Object.values(dict).join(',')
-    const query = Object.keys(dict).length == 0 ? `INSERT INTO users VALUES(DEFAULT)` : `INSERT INTO users(${fields}) VALUES(${vals})`
+
+    const fields = Object.keys(dict).join(', ')
+    const placeholders = Object.keys(dict).map((_, i) => `$${i + 1}`).join(', ')
+    const query = 
+        Object.keys(dict).length === 0 ? "INSERT INTO users VALUES(DEFAULT)"
+        : {
+            text: `INSERT INTO users(${fields}) VALUES(${placeholders})`,
+            values: Object.values(dict)
+        }
     return pool.query(query, (error, result) => {
         if (error) {
             return res.status(400).json({

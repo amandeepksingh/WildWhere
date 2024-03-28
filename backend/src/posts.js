@@ -121,14 +121,18 @@ function createPost(req, res, next) {
     //does not require pid due to AUTO_INCREMENT
     if (req.body.uid) dict['uid'] = req.body.uid
     else return res.status(400).json({"message": "missing uid"}) //handles misformatted input
-    if (req.body.imgLink) dict['imgLink'] = `'${req.body.imgLink}'` //s3 later on
-    if (req.body.datetime) dict['datetime'] = `'${req.body.datetime}'` //check postgres
-    if (req.body.coordinate) dict['coordinate'] = `point '${req.body.coordinate}'` // postgres: string with format '(x, y)' where x, y are floats
+    if (req.body.imgLink) dict['imgLink'] = req.body.imgLink //s3 later on
+    if (req.body.datetime) dict['datetime'] = req.body.datetime //check postgres
+    if (req.body.coordinate) dict['coordinate'] = req.body.coordinate // postgres: string with format '(x, y)' where x, y are floats
     else return res.status(400).json({"message": "missing coordinates"})
 
-    const fields = Object.keys(dict).join(','),
-        vals = Object.values(dict).join(',')
-    const query = `INSERT INTO posts(${fields}) VALUES(${vals})`
+    const fields = Object.keys(dict).join(', ')
+    const placeholders = Object.keys(dict).map((_, i) => `$${i + 1}`).join(', ')
+    const query = {
+        text: `INSERT INTO posts(${fields}) VALUES(${placeholders})`,
+        values: Object.values(dict)
+    }
+
     return pool.query(query, (error, result) => {
         if (error) {
             return res.status(400).json({
