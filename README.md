@@ -189,10 +189,10 @@ _creating posts_: Used to create post with attributes matching the input JSON bo
 | _ec2Host/posts/createPost_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string |
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---: |
 ||| pid int | AUTO-GENERATED (starts from 1) || post created
-||| uid int | REQUIRED || uid int
-||| imgLink string | optional || imgLink string
-||| datetime timestamp YYYY-MM-DD HH:MM:SS | optional || datetime timestamp
-||| coordinate point (longitude [-180, 180], latitude [-90, 90]) e.g. (-169.2, 25.0) | REQUIRED || coordinate point
+||| uid int | REQUIRED || _or_
+||| imgLink string | optional || error message
+||| datetime timestamp YYYY-MM-DD HH:MM:SS | optional ||
+||| coordinate point (longitude [-180, 180], latitude [-90, 90]) e.g. (-169.2, 25.0) | REQUIRED ||
 
 _updating posts_: Used to update post with given PID so the match the input JSON body.
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
@@ -200,10 +200,10 @@ _updating posts_: Used to update post with given PID so the match the input JSON
 | _ec2Host/posts/updatePostByPID_ | _put_ | _JSON body of following_ | _optional or required_ | _200_ | string |
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---: |
 ||| pid int | AUTO-GENERATED || post with pid ${testInput.pid} updated
-||| uid int | optional || uid int
-||| imgLink string | optional || imgLink string
-||| datetime timestamp | optional || datetime timestamp
-||| coordinate point | optional || coordinate point
+||| uid int | optional || _or_
+||| imgLink string | optional || error message
+||| datetime timestamp | optional ||
+||| coordinate point | optional ||
 
 _deleting posts_: Used to delete post with given PID.
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  

@@ -10,83 +10,43 @@ const pool = new Pool({
     database: process.env.dbName,
     password: process.env.dbPass,
     port: process.env.dbPort,
-	ssl: {
-		rejectUnauthorized:false
-	}
+	// ssl: {
+	// 	rejectUnauthorized:false
+	// } //used only on EC2
 });
 
 //creates users and routes methods and endpoints to functions
 const users = express();
-users.get('/selectUser', (req, res, next) => selectUser(req, res, next))
-/*
-    @params:
-        uid int (optional),
-        email string (optional)
-        username string (optional)
-        bio string (optional)
-        pfplink linkToImg (optional)
-        superUser boolean (optional)
-        locationPerm boolean (optional)
-        notificationPerm boolean (optional)
-        colorBlindrating int (optional)
-    @returns:
-        message []{
-            uid int,
-            email string,
-            username string,
-            bio string,
-            pfplink linkToImg,
-            superUser boolean,
-            locationPerm boolean,
-            notificationPerm boolean,
-            colorBlindrating int
-        }
-*/
+users.get('/selectUser', (req, res, next) => {selectUser(req, res, next)})
 users.post('/createUser', (req, res, next) => createUser(req, res, next))
-/*
-    @params:
-        uid int (required),
-        email string (optional)
-        username string (optional)
-        bio string (optional)
-        pfplink linkToImg (optional)
-        superUser boolean (optional)
-        locationPerm boolean (optional)
-        notificationPerm boolean (optional)
-        colorBlindrating int (optional)
-    @returns:
-        message string 
-            `user with uid ${testInput.uid} created`
-            error message
-*/
 users.put('/updateUserByUID', (req, res, next) => updateUserByUID(req, res, next))
-/*
-    @params:
-        uid int (required),
-        email string (optional)
-        username string (optional)
-        bio string (optional)
-        pfplink linkToImg (optional)
-        superUser boolean (optional)
-        locationPerm boolean (optional)
-        notificationPerm boolean (optional)
-        colorBlindRating int (optional)
-    @returns:
-        message string:
-            `user with uid ${uid} updated`
-            error message
-*/
 users.delete('/deleteUserByUID', (req, res, next) => deleteUserByUID(req, res, next))
-/*
-    @params:
-        uid int (required)
-    @returns:
-        message string:
-            `user with uid ${uid} deleted if existed`
-            error message
-*/
 
 function selectUser(req, res, next) {
+    /**
+     * @param:
+     *  uid int (optional),
+     *  email string (optional)
+     *  username string (optional)
+     *  bio string (optional)
+     *  pfplink linkToImg (optional)
+     *  superUser boolean (optional)
+     *  locationPerm boolean (optional)
+     *  notificationPerm boolean (optional)
+     *  colorBlindrating int (optional)
+     * @return:
+     *   message []{
+     *      uid int,
+     *      email string,
+     *      username string,
+     *      bio string,
+     *      pfplink linkToImg,
+     *      superUser boolean,
+     *      locationPerm boolean,
+     *      notificationPerm boolean,
+     *      colorBlindrating int
+     *  }
+     */
     const columns = ["uid", "email", "username", "bio", "pfpLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
     var condits = {}
     for(const col of columns) {
@@ -115,7 +75,23 @@ function selectUser(req, res, next) {
 }
 
 function createUser(req, res, next) {
-    //NO UID, AUTO-INCREMENT STARTING FROM 2
+    /**
+     * @param:
+     *  email string (optional)
+     *  username string (optional)
+     *  bio string (optional)
+     *  pfplink linkToImg (optional)
+     *  superUser boolean (optional)
+     *  locationPerm boolean (optional)
+     *  notificationPerm boolean (optional)
+     *  colorBlindrating int (optional)
+     * @returns:
+     *  message string 
+     *      user created
+     *      OR
+     *      error message
+     */
+    //NO UID, AUTO-INCREMENT STARTING FROM 1
     const columns = ["email", "username", "bio", "pfpLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
     var dict = {}
     for(const col of columns) {
@@ -145,6 +121,23 @@ function createUser(req, res, next) {
 }
 
 function updateUserByUID(req, res, next) {
+    /**
+     * @param:
+     *  uid int (required),
+     *  email string (optional)
+     *  username string (optional)
+     *  bio string (optional)
+     *  pfplink linkToImg (optional)
+     *  superUser boolean (optional)
+     *  locationPerm boolean (optional)
+     *  notificationPerm boolean (optional)
+     *  colorBlindRating int (optional)
+     * @returns:
+     *  message string:
+     *      `user with uid ${uid} updated`
+     *      OR
+     *      error message
+     */
     if (req.body.uid === undefined) {
         return res.status(400).json({
             "message": "missing uid"
@@ -181,6 +174,15 @@ function updateUserByUID(req, res, next) {
 }
 
 function deleteUserByUID(req, res, next) {
+    /**
+     * @param:
+     *   uid int (required)
+     * @returns:
+     *   message string:
+     *      `user with uid ${uid} deleted if existed`
+     *      OR
+     *      error message
+     */
     if (req.body.uid === undefined) {
         return res.status(400).json({
             "message": "missing uid"
