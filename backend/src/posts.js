@@ -10,76 +10,38 @@ const pool = new Pool({
     database: process.env.dbName,
     password: process.env.dbPass,
     port: process.env.dbPort,
-	ssl: {
-		rejectUnauthorized:false
-	}
+	// ssl: {
+	// 	rejectUnauthorized:false
+	// } //used only on EC2
 });
 
 //creates posts and routes methods and endpoints to functions
 const posts = express();
 posts.get('/selectPost', (req, res, next) => selectPost(req, res, next))
-/*
-    NOTE: if radius is entered into SELECT, then there must be a COORDINATE, 
-    if a COORDINATE exists without a radius, assume radius of 0, filters for posts with this coordinates
-        @params:
-        pid int (optional),
-        uid int (optional),
-        radius int (optional), 
-        imgLink string (optional),
-        datetime string (optional),
-        coordinate (float,float) (optional)
-    @returns:
-        message []{
-            pid int,
-            uid int,
-            radius int,
-            imgLink string,
-            datetime string,
-            coordinate [float,float]
-        }
-*/
 posts.post('/createPost', (req, res, next) => createPost(req, res, next))
-/*
-    @params:
-        pid int (required),
-        uid int (required), //removed radius
-        imgLink string (optional),
-        datetime string (optional),
-        coordinate (float,float) (optional)
-    @returns:
-        message string
-            `post with pid ${testInput.pid} created`
-            error message
-*/
 posts.put('/updatePostByPID', (req, res, next) => updatePostByPID(req, res, next))
-/*
-    @params:
-        pid int (required),
-        uid int (optional),
-        imgLink string (optional),
-        datetime string (optional),
-        coordinate (float,float) (optional)
-    @returns:
-        message string
-            `post with pid ${testInput.pid} updated`
-            error message
-*/
 posts.delete('/deletePostByPID', (req, res, next) => deletePostByPID(req, res, next))
-/*
-    @params:
-        pid int (required)
-    @returns:
-        message string:
-            `post with pid ${pid} deleted if existed`
-            error message
-*/
-
-/*
-DOCUMENTATION:
-
-*/
 
 function selectPost(req, res, next) {
+    /**
+     * @param:
+     *  pid int (optional),
+     *  uid int (optional),
+     *  radius int (optional), 
+     *  imgLink string (optional),
+     *  starttime string (optional),
+     *  enttime string (optional),
+     *  coordinate (float,float) (optional)
+     * @returns:
+     *   message []{
+     *      pid int,
+     *      uid int,
+     *      radius int,
+     *      imgLink string,
+     *      datetime string,
+     *      coordinate (x: float, y: float)
+     *  }
+     */
     var condits = []
     var values = []
     var i = 1
@@ -94,7 +56,7 @@ function selectPost(req, res, next) {
     }
 
     if (req.body.coordinate) {
-        radius = req.body.radius ? req.body.radius : 0
+        radius = req.body.radius ? req.body.radius : 0 //if a COORDINATE exists without a radius, assume radius of 0, filters for posts with this coordinates
         //RADIUS in MILES
         condits.push(`coordinate<@>$${i++}::point <= abs($${i++})`)
         values.push(req.body.coordinate)
@@ -102,7 +64,7 @@ function selectPost(req, res, next) {
         //condits.push(`length('coordinate :: POINT, point(${req.body.coordinate}) :: POINT' :: PATH) <= abs(${radius})`)
         //condits.push(`\|((coordinate[0] - ${req.body.coordinate}[0]) ^ 2 + (coordinate[1] - ${req.body.coordinate}[1]) ^ 2)  <= abs(${radius})`) 
         //condits.push(`(@-@ path '(coordinate, ${req.body.coordinate})') <= abs(${radius})`)
-    } else if (req.body.radius) return res.status(400).json({"message": "non-null search radius entered with null coordinates"})
+    } else if (req.body.radius) return res.status(400).json({"message": "non-null search radius entered with null coordinates"}) //if radius is entered into SELECT, then there must be a COORDINATE
     
     if (req.body.imgLink) {
         condits.push(`imgLink = $${i++}`)
@@ -138,8 +100,21 @@ function selectPost(req, res, next) {
 }
 
 function createPost(req, res, next) {
+    /**
+     * @param:
+     *  pid int (required),
+     *  uid int (required),
+     *  imgLink string (optional),
+     *  datetime string (optional),
+     *  coordinate (float,float) (optional)
+     * @returns:
+     *  message string
+     *      post created
+     *      OR
+     *      error message
+    */
     var dict = {}
-    //does not require pid due to AUTO_INCREMENT
+    //NO PID, AUTO-INCREMENT STARTING FROM 2
     if (req.body.uid) dict['uid'] = req.body.uid
     else return res.status(400).json({"message": "missing uid"}) //handles misformatted input
     if (req.body.imgLink) dict['imgLink'] = req.body.imgLink //s3 later on
@@ -167,21 +142,20 @@ function createPost(req, res, next) {
     })
 }
 
-/*
-    @params:
-        pid int (required),
-        uid int (optional),
-        radius int (optional),
-        imgLink string (optional),
-        datetime string (optional),
-        coordinate [float,float] (optional)
-    @returns:
-        message string
-            `post with pid ${testInput.pid} updated`
-            error message
-*/
-
 function updatePostByPID(req, res, next) {
+    /**
+     * @param:
+     *  pid int (required),
+     *  uid int (optional),
+     *  imgLink string (optional),
+     *  datetime string (optional),
+     *  coordinate (float,float) (optional)
+     * @returns:
+     *  message string
+     *      post updated
+     *      OR
+     *      error message
+     */
     if (req.body.pid === undefined) {
         return res.status(400).json({
             "message": "missing pid"
@@ -216,6 +190,14 @@ function updatePostByPID(req, res, next) {
 }
 
 function deletePostByPID(req, res, next) {
+    /**
+     *   @param:
+     *      pid int (required)
+     *   @returns:
+     *       message string:
+     *           `post with pid ${pid} deleted if existed`
+     *           error message
+     */
     if (req.body.pid === undefined) {
         return res.status(400).json({
             "message": "missing pid"
