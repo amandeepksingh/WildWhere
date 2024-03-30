@@ -108,6 +108,8 @@ The request will return a response that has a status code and a message, which c
     //returns "user created"
 ```
 
+
+
 #### Users
 
 _selecting users_: Used to select all users matching input JSON body and return an array of each of those users' attributes.
@@ -124,7 +126,6 @@ _selecting users_: Used to select all users matching input JSON body and return 
 ||| locationPerm boolean | optional || locationPerm boolean
 ||| notificationPerm boolean | optional || notificationPerm boolean
 ||| colorBlindRating int | optional || colorBlindRating int
-
 
 _creating users_: Used to create user with attributes matching the input JSON body.
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
@@ -182,7 +183,6 @@ _selecting posts_: Used to select all posts matching input JSON body and return 
 ||| endtime timestamp YYYY/MM/DD/HH24/MI/ss | optional || endtime timestamp
 ||| coordinate point (longitude [-180, 180], latitude [-90, 90]) e.g. (-169.2, 25.0) | optional (required for non-null radius) || coordinate point
 
-
 _creating posts_: Used to create post with attributes matching the input JSON body.
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :-------------: | :------------------: | :---------------: |
@@ -213,6 +213,28 @@ _deleting posts_: Used to delete post with given PID.
 ||| pid int | REQUIRED || user with pid ${testInput.pid} deleted if existed
 |||||| _or_
 |||||| error message
+
+
+
+#### Images
+
+_uploading images_: Used to upload images
+| Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
+| :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
+| _ec2Host/images/user_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string
+| :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
+||| uid int | REQUIRED || image upload successful
+||| img image | REQUIRED || _or_
+|||||| error message
+
+| Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
+| :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
+| _ec2Host/images/post_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string
+| :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
+||| pid int | REQUIRED || image upload successful
+||| img image | REQUIRED || _or_
+|||||| error message
+
 
 #### Database infrastructure
 
