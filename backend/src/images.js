@@ -63,6 +63,7 @@ async function uploadUserImage(req, res, next) {
     }
     fs.rename(oldName, newName, (err) => {
         if (err) {
+            /* istanbul ignore next */
             return res.status(400).json({message: err.message})
         }
         return res.status(200).json({message:"image upload successful"})
@@ -79,10 +80,10 @@ async function uploadPostImage(req, res, next) {
      *      OR
      *  error message
      */
-    if (req.body.uid === undefined) {
+    if (req.body.pid === undefined) {
         return res.status(400).json({message: "missing pid"})
     }
-    const pid = req.body.uid
+    const pid = req.body.pid
     const filePath = 'images/post/'
     const defaultBasename = 'post-unassigned'
     const files = await fs.readdirSync("images/post")
