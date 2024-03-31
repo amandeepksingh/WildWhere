@@ -221,20 +221,29 @@ _deleting posts_: Used to delete post with given PID.
 _uploading images_: Used to upload images
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
-| _ec2Host/images/user_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string
+| _ec2Host/images/upload_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string
 | :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
-||| uid int | REQUIRED || image upload successful
-||| img image | REQUIRED || _or_
-|||||| error message
+||| type string | REQUIRED [=post or =user] || 'image upload successful'
+||| id int | REQUIRED || _or_
+||| img image | REQUIRED || error message
 
+_accessing images_: Used to get a signed URL to an image (can be used to download or display img)
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
-| _ec2Host/images/post_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string
+| _ec2Host/images/access_ | _get__ | _JSON body of following_ | _optional or required_ | _200_ | string
 | :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
-||| pid int | REQUIRED || image upload successful
-||| img image | REQUIRED || _or_
+||| type string | REQUIRED [=post or =user] || signed URL to image
+||| id int | REQUIRED || _or_
 |||||| error message
 
+_deleting images_: Used to delete image (signed URLs become invalid)
+| Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
+| :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
+| _ec2Host/images/delete_ | _delete_ | _JSON body of following_ | _optional or required_ | _200_ | string
+| :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
+||| type string | REQUIRED [=post or =user] || 'image delete successful'
+||| id int | REQUIRED || _or_
+|||||| error message
 
 #### Database infrastructure
 
