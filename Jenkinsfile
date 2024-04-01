@@ -46,8 +46,8 @@ pipeline {
               
             script {
                 sh '''
-                    ssh -i $WW_PROD ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'mkdir newtest'
-                    scp -i $WW_PROD -r backend ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com:/home/ec2-user/newtest
+                    ssh -i $WW_PROD_PASS ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'mkdir newtest'
+                    scp -i $WW_PROD_PASS -r backend ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com:/home/ec2-user/newtest
                 '''
             }
                
