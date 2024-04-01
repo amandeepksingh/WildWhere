@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        WW_PROD = credentials('ww-prod-cred')
+        WW_PROD = credentials('ww_pem')
     }
     stages {
         stage('filter') {
