@@ -44,8 +44,17 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                script {
-                    def reg = input(
+                // script {
+
+                //     def d = new Date()
+                //     // def currentDay = d.dayOfMonth
+                //     println "$d"
+                
+                // }
+               sh 'echo "Deploying..."'
+               withCredentials([sshUserPrivateKey(credentialsId: 'ww-prod-cred', keyFileVariable: 'SSH_KEY')]) {
+                    script {
+                        def reg = input(
                         message: 'What is the reg value?', 
                         parameters: [
                             [$class: 'ChoiceParameterDefinition', 
@@ -53,17 +62,7 @@ pipeline {
                                 name: 'input', 
                                 description: 'A select box option']
                         ])
-                }
-                script {
 
-                    def d = new Date()
-                    // def currentDay = d.dayOfMonth
-                    println "$d"
-                
-                }
-               sh 'echo "Deploying..."'
-               withCredentials([sshUserPrivateKey(credentialsId: 'ww-prod-cred', keyFileVariable: 'SSH_KEY')]) {
-                    script {
                         if(reg == 1) {
                             try {
                             sh '''
