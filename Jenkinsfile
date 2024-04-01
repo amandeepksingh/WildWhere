@@ -1,7 +1,7 @@
 pipeline {
     agent any
      environment{
-                WW_PROD = credentials('ww-prod-cred');
+                WW_PROD_PASS = credentials('ww-prod-priv-key');
      }
     stages {
         stage('filter') {
