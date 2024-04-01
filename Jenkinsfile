@@ -1,6 +1,6 @@
 def remote = [:]
 remote.name ="ww-prd"
-remote.host ="172.31.18.250"
+remote.host ="ec2-13-58-233-86.us-east-2.compute.amazonaws.com"
 remote.allowAnyHosts = true
 
 pipeline {
