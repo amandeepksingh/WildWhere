@@ -1,7 +1,7 @@
-def remote = [:]
-remote.name ="ww-prd"
-remote.host ="ec2-13-58-233-86.us-east-2.compute.amazonaws.com"
-remote.allowAnyHosts = true
+// def remote = [:]
+// remote.name ="ww-prd"
+// remote.host ="ec2-13-58-233-86.us-east-2.compute.amazonaws.com"
+// remote.allowAnyHosts = true
 
 pipeline {
     agent any
@@ -48,11 +48,12 @@ pipeline {
             steps {
 
                sh 'echo "Deploying..."'
-                script {
-                    remote.user = env.WW_PROD_USR
-                    remote.password = env.WW_PROD_PSW
-                }
-                sshCommand(remote: remote, command:"ls -l")
+               sshagent(credentials: ['ww-prod-cred']) {
+                    sh '''
+                        ssh ec2-user@c2-13-58-233-86.us-east-2.compute.amazonaws.com 'mkdir newtest'
+                    '''
+               }
+              
             // script {
             //     sh '''
             //         ssh -i $WW_PROD_PSW $WW_PROD_USR@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'mkdir newtest'
@@ -61,11 +62,6 @@ pipeline {
             // }
                
             }
-        }
-    }
-    post {
-        always {
-            sleep 5
         }
     }
     
