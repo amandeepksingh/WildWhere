@@ -1,7 +1,12 @@
+// def remote = [:]
+// remote.name ="ww-prd"
+// remote.host ="172.31.18.250"
+// remote.allowAnyHosts = true
+
 pipeline {
     agent any
      environment{
-                WW_PROD_PASS = credentials('ww-prod-priv-key');
+                WW_PROD = credentials('ww-prod-cred');
      }
     stages {
         stage('filter') {
@@ -46,8 +51,8 @@ pipeline {
               
             script {
                 sh '''
-                    ssh -i $WW_PROD_PASS ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'mkdir newtest'
-                    scp -i $WW_PROD_PASS -r backend ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com:/home/ec2-user/newtest
+                    ssh -i $env.WW_PROD_PSW $env.WW_PROD_USR@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'mkdir newtest'
+                    scp -i $env.WW_PROD_PSW -r backend $env.WW_PROD_USR@ec2-13-58-233-86.us-east-2.compute.amazonaws.com:/home/ec2-user/newtest
                 '''
             }
                
