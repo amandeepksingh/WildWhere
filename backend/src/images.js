@@ -27,6 +27,16 @@ const s3Client = new AWSs3Module.S3Client({
     region: 'us-east-2'
 })
 
+//route to endpoints
+const images = express()
+images.post('/userProfilePic/upload', imageUpload.fields([{name: 'uid'}, {name: 'img', maxCount: 1}]), (req, res, next) => imgUpload("user", req, res, next))
+images.get('/userProfilePic/access', imageUpload.none(), (req, res, next) => imgAccess("user", req, res, next))
+images.delete('/userProfilePic/delete', imageUpload.none(), (req, res, next) => imgDelete("user", req, res, next)) 
+images.post('/postPic/upload', imageUpload.fields([{name: 'pid'}, {name: 'img', maxCount: 1}]), (req, res, next) => imgUpload("post", req, res, next))
+images.get('/postPic/access', imageUpload.none(), (req, res, next) => imgAccess("post", req, res, next))
+images.delete('/postPic/delete', imageUpload.none(), (req, res, next) => imgDelete("post", req, res, next)) 
+
+//s3 helper functions
 function s3Put(res, fileName, contentType) {
     const params = {
         Bucket: process.env.accessPoint,
@@ -70,16 +80,11 @@ function s3DeleteFile(res, fileName) {
     )
 }
 
-const images = express()
-
-images.post('/upload', imageUpload.fields([{name: 'type'}, {name: 'id'}, {name: 'img', maxCount: 1}]), (req, res, next) => imgUpload(req, res, next))
-images.get('/access', imageUpload.none(), (req, res, next) => imgAccess(req, res, next))
-images.delete('/delete', imageUpload.none(), (req, res, next) => imgDelete(req, res, next)) 
-
-async function imgUpload(req, res, next) {
+//immediate functions
+async function imgUpload(idType, req, res, next) {
     /**
      * @param
-     *  type string
+     *  idType string
      *  id int
      *  img image
      * @returns
@@ -87,15 +92,19 @@ async function imgUpload(req, res, next) {
      *      OR
      *  error message
      */
-    //confirm and shorthand params
-    if (req.body.type === undefined || (req.body.type !== "user" && req.body.type !== "post")) {
-        return res.status(400).json({message: "type must be specified. Supports 'user' and 'post'"})
-    }
-    const idType = req.body.type
-    if (req.body.id === undefined) {
-        return res.status(400).json({message: "id must be specified"})
-    }
-    const id = req.body.id
+    //confirm and shorthand req vars
+    var id
+    if (idType === "user") {
+        if (req.body.uid === undefined) {
+            return res.status(400).json({message: 'uid is required'})
+        } else {
+            id = req.body.uid
+        }
+    } else if (idType === "post") {
+        if (req.body.pid === undefined) {
+            return res.status(400).json({message: 'pid is required'})
+        }
+    } //leaving open to other idTypes
     if (req.files === undefined || req.files['img'] === undefined) {
         return res.status(400).json({message: 'img must be specified'});
     }
@@ -120,6 +129,8 @@ async function imgUpload(req, res, next) {
         return res.status(400).json({message: `Backend logic error: ${err.message}`})
     })
 
+    //TODO delete existing from s3 if there
+
     //upload to s3 and clear local
     const contentType = `image/${extension.substring(1)}`
     return s3Put(res, newName, contentType).then(res => {
@@ -130,30 +141,34 @@ async function imgUpload(req, res, next) {
     })
 }
 
-async function imgAccess(req, res, next) {
+async function imgAccess(idType, req, res, next) {
     /**
      * @param
-     *  type string
+     *  idType string
      *  id int
      * @returns
      *  img image
      *      or
      *  error message
      */
-    //confirm and shorthand params
-    if (req.body.type === undefined) {
-        return res.status(400).json({message: "type must be specified. Supports 'user' and 'post'"})
-    }
-    const type = req.body.type
-    if (req.body.id === undefined) {
-        return res.status(400).json({message: "id must be specified"})
-    }
-    const id = req.body.id
+    //confirm and shorthand req vars
+    var id
+    if (idType === "user") {
+        if (req.body.uid === undefined) {
+            return res.status(400).json({message: 'uid is required'})
+        } else {
+            id = req.body.uid
+        }
+    } else if (idType === "post") {
+        if (req.body.pid === undefined) {
+            return res.status(400).json({message: 'pid is required'})
+        }
+    } //leaving open to other idTypes
 
     //get files, match file, download file
-    return s3ListFiles(type).then(files => {
+    return s3ListFiles(idType).then(files => {
         for (file of files) {
-            if (file.includes(`images/${type}/${id}`)) {
+            if (file.includes(`images/${idType}/${id}`)) {
                 return file
             }
         }
@@ -165,10 +180,10 @@ async function imgAccess(req, res, next) {
     })
 }
 
-async function imgDelete(req, res, next) {
+async function imgDelete(idType, req, res, next) {
     /**
      * @params
-     *  type string
+     *  idType string
      *  id int
      * @returns
      *  message
@@ -176,19 +191,23 @@ async function imgDelete(req, res, next) {
      *  error
      */
     //confirm and shorthand req vars
-    if (req.body.type === undefined) {
-        return res.status(400).json({message: 'type is required'})
-    }
-    const type = req.body.type
-    if (req.body.id === undefined) {
-        return res.status(400).json({message: 'id is required'})
-    }
-    const id = req.body.id
+    var id
+    if (idType === "user") {
+        if (req.body.uid === undefined) {
+            return res.status(400).json({message: 'uid is required'})
+        } else {
+            id = req.body.uid
+        }
+    } else if (idType === "post") {
+        if (req.body.pid === undefined) {
+            return res.status(400).json({message: 'pid is required'})
+        }
+    } //leaving open to other idTypes
 
     //get files, match file, delete file
-    return s3ListFiles(type).then(files => {
+    return s3ListFiles(idType).then(files => {
         for (file of files) {
-            if (file.includes(`images/${type}/${id}`)) {
+            if (file.includes(`images/${idType}/${id}`)) {
                 return file
             }
         }

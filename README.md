@@ -108,9 +108,9 @@ The request will return a response that has a status code and a message, which c
     //returns "user created"
 ```
 
+### Description
 
-
-#### Users
+#### User Description
 
 _selecting users_: Used to select all users matching input JSON body and return an array of each of those users' attributes.
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
@@ -168,7 +168,7 @@ _deleting users_: Used to delete user with given UID.
 
 
 
-#### Posts
+#### Post Description
 
 _selecting posts_: Used to select all posts matching input JSON body and return an array of each of those posts' attributes.
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
@@ -214,38 +214,67 @@ _deleting posts_: Used to delete post with given PID.
 |||||| _or_
 |||||| error message
 
+### Images
 
-
-#### Images
+#### User Images
 
 _uploading images_: Used to upload images
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
-| _ec2Host/images/upload_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string
+| _ec2Host/images/userProfilePic/upload_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string
 | :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
-||| type string | REQUIRED [=post or =user] || 'image upload successful'
-||| id int | REQUIRED || _or_
-||| img image | REQUIRED || error message
+||| uid int | REQUIRED || 'image upload successful'
+||| img image | REQUIRED || _or_
+||| ||| error message
 
 _accessing images_: Used to get a signed URL to an image (can be used to download or display img)
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
-| _ec2Host/images/access_ | _get__ | _JSON body of following_ | _optional or required_ | _200_ | string
+| _ec2Host/images/userProfilePic/access_ | _get__ | _JSON body of following_ | _optional or required_ | _200_ | string
 | :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
-||| type string | REQUIRED [=post or =user] || signed URL to image
-||| id int | REQUIRED || _or_
+||| uid int | REQUIRED || signed URL to image
+|||||| _or_
 |||||| error message
 
 _deleting images_: Used to delete image (signed URLs become invalid)
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
-| _ec2Host/images/delete_ | _delete_ | _JSON body of following_ | _optional or required_ | _200_ | string
+| _ec2Host/images/userProfilePic/delete_ | _delete_ | _JSON body of following_ | _optional or required_ | _200_ | string
 | :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
-||| type string | REQUIRED [=post or =user] || 'image delete successful'
-||| id int | REQUIRED || _or_
+||| uid int | REQUIRED || 'image delete successful'
+|||||| _or_
 |||||| error message
 
-#### Database infrastructure
+#### Post Images
+
+_uploading images_: Used to upload images
+| Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
+| :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
+| _ec2Host/images/postPic/upload_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string
+| :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
+||| pid int | REQUIRED || 'image upload successful'
+||| img image | REQUIRED || _or_
+||| ||| error message
+
+_accessing images_: Used to get a signed URL to an image (can be used to download or display img)
+| Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
+| :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
+| _ec2Host/images/postPic/access_ | _get__ | _JSON body of following_ | _optional or required_ | _200_ | string
+| :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
+||| pid int | REQUIRED || signed URL to image
+|||||| _or_
+|||||| error message
+
+_deleting images_: Used to delete image (signed URLs become invalid)
+| Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
+| :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
+| _ec2Host/images/postPic/delete_ | _delete_ | _JSON body of following_ | _optional or required_ | _200_ | string
+| :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
+||| pid int | REQUIRED || 'image delete successful'
+|||||| _or_
+|||||| error message
+
+### Database infrastructure
 
 Our PostgreSQL database is hosted on RDS as a part of the AWS suite. We use an EC2 to interact with it and the tables we use in the database are shown below:
 ![image](https://github.com/amandeepksingh/WildWhere/assets/89215822/5f569ade-4fd8-4555-b45d-6d43839828b6)
