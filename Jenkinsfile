@@ -1,6 +1,8 @@
 pipeline {
     agent any
-    
+    enviroment {
+        WW_PROD = credentials('ww-prod-cred')
+    }
     stages {
         stage('filter') {
             steps{
@@ -25,6 +27,9 @@ pipeline {
                sh 'ls -l -a'
                dir('backend') {
                     sh 'ls -la'
+               }
+               dir('backend/src/process_src') {
+
                }
             }
         }
