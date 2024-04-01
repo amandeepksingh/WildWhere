@@ -45,11 +45,11 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    import java.time.LocalDate
-                    
-                    def d = LocalDate.now()
-                    def currentDay = d.dayOfMonth
-                    println currentDay
+
+                    def d = new Date()
+                    // def currentDay = d.dayOfMonth
+                    println "$d"
+                
                 }
                sh 'echo "Deploying..."'
                withCredentials([sshUserPrivateKey(credentialsId: 'ww-prod-cred', keyFileVariable: 'SSH_KEY')]) {
