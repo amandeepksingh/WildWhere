@@ -51,7 +51,7 @@ pipeline {
               
             script {
                 sh '''
-                    ssh -i $env.WW_PROD_PSW $env.WW_PROD_USR@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'mkdir newtest'
+                    ssh -i $WW_PROD_PSW $WW_PROD_USR@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'mkdir newtest'
                     scp -i $env.WW_PROD_PSW -r backend $env.WW_PROD_USR@ec2-13-58-233-86.us-east-2.compute.amazonaws.com:/home/ec2-user/newtest
                 '''
             }
