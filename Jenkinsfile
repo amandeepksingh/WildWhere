@@ -51,6 +51,7 @@ pipeline {
                 script {
                     def d = LocalDate.now()
                     def currentDay = d.dayOfMonth
+                    echo currentDay
                 }
                sh 'echo "Deploying..."'
                withCredentials([sshUserPrivateKey(credentialsId: 'ww-prod-cred', keyFileVariable: 'SSH_KEY')]) {
