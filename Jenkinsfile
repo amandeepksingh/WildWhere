@@ -1,7 +1,7 @@
-// def remote = [:]
-// remote.name ="ww-prd"
-// remote.host ="172.31.18.250"
-// remote.allowAnyHosts = true
+def remote = [:]
+remote.name ="ww-prd"
+remote.host ="172.31.18.250"
+remote.allowAnyHosts = true
 
 pipeline {
     agent any
@@ -48,15 +48,24 @@ pipeline {
             steps {
 
                sh 'echo "Deploying..."'
-              
-            script {
-                sh '''
-                    ssh -i $WW_PROD_PSW $WW_PROD_USR@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'mkdir newtest'
-                    scp -i $env.WW_PROD_PSW -r backend $env.WW_PROD_USR@ec2-13-58-233-86.us-east-2.compute.amazonaws.com:/home/ec2-user/newtest
-                '''
-            }
+                script {
+                    remote.user = env.WW_PROD_USR
+                    remote.password = env.WW_PROD_PSW
+                }
+                sshCommand(remote: remote, command:"ls -l")
+            // script {
+            //     sh '''
+            //         ssh -i $WW_PROD_PSW $WW_PROD_USR@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'mkdir newtest'
+            //         scp -i $env.WW_PROD_PSW -r backend $env.WW_PROD_USR@ec2-13-58-233-86.us-east-2.compute.amazonaws.com:/home/ec2-user/newtest
+            //     '''
+            // }
                
             }
+        }
+    }
+    post {
+        always {
+            sleep 5
         }
     }
     
