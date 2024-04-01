@@ -1,6 +1,7 @@
 pipeline {
     agent any
-    enviroment {
+
+    environment {
         WW_PROD = credentials('ww-prod-cred')
     }
     stages {
