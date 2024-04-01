@@ -48,11 +48,11 @@ pipeline {
             steps {
 
                sh 'echo "Deploying..."'
-               sshagent(credentials: ['ww-prod-cred']) {
-                    sh '''
-                        ssh ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'mkdir newtest'
-                    '''
-               }
+               withCredentials([sshUserPrivateKey(credentialsId: 'ww-prod-cred', keyFileVariable: 'SSH_KEY')]) {
+                sh '''
+                    ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'mkdir newtest'
+                '''
+               } 
               
             // script {
             //     sh '''
