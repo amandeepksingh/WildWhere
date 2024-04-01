@@ -3,6 +3,8 @@
 // remote.host ="ec2-13-58-233-86.us-east-2.compute.amazonaws.com"
 // remote.allowAnyHosts = true
 
+import java.text.SimpleDateFormat
+
 pipeline {
     agent any
      environment{
