@@ -4,7 +4,7 @@
 // remote.allowAnyHosts = true
 
 import java.text.SimpleDateFormat
-
+import java.time.LocalDate
 pipeline {
     agent any
      environment{
@@ -49,15 +49,14 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    def d = getDate()
-                    def dformat = new SimpleDateFormat("yyyy-MM-dd")
-                    def str = dformat.format(d)
+                    def d = LocalDate.now()
+                    def currentDay = d.dayOfMonth
                 }
                sh 'echo "Deploying..."'
                withCredentials([sshUserPrivateKey(credentialsId: 'ww-prod-cred', keyFileVariable: 'SSH_KEY')]) {
                 sh '''
-                    ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'mkdir $str'
-                    scp -i $env.WW_PROD_PSW -r backend $env.WW_PROD_USR@ec2-13-58-233-86.us-east-2.compute.amazonaws.com:/home/ec2-user/$str
+                    ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'mkdir test$currentDay'
+                    scp -i $env.WW_PROD_PSW -r backend $env.WW_PROD_USR@ec2-13-58-233-86.us-east-2.compute.amazonaws.com:/home/ec2-user/$test$currentDay
                 '''
                } 
               
