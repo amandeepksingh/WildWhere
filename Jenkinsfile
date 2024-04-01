@@ -1,10 +1,6 @@
-// def remote = [:]
-// remote.name ="ww-prd"
-// remote.host ="ec2-13-58-233-86.us-east-2.compute.amazonaws.com"
-// remote.allowAnyHosts = true
-
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+
 pipeline {
     agent any
      environment{
@@ -49,9 +45,11 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
+                    import java.time.LocalDate
+                    
                     def d = LocalDate.now()
                     def currentDay = d.dayOfMonth
-                    // echo currentDay
+                    println currentDay
                 }
                sh 'echo "Deploying..."'
                withCredentials([sshUserPrivateKey(credentialsId: 'ww-prod-cred', keyFileVariable: 'SSH_KEY')]) {
@@ -61,20 +59,7 @@ pipeline {
                     ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'node --version'
                 '''
                } 
-              
-            // script {
-            //     sh '''
-            //         ssh -i $WW_PROD_PSW $WW_PROD_USR@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'mkdir newtest'
-            //         scp -i $env.WW_PROD_PSW -r backend $env.WW_PROD_USR@ec2-13-58-233-86.us-east-2.compute.amazonaws.com:/home/ec2-user/newtest
-            //     '''
-            // }
-               
             }
         }
     }
-    
-    // Only run this pipeline for branches with names starting with 'feature/'
-    // when {
-    //     branch 'feature/*'
-    // }
 }
