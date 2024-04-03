@@ -103,6 +103,8 @@ async function imgUpload(idType, req, res, next) {
     } else if (idType === "post") {
         if (req.body.pid === undefined) {
             return res.status(400).json({message: 'pid is required'})
+        } else {
+            id = req.body.pid
         }
     } //leaving open to other idTypes
     if (req.files === undefined || req.files['img'] === undefined) {

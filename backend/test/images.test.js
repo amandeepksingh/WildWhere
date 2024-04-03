@@ -38,7 +38,7 @@ describe("IMAGES: test upload", () => {
             .attach('img', 'test/testImages/test1.jpg')
         assert.strictEqual(resp.status, 200)
         assert.strictEqual(resp.body.message, "file upload successful")
-        await request(app).delete('/images/userProfilePic/delete').send('uid',1) //teardown
+        await request(app).delete('/images/userProfilePic/delete').send('pid',1) //teardown
     })
     it("IMAGES: test post upload missing pid", async () => {
         const resp = await request(app).post('/images/postPic/upload')
