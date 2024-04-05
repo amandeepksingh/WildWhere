@@ -88,9 +88,10 @@ function createUser(req, res, next) {
      *  colorBlindrating int (optional)
      * @returns:
      *  message string 
-     *      `user created: ${uid}`
+     *      "user created"
      *      OR
      *      error message
+     *  uid string (on success)
      */
     //NO UID (randomly generated)
     const columns = ["email", "username", "bio", "pfpLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
@@ -119,7 +120,8 @@ function createUser(req, res, next) {
             })
         }
         return res.status(200).json({
-            message: `user created: ${uid}`
+            message: "user created",
+            uid: uid
         })
     })
 }

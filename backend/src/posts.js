@@ -110,9 +110,10 @@ function createPost(req, res, next) {
      *  coordinate (float,float) (optional)
      * @returns:
      *  message string
-     *      `post created: ${pid}`
+     *      "post created"
      *      OR
      *      error message
+     *  pid string (on success)
     */
     var dict = {}
     //NO PID (randomly generated)
@@ -140,7 +141,8 @@ function createPost(req, res, next) {
             })
         }
         return res.status(200).json({
-            message: `post created: ${pid}`
+            message: "post created",
+            pid: pid
         })
     })
 }
