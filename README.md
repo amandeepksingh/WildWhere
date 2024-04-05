@@ -61,7 +61,7 @@ After sending a request to an endpoint with a method and input JSON body, you'll
 
 #### Example
 
-Then you could  run a request to the endpoint _ec2Host/users/createUser_ that uses a _Post_ method and send _{uid: 582, username: John254}_ as its input JSON body.
+Then you could run a request to the endpoint _ec2Host/users/createUser_ that uses a _Post_ method and send _{uid: 582, username: John254}_ as its input JSON body.
 
 ##### In browser
 
@@ -115,7 +115,7 @@ _selecting users_: Used to select all users matching input JSON body and return 
 | :-------: | :----: | :-------------: | :---: |  :------------------: | :---------------: |
 | _ec2Host/users/selectUser_ | _get_ | _JSON body of following_ | _optional or required_ | _200_ | _array of JSON bodies of following_ |
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---: |
-||| uid int | optional || uid int
+||| uid string | optional || uid string
 ||| email string | optional || email string
 ||| username string | optional || username string
 ||| bio string | optional || bio string
@@ -131,7 +131,7 @@ _creating users_: Used to create user with attributes matching the input JSON bo
 | :-------: | :----: | :-------------: | :-------------: | :------------------: | :---------------: |
 | _ec2Host/users/createUser_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string |
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---: |
-||| uid int | AUTO-GENERATED (starts from 1) || user created
+||| uid string | AUTO-GENERATED (starts from 1) || user created
 ||| email string | optional || _or_
 ||| username string | optional || error message
 ||| bio string | optional || 
@@ -146,7 +146,7 @@ _updating users_: Used to update user with given UID so the match the input JSON
 | :-------: | :----: | :-------------: | :-------------: | :------------------: | :---------------: |
 | _ec2Host/users/updateUserByUID_ | _put_ | _JSON body of following_ | _optional or required_ | _200_ | string |
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---: |
-||| uid int | required || user with uid ${testInput.uid} updated
+||| uid string | required || user with uid ${uid} updated
 ||| email string | optional || _or_
 ||| username string | optional || error message
 ||| bio string | optional || 
@@ -161,8 +161,8 @@ _deleting users_: Used to delete user with given UID.
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
 | _ec2Host/users/deleteUserByUID_ | _delete_ | _JSON body of following_ | _optional or required_ | _200_ | string
 | :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
-||| uid int | requried || user with uid ${testInput.uid} deleted if existed
-|||||| _or_
+||| uid string | requried || user with uid ${uid} deleted if existed
+|||||| _or_ 
 |||||| error message
 
 
@@ -174,8 +174,8 @@ _selecting posts_: Used to select all posts matching input JSON body and return 
 | :-------: | :----: | :-------------: | :---: |  :------------------: | :---------------: |
 | _ec2Host/posts/selectPost_ | _get_ | _JSON body of following_ | _optional or required_ | _200_ | _array of JSON bodies of following_ |
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---: |
-||| pid int | optional || pid int
-||| uid int | optional || uid int
+||| pid string | optional || pid string
+||| uid string | optional || uid string
 ||| radius int | optional || radius int 
 ||| imgLink string | optional || imgLink string
 ||| starttime timestamp YYYY/MM/DD/HH24/MI/ss | optional || starttime timestamp
@@ -188,8 +188,8 @@ _creating posts_: Used to create post with attributes matching the input JSON bo
 | :-------: | :----: | :-------------: | :-------------: | :------------------: | :---------------: |
 | _ec2Host/posts/createPost_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string |
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---: |
-||| pid int | AUTO-GENERATED (starts from 1) || post created
-||| uid int | REQUIRED || _or_
+||| pid string | AUTO-GENERATED (starts from 1) || post created
+||| uid string | REQUIRED || _or_
 ||| imgLink string | optional || error message
 ||| datetime timestamp YYYY-MM-DD HH:MM:SS | optional ||
 ||| coordinate point (longitude [-180, 180], latitude [-90, 90]) e.g. (-169.2, 25.0) | REQUIRED ||
@@ -199,8 +199,8 @@ _updating posts_: Used to update post with given PID so the match the input JSON
 | :-------: | :----: | :-------------: | :-------------: | :------------------: | :---------------: |
 | _ec2Host/posts/updatePostByPID_ | _put_ | _JSON body of following_ | _optional or required_ | _200_ | string |
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---: |
-||| pid int | AUTO-GENERATED || post with pid ${testInput.pid} updated
-||| uid int | optional || _or_
+||| pid string | AUTO-GENERATED || post with pid ${pid} updated
+||| uid string | optional || _or_
 ||| imgLink string | optional || error message
 ||| datetime timestamp | optional ||
 ||| coordinate point | optional ||
@@ -210,7 +210,7 @@ _deleting posts_: Used to delete post with given PID.
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
 | _ec2Host/posts/deletePostByPID_ | _delete_ | _JSON body of following_ | _optional or required_ | _200_ | string
 | :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
-||| pid int | REQUIRED || user with pid ${testInput.pid} deleted if existed
+||| pid string | REQUIRED || user with pid ${pid} deleted if existed
 |||||| _or_
 |||||| error message
 
