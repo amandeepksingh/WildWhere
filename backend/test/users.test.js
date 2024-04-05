@@ -20,8 +20,6 @@ const pool = new Pool({
 async function teardown() { //TODO before each run. Using before() or after() seems to cause async issues
     await pool.query("DELETE FROM users;")
     await pool.query("DELETE FROM posts;")
-    await pool.query("ALTER SEQUENCE users_uid_seq RESTART WITH 1;")
-    await pool.query("ALTER SEQUENCE posts_pid_seq RESTART WITH 1;")
 }
 
 
@@ -39,9 +37,11 @@ describe("selecting users", () => {
         const resp1 = await request(app)
         .post('/users/createUser')
         .send('email=jj@umass')
+        const uid = resp1.body.uid
+
         const resp2 = await request(app)
         .get('/users/selectUser')
-        .send('uid=1') //send body parameters
+        .send(`uid=${uid}`) //send body parameters
         .send('email=jj@umas') //send body parameters
         assert.strictEqual(resp2.status,200)
         assert.deepStrictEqual(resp2.body.message, [])
@@ -51,15 +51,17 @@ describe("selecting users", () => {
         const resp1 = await request(app)
         .post('/users/createUser')
         .send('email=jj@umass')
-        assert.deepStrictEqual(resp1.body.message,`user created`)
+        assert.deepStrictEqual(resp1.body.message, `user created`)
+        const uid = resp1.body.uid
+
         const resp2 = await request(app)
         .get('/users/selectUser')
-        .send('uid=1') //send body parameters
+        .send(`uid=${uid}`) //send body parameters
         .send('email=jj@umass') //send body parameters
         assert.strictEqual(resp2.status,200)
         assert.deepStrictEqual(resp2.body.message, [
             {
-                "uid": 1,
+                "uid": uid,
                 "email": 'jj@umass',
                 "username": null,
                 "bio": null,
@@ -76,14 +78,16 @@ describe("selecting users", () => {
         const resp1 = await request(app)
         .post('/users/createUser')
         .send('email=jj@umass')
+        const uid = resp1.body.uid
+
         const resp2 = await request(app)
         .get('/users/selectUser')
-        .send('uid=1') //send body parameters
+        .send(`uid=${uid}`) //send body parameters
         .send('email=jj@umass') //send body parameters
         assert.strictEqual(resp2.status,200)
         assert.deepStrictEqual(resp2.body.message, [
             {
-                "uid": 1,
+                "uid": uid,
                 "email": "jj@umass",
                 "username": null,
                 "bio": null,
@@ -100,16 +104,20 @@ describe("selecting users", () => {
         const resp1 = await request(app)
         .post('/users/createUser')
         .send('email=jj@umass')
+        const uid1 = resp1.body.uid
+
         const resp1b = await request(app)
         .post('/users/createUser')
         .send('email=jj@umass')
+        const uid2 = resp1b.body.uid
+
         const resp2 = await request(app)
         .get('/users/selectUser')
         .send('email=jj@umass')
         assert.strictEqual(resp2.status,200)
         assert.deepStrictEqual(resp2.body.message, [
             {
-                "uid": 1,
+                "uid": uid1,
                 "email": "jj@umass",
                 "username": null,
                 "bio": null,
@@ -120,7 +128,7 @@ describe("selecting users", () => {
                 "colorblindrating": null
             },
             {
-                "uid": 2,
+                "uid": uid2,
                 "email": "jj@umass",
                 "username": null,
                 "bio": null,
@@ -191,12 +199,12 @@ describe("creating users", () => {
 describe("updating users", () => {
     it("USER: update user with email", async () => {
         await teardown()
-        const uid = 1,
-            email = "jj@umass.edu"
+        const email = "jj@umass.edu"
         const resp1 = await request(app)
         .post('/users/createUser')
         assert.strictEqual(resp1.status, 200)
         assert.strictEqual(resp1.body.message, `user created`)
+        const uid = resp1.body.uid
         
         const resp2 = await request(app)
         .put('/users/updateUserByUID')
@@ -230,11 +238,11 @@ describe("updating users", () => {
 describe("deleting users", () => {
     it("USER: delete user by ID", async () => {
         await teardown()
-        const uid = 1
         const resp1 = await request(app)
         .post('/users/createUser')
         assert.strictEqual(resp1.status, 200)
         assert.strictEqual(resp1.body.message, `user created`)
+        const uid = resp1.body.uid
 
         const resp2 = await request(app)
         .delete('/users/deleteUserByUID')
