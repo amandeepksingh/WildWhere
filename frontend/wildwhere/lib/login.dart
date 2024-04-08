@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wildwhere/mapscreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -53,10 +52,10 @@ class _LoginState extends State<Login> {
               children: [
                 const SizedBox(height: 80),
                 googleSignIn(context),
-                const SizedBox(height: 25),
-                appleSignIn(context),
-                const SizedBox(height: 25),
-                fbSignIn(context)
+                // const SizedBox(height: 25), //TODO
+                // appleSignIn(context),
+                // const SizedBox(height: 25), //TODO
+                // fbSignIn(context)
               ],
             ),
           ),
