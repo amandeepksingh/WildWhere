@@ -146,7 +146,7 @@ _updating users_: Used to update user with given UID so the match the input JSON
 | :-------: | :----: | :-------------: | :-------------: | :------------------: | :---------------: |
 | _ec2Host/users/updateUserByUID_ | _put_ | _JSON body of following_ | _optional or required_ | _200_ | string |
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---: |
-||| uid string | required || user with uid ${uid} updated
+||| uid string | REQUIRED || user with uid ${uid} updated
 ||| email string | optional || _or_
 ||| username string | optional || error message
 ||| bio string | optional || 
@@ -181,7 +181,9 @@ _selecting posts_: Used to select all posts matching input JSON body and return 
 ||| starttime timestamp YYYY/MM/DD/HH24/MI/ss | optional || starttime timestamp
 ||| endtime timestamp YYYY/MM/DD/HH24/MI/ss | optional || endtime timestamp
 ||| coordinate point (longitude [-180, 180], latitude [-90, 90]) e.g. (-169.2, 25.0) | optional (required for non-null radius) || coordinate point
-
+||| animalName string | optional || animalName string
+||| quantity int | optional || quantity int
+||| activity string | optional || activity string
 
 _creating posts_: Used to create post with attributes matching the input JSON body.
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
@@ -193,17 +195,23 @@ _creating posts_: Used to create post with attributes matching the input JSON bo
 ||| imgLink string | optional || error message
 ||| datetime timestamp YYYY-MM-DD HH:MM:SS | optional ||
 ||| coordinate point (longitude [-180, 180], latitude [-90, 90]) e.g. (-169.2, 25.0) | REQUIRED ||
+||| animalName string | optional ||
+||| quantity int | optional ||
+||| activity string | optional ||
 
 _updating posts_: Used to update post with given PID so the match the input JSON body.
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :-------------: | :------------------: | :---------------: |
 | _ec2Host/posts/updatePostByPID_ | _put_ | _JSON body of following_ | _optional or required_ | _200_ | string |
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---: |
-||| pid string | AUTO-GENERATED || post with pid ${pid} updated
+||| pid string | REQUIRED || post with pid ${pid} updated
 ||| uid string | optional || _or_
 ||| imgLink string | optional || error message
 ||| datetime timestamp | optional ||
 ||| coordinate point | optional ||
+||| animalName string | optional ||
+||| quantity int | optional ||
+||| activity string | optional ||
 
 _deleting posts_: Used to delete post with given PID.
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
@@ -216,5 +224,4 @@ _deleting posts_: Used to delete post with given PID.
 
 #### Database infrastructure
 
-Our PostgreSQL database is hosted on RDS as a part of the AWS suite. We use an EC2 to interact with it and the tables we use in the database are shown below:
-![image](https://github.com/amandeepksingh/WildWhere/assets/89215822/5f569ade-4fd8-4555-b45d-6d43839828b6)
+Our PostgreSQL database is hosted on RDS as a part of the AWS suite. We use an EC2 to interact with it and the tables we use in the database are shown below: ![db schema diagram](Schema.png)
