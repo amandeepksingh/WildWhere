@@ -19,5 +19,8 @@ CREATE TABLE POSTS (
     uid CHAR(16) NOT NULL REFERENCES Users(uid) ON DELETE CASCADE,
     imgLink VARCHAR(50),
     datetime TIMESTAMP,
-    coordinate POINT NOT NULL
+    coordinate POINT NOT NULL,
+    animalName VARCHAR(50),
+    quantity INTEGER,
+    activity VARCHAR(50)
 );

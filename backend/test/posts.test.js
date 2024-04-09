@@ -62,7 +62,10 @@ describe("selecting posts", () => {
                     "uid": uid,
                     "imglink": null,
                     "datetime": null,
-                    "coordinate": {"x": 0.0, "y": 0.0}
+                    "coordinate": {"x": 0.0, "y": 0.0},
+                    "activity": null,
+                    "animalname": null,
+                    "quantity": null
                 }
             ])
         })
@@ -78,6 +81,9 @@ describe("selecting posts", () => {
             .send(`uid=${uid}`)
             .send('datetime=1997-12-17 07:37:16-08') //check formating
             .send('coordinate=(2.5, 7.9)') //check single quotes
+            .send('animalName=John')
+            .send('quantity=8')
+            .send('activity=running')
             const pid = create_post.body.pid
 
             const resp = await request(app)
@@ -94,7 +100,10 @@ describe("selecting posts", () => {
                     "uid": uid,
                     "imglink": null,
                     "datetime": '1997-12-17T12:37:16.000Z', 
-                    "coordinate": {"x": 2.5, "y": 7.9} 
+                    "coordinate": {"x": 2.5, "y": 7.9},
+                    "activity": "running",
+                    "animalname": "John",
+                    "quantity": 8
                 }
             ])
         })
@@ -127,14 +136,20 @@ describe("selecting posts", () => {
                     "uid": uid,
                     "imglink": null,
                     "datetime": null,
-                    "coordinate": {"x": 3.6, "y": 5.8}
+                    "coordinate": {"x": 3.6, "y": 5.8},
+                    "activity": null,
+                    "animalname": null,
+                    "quantity": null
                 },
                 {
                     "pid": pid2,
                     "uid": uid,
                     "imglink": null,
                     "datetime": null,
-                    "coordinate": {"x": 2.6, "y": 7.5}
+                    "coordinate": {"x": 2.6, "y": 7.5},
+                    "activity": null,
+                    "animalname": null,
+                    "quantity": null
                 }
             ])
         })
@@ -166,7 +181,10 @@ describe("selecting posts", () => {
                     "uid": uid,
                     "imglink": null,
                     "datetime": null,
-                    "coordinate": {"x": 177.0, "y": 0.0} //tuple
+                    "coordinate": {"x": 177.0, "y": 0.0},
+                    "activity": null,
+                    "animalname": null,
+                    "quantity": null
                 }
             ])
         })
@@ -199,7 +217,10 @@ describe("selecting posts", () => {
                     "uid": uid,
                     "imglink": null,
                     "datetime": null,
-                    "coordinate": {"x": 177.0, "y": 0.0} //tuple
+                    "coordinate": {"x": 177.0, "y": 0.0},
+                    "activity": null,
+                    "animalname": null,
+                    "quantity": null
                 }
             ])
         })
@@ -244,21 +265,30 @@ describe("selecting posts", () => {
                     "uid": uid,
                     "imglink": null,
                     "datetime": null,
-                    "coordinate": {"x":177.0, "y":0.0} 
+                    "coordinate": {"x":177.0, "y":0.0},
+                    "activity": null,
+                    "animalname": null,
+                    "quantity": null
                 },
                 {
                     "pid": pid2,
                     "uid": uid,
                     "imglink": null,
                     "datetime": null,
-                    "coordinate": {"x":50.0, "y":50.0}
+                    "coordinate": {"x":50.0, "y":50.0},
+                    "activity": null,
+                    "animalname": null,
+                    "quantity": null
                 },
                 {
                     "pid": pid4,
                     "uid": uid,
                     "imglink": null,
                     "datetime": null,
-                    "coordinate": {"x":100.0, "y":0.0}
+                    "coordinate": {"x":100.0, "y":0.0},
+                    "activity": null,
+                    "animalname": null,
+                    "quantity": null
                 }
             ])
         })
@@ -292,7 +322,10 @@ describe("selecting posts", () => {
                     "uid": uid,
                     "imglink": null,
                     "datetime": '2008-12-17T12:37:16.000Z',
-                    "coordinate": {"x": 2.6, "y": 0.0} //tuple
+                    "coordinate": {"x": 2.6, "y": 0.0},
+                    "activity": null,
+                    "animalname": null,
+                    "quantity": null
                 }
             ])
         })
@@ -326,7 +359,10 @@ describe("selecting posts", () => {
                     "uid": uid,
                     "imglink": null,
                     "datetime": '1997-12-17T12:37:16.000Z',
-                    "coordinate": {"x": 177.0, "y": 0.0} //tuple
+                    "coordinate": {"x": 177.0, "y": 0.0},
+                    "activity": null,
+                    "animalname": null,
+                    "quantity": null
                 }
             ])
         })
@@ -367,7 +403,10 @@ describe("selecting posts", () => {
                     "uid": uid,
                     "imglink": null,
                     "datetime": '2008-12-17T12:37:16.000Z',
-                    "coordinate": {"x": 2.6, "y": 0.0} //tuple
+                    "coordinate": {"x": 2.6, "y": 0.0},
+                    "activity": null,
+                    "animalname": null,
+                    "quantity": null
                 }
             ])
         })
@@ -479,7 +518,10 @@ describe("updating posts", () => {
                     "uid": uid,
                     "imglink": "test_link",
                     "datetime": null,
-                    "coordinate": {"x":0.0, "y":0.0}
+                    "coordinate": {"x":0.0, "y":0.0},
+                    "activity": null,
+                    "animalname": null,
+                    "quantity": null
                 }
             ]
         ) 

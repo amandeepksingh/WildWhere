@@ -31,8 +31,11 @@ function selectPost(req, res, next) {
      *  radius int (optional), 
      *  imgLink string (optional),
      *  starttime string (optional),
-     *  enttime string (optional),
+     *  endtime string (optional),
      *  coordinate (float,float) (optional)
+     *  animalName string (optional)
+     *  quantity int (optional)
+     *  activity string (optional)
      * @returns:
      *   message []{
      *      pid string,
@@ -40,7 +43,10 @@ function selectPost(req, res, next) {
      *      radius int,
      *      imgLink string,
      *      datetime string,
-     *      coordinate (x: float, y: float)
+     *      coordinate (x: float, y: float),
+     *      animalName string,
+     *      quantity int,
+     *      activity string
      *  }
      */
     var condits = []
@@ -81,6 +87,18 @@ function selectPost(req, res, next) {
         condits.push(`datetime <= TO_TIMESTAMP($${i++}, 'YYYY/MM/DD/HH24:MI:ss')`)
         values.push(req.body.endtime)
     }
+    if (req.body.animalName) {
+        condits.push(`animalName = $${i++}`)
+        values.push(req.body.animalName)
+    }
+    if (req.body.quantity) {
+        condits.push(`quantity = $${i++}`)
+        values.push(req.body.quantity)
+    }
+    if (req.body.activity) {
+        condits.push(`activity = $${i++}`)
+        values.push(req.body.activity)
+    }
 
     const query = condits.length === 0 ? "SELECT * FROM posts" 
         : {
@@ -107,7 +125,10 @@ function createPost(req, res, next) {
      *  uid string (required),
      *  imgLink string (optional),
      *  datetime string (optional),
-     *  coordinate (float,float) (optional)
+     *  coordinate (float,float) (optional),
+     *  animalName string,
+     *  quantity int,
+     *  activity string
      * @returns:
      *  message string
      *      "post created"
@@ -123,6 +144,9 @@ function createPost(req, res, next) {
     if (req.body.datetime) dict['datetime'] = req.body.datetime //check postgres
     if (req.body.coordinate) dict['coordinate'] = req.body.coordinate // postgres: string with format '(x, y)' where x, y are floats
     else return res.status(400).json({"message": "missing coordinates"})
+    if (req.body.animalName) dict['animalName'] = req.body.animalName
+    if (req.body.quantity) dict['quantity'] = req.body.quantity
+    if (req.body.activity) dict['activity'] = req.body.activity
 
     const pid = randomstring.generate(16)
     dict['pid'] = pid
@@ -154,7 +178,10 @@ function updatePostByPID(req, res, next) {
      *  uid string (optional),
      *  imgLink string (optional),
      *  datetime string (optional),
-     *  coordinate (float,float) (optional)
+     *  coordinate (float,float) (optional),
+     *  animalName string,
+     *  quantity int,
+     *  activity string
      * @returns:
      *  message string
      *      `post with pid ${pid} updated`
@@ -172,6 +199,9 @@ function updatePostByPID(req, res, next) {
     if (req.body.imgLink) updates["imgLink"] = req.body.imgLink
     if (req.body.datetime) updates["datetime"] = req.body.datetime //check postgres format
     if (req.body.coordinate) updates["coordinate"] = req.body.coordinate //check postgres format
+    if (req.body.animalName) updates['animalName'] = req.body.animalName
+    if (req.body.quantity) updates['quantity'] = req.body.quantity
+    if (req.body.activity) updates['activity'] = req.body.activity
 
     const len = Object.keys(updates).length
     if(len > 0) {
