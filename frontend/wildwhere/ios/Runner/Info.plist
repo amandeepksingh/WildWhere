@@ -33,6 +33,10 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>The app needs library permissions.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>The app needs camera permissions.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>The app needs location permission</string>
 	<key>NSLocationAlwaysUsageDescription</key>
