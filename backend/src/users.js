@@ -2,6 +2,7 @@
 const express = require('express')
 const Pool = require('pg').Pool;
 require('dotenv').config({path: "../.env"});
+const randomstring = require('randomstring')
 
 //creates DB connection
 const pool = new Pool({
@@ -25,7 +26,7 @@ users.delete('/deleteUserByUID', (req, res, next) => deleteUserByUID(req, res, n
 function selectUser(req, res, next) {
     /**
      * @param:
-     *  uid int (optional),
+     *  uid string (optional),
      *  email string (optional)
      *  username string (optional)
      *  bio string (optional)
@@ -36,7 +37,7 @@ function selectUser(req, res, next) {
      *  colorBlindrating int (optional)
      * @return:
      *   message []{
-     *      uid int,
+     *      uid string,
      *      email string,
      *      username string,
      *      bio string,
@@ -87,11 +88,12 @@ function createUser(req, res, next) {
      *  colorBlindrating int (optional)
      * @returns:
      *  message string 
-     *      user created
+     *      "user created"
      *      OR
      *      error message
+     *  uid string (on success)
      */
-    //NO UID, AUTO-INCREMENT STARTING FROM 1
+    //NO UID (randomly generated)
     const columns = ["email", "username", "bio", "pfpLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
     var dict = {}
     for(const col of columns) {
@@ -99,6 +101,9 @@ function createUser(req, res, next) {
             dict[col] = req.body[col]
         }
     }
+
+    const uid = randomstring.generate(16)
+    dict['uid'] = uid
 
     const fields = Object.keys(dict).join(', ')
     const placeholders = Object.keys(dict).map((_, i) => `$${i + 1}`).join(', ')
@@ -115,7 +120,8 @@ function createUser(req, res, next) {
             })
         }
         return res.status(200).json({
-            message: `user created`
+            message: "user created",
+            uid: uid
         })
     })
 }
@@ -123,7 +129,7 @@ function createUser(req, res, next) {
 function updateUserByUID(req, res, next) {
     /**
      * @param:
-     *  uid int (required),
+     *  uid string (required),
      *  email string (optional)
      *  username string (optional)
      *  bio string (optional)
@@ -176,7 +182,7 @@ function updateUserByUID(req, res, next) {
 function deleteUserByUID(req, res, next) {
     /**
      * @param:
-     *   uid int (required)
+     *   uid string (required)
      * @returns:
      *   message string:
      *      `user with uid ${uid} deleted if existed`
