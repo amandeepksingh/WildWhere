@@ -79,9 +79,10 @@ pipeline {
                 // }
                sh 'echo "Deploying..."'
                withCredentials([sshUserPrivateKey(credentialsId: 'ww-prod-cred', keyFileVariable: 'SSH_KEY')]) {
-                        sh '''
-                            ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'sudo su'
-                        '''
+                        // sh '''
+                        //     ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'sudo su'
+                        //     ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'whoami'
+                        // '''
                     script {
                         def reg = input(
                         message: 'Deploy on to production server?', 
@@ -95,7 +96,7 @@ pipeline {
                         if(reg == "yes") {
                             try {
                             sh '''
-                                ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'rm -r WWBUILD'
+                                ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'sudo rm -rf WWBUILD'
                             '''
                         } catch(Exception e) {
 
