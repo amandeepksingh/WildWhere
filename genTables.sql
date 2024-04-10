@@ -7,7 +7,7 @@ CREATE TABLE Users (
     email VARCHAR(50),
     username VARCHAR(50),
     bio VARCHAR(50),
-    pfpLink VARCHAR(50),
+    pfpLink VARCHAR(5000),
     superUser BOOLEAN,
     locationPerm BOOLEAN,
     notificationPerm BOOLEAN,
@@ -17,7 +17,7 @@ CREATE TABLE Users (
 CREATE TABLE POSTS (
     pid CHAR(16) PRIMARY KEY,
     uid CHAR(16) NOT NULL REFERENCES Users(uid) ON DELETE CASCADE,
-    imgLink VARCHAR(50),
+    imgLink VARCHAR(5000),
     datetime TIMESTAMP,
     coordinate POINT NOT NULL,
     animalName VARCHAR(50),
