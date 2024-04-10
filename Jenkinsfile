@@ -13,7 +13,6 @@ pipeline {
                 sh 'echo "filtering out excess files"'
                 sh 'rm -r frontend'
                 sh 'rm .gitignore'
-                sh 'rm genTables.sql'
                 sh 'rm README.md'
                 sh 'rm .DS_Store'
                 sh 'rm -r .git'
@@ -97,6 +96,7 @@ pipeline {
                             try {
                             sh '''
                                 ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'sudo rm -rf WWBUILD'
+                                sh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'whoami'
                             '''
                         } catch(Exception e) {
 
