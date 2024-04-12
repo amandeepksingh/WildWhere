@@ -1,7 +1,7 @@
 //imports
 const express = require('express');
 const app = require('./app');
-require('dotenv').config({path: "../.env"});
+require('dotenv').config({path: "../../.env"});
 
 //Creates server to listen. Sends requests from server to app
 const server = express();
