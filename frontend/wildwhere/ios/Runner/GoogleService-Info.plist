@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CLIENT_ID</key>
+	<string>846106559591-c2l9dcbp4hk38s2ejne016emfpin63ae.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.846106559591-c2l9dcbp4hk38s2ejne016emfpin63ae</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBTUQ9breCNRJJaUKrI2T2YEb_1qCxYRJ4</string>
+	<key>GCM_SENDER_ID</key>
+	<string>846106559591</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.wildwhere</string>
+	<key>PROJECT_ID</key>
+	<string>wildwherev2</string>
+	<key>STORAGE_BUCKET</key>
+	<string>wildwherev2.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:846106559591:ios:e513f31a99be0da54f80c2</string>
+</dict>
+</plist>
