@@ -4,9 +4,14 @@ const bodyParser = require('body-parser')
 const posts = require('./posts')
 const users = require('./users')
 const getHelpTxt = require('./help');
-
+const morgan = require('morgan');
+const logger = require('./logger')
 //creates app
 const app = express();
+
+//setup logger and integrate as middleware
+new logger();
+app.use(morgan('combined', { stream: logger.requestLogStream }));
 
 //enables app to parse JSON bodies
 app.use(bodyParser.urlencoded({extended: true}));
