@@ -1,11 +1,30 @@
 //imports
 const express = require('express')
+
+const Pool = require('pg').Pool;
+require('dotenv').config({path: "../.env"});
+
+//creates DB connection
+const pool = new Pool({
+    user: process.env.dbUser,
+    host: process.env.dbHost,
+    database: process.env.dbName,
+    password: process.env.dbPass,
+    port: process.env.dbPort,
+	// ssl: {
+	// 	rejectUnauthorized:false
+	// } //used only on EC2
+});
+
 const multer = require('multer')
 const path = require('path')
 const fs = require('fs').promises;
 const fsAsync = require('fs');
 const AWSs3Module = require('@aws-sdk/client-s3');
 const AWSPreSigner = require('@aws-sdk/s3-request-presigner');
+
+
+
 
 //configure storage point for files
 const imageStore = multer.diskStorage({
@@ -30,11 +49,13 @@ const s3Client = new AWSs3Module.S3Client({
 //route to endpoints
 const images = express()
 images.post('/userProfilePic/upload', imageUpload.fields([{name: 'uid'}, {name: 'img', maxCount: 1}]), (req, res, next) => imgUpload("user", req, res, next))
-images.get('/userProfilePic/access', imageUpload.none(), (req, res, next) => imgAccess("user", req, res, next))
-images.delete('/userProfilePic/delete', imageUpload.none(), (req, res, next) => imgDelete("user", req, res, next)) 
-images.post('/postPic/upload', imageUpload.fields([{name: 'pid'}, {name: 'img', maxCount: 1}]), (req, res, next) => imgUpload("post", req, res, next))
-images.get('/postPic/access', imageUpload.none(), (req, res, next) => imgAccess("post", req, res, next))
-images.delete('/postPic/delete', imageUpload.none(), (req, res, next) => imgDelete("post", req, res, next)) 
+//images.get('/userProfilePic/access', imageUpload.none(), (req, res, next) => imgAccess("user", req, res, next)) //DELETE
+images.delete('/userProfilePic/delete', imageUpload.fields([{name: 'uid'}]), (req, res, next) => imgDelete("user", req, res, next)) 
+images.post('/postPic/upload', imageUpload.fields([{name: 'uid'}, {name: 'pid'}, {name: 'img', maxCount: 1}]), (req, res, next) => imgUpload("post", req, res, next))
+//images.get('/postPic/access', imageUpload.none(), (req, res, next) => imgAccess("post", req, res, next)) //DELETE
+images.delete('/postPic/delete', imageUpload.fields({name: 'uid'}, {name: 'pid'}), (req, res, next) => imgDelete("post", req, res, next)) 
+
+
 
 //s3 helper functions
 function s3Put(res, fileName, contentType) {
@@ -49,10 +70,14 @@ function s3Put(res, fileName, contentType) {
     })
 }
 
-function s3ListFiles(type) {
+
+
+//FILE STRUCTURE images/uid/ profile picture OR pid folder for that user
+function s3ListFiles(uid, pid) {
+    const prefix = `images/${uid}/${pid}`; //<--------------------------------------------------------------------------------------ASSUMPTIONL: FOLDER PATH
     const params = {
         Bucket: process.env.accessPoint,
-        Prefix: `images/${type}/`
+        Prefix: prefix
     }
     return s3Client.send(new AWSs3Module.ListObjectsV2Command(params)).then(data => {
         if (data.Contents === undefined) throw new Error('file does not exist')
@@ -60,13 +85,15 @@ function s3ListFiles(type) {
     })
 }
 
+
+//returns the image URL, to be entered into the database
 function s3DownloadFile(res, fileName) {
     const params = {
         Bucket: process.env.accessPoint,
         Key: fileName
     }
     return AWSPreSigner.getSignedUrl(s3Client, new AWSs3Module.GetObjectCommand(params)).then(url => {
-        res.status(200).json({message:url})
+        res.status(200).json({"message":url})
     })
 }
 
@@ -93,25 +120,30 @@ async function imgUpload(idType, req, res, next) {
      *  error message
      */
     //confirm and shorthand req vars
-    var id
-    if (idType === "user") {
-        if (req.body.uid === undefined) {
-            return res.status(400).json({message: 'uid is required'})
-        } else {
-            id = req.body.uid
-        }
-    } else if (idType === "post") {
-        if (req.body.pid === undefined) {
-            return res.status(400).json({message: 'pid is required'})
-        } else {
-            id = req.body.pid
-        }
-    } //leaving open to other idTypes
+
+    //PFP -> maintain a single one, doesn't matter for posts, return link on BOTH, INSERT LINK into DB
+    var uid
+    var pid
+    if (req.body.uid === undefined) {
+        return res.status(400).json({message: 'uid is required'})
+    } else { uid = req.body.uid }
+    
+    if (idType === "user") { pid = "pfp" }
+    else if (idType === "post"){ 
+        if (req.body.pid === undefined) { return res.status(400).json({message: 'pid is required'}) }
+        else pid = req.body.pid 
+    }
+
     if (req.files === undefined || req.files['img'] === undefined) {
         return res.status(400).json({message: 'img must be specified'});
-    }
+    } //leaving open to other idTypes
+    
     
     //get file and extension
+
+     
+    //JFR
+
     const filePath = 'images/'
     const defaultBasename = 'unassigned'
     var fullFileName
@@ -123,26 +155,75 @@ async function imgUpload(idType, req, res, next) {
         }
     })    
     const extension = path.extname(fullFileName)
+    //ec2 FILE PATH, CHANGE LOCALLY FOR TESTING for NEW STRUCTURE
     const oldName = `${filePath}${defaultBasename}${extension}`
     
-    //rename file
-    const newName = `${filePath}${idType}/${id}${extension}`
+    //s3 FILE PATH -> RENAMED, FILE STRUCTURE IMPLEMENTATION
+    const newName = `${filePath}${uid}/${pid}/image${extension}` //RENAMED image to image.fileType for now, will request an image name / image ID for multi-image version
     await fs.rename(oldName, newName).catch(err => {
         return res.status(400).json({message: `Backend logic error: ${err.message}`})
     })
+    
+    //<-------------------------------------------------------------------------------------------------------------LIST FILES DOESN'T RESOLVE, DESPITE NO CHANGES
+    /*
+    await s3ListFiles(uid, pid).then(files => {
+        const input = `images/${uid}/${pid}/image`; //FILE PATH WITHOUT EXTENSION????
+        for (file of files) { 
+            if (file.includes(input)) {
+                return res.status(200).json({message: `An image already exists under this name.`})       }
+        } 
+    })
+    */
+    
 
-    //TODO delete existing from s3 if there
 
     //upload to s3 and clear local
+
+    //s3 key -> FILE/FORMAT (NOT DIRECTORY)
     const contentType = `image/${extension.substring(1)}`
-    return s3Put(res, newName, contentType).then(res => {
+    await s3Put(res, newName, contentType).then(res => {
+        //PUTS on s3 and DELETES from ec2
         fs.unlink(newName)
         return res
     }).catch(err => {
         return res.status(400).json({message: err.message})
     })
+
+    if(res.status === 400) {
+        //error handling
+        const message = res.message;
+        return res.status(400).json({
+            "message": res.message
+        }) 
+    }
+    //s3List FILES and then Download to generate URL and upload to DB
+    
+//use filename directly
+
+    return s3DownloadFile(res, newName).then(json => { //<-----------------------------------------NEVER ENTERS HERE, DOESN'T UPDATE TABLES
+        //use msg.url
+        //console.log(json)
+        const query = idType === "post" ? `UPDATE posts SET imgLink=${json.message} WHERE pid = ${pid}` : `UPDATE users SET pfpLink=${json.message} WHERE uid = ${uid}` ;
+        
+        return pool.query(query, (error, result) => {
+        if (error) {
+            return res.status(400).json({
+                "message": error.message
+            }) //propogate errors from DB up
+        }
+        return res.status(200).json({
+            "message": result.rows
+        }) //expected return
+    
+    }) })
+    .catch(err => {
+        return res.status(400).json({message: err.message})
+    })
+    
+    
 }
 
+/*
 async function imgAccess(idType, req, res, next) {
     /**
      * @param
@@ -152,7 +233,7 @@ async function imgAccess(idType, req, res, next) {
      *  img image
      *      or
      *  error message
-     */
+     *
     //confirm and shorthand req vars
     var id
     if (idType === "user") {
@@ -182,6 +263,8 @@ async function imgAccess(idType, req, res, next) {
     })
 }
 
+*/
+
 async function imgDelete(idType, req, res, next) {
     /**
      * @params
@@ -193,6 +276,19 @@ async function imgDelete(idType, req, res, next) {
      *  error
      */
     //confirm and shorthand req vars
+    var uid
+    var pid
+    if (req.body.uid === undefined) {
+        return res.status(400).json({message: 'uid is required'})
+    } else { uid = req.body.uid }
+    
+    if (idType === "user") { pid = "pfp" }
+    else if (idType === "post"){ 
+        if (req.body.pid === undefined) { return res.status(400).json({message: 'pid is required'}) }
+        else pid = req.body.pid 
+    }
+    
+   /*
     var id
     if (idType === "user") {
         if (req.body.uid === undefined) {
@@ -206,10 +302,33 @@ async function imgDelete(idType, req, res, next) {
         }
     } //leaving open to other idTypes
 
+    */
+   
+    const query = idType === "post" ? `UPDATE posts SET imgLink=NULL WHERE pid = ${pid}` : `UPDATE users SET pfpLink=NULL WHERE uid = ${uid}` ;
+        
+    await pool.query(query, (error, result) => {
+    if (error) {
+        return res.status(400).json({
+            "message": error.message
+        }) //propogate errors from DB up
+    }
+    return res.status(200).json({
+        message: result.rows
+    }) //expected return
+    })      
+
+    if(res.status === 400) {
+        //error handling
+        const message = res.message;
+        return res.status(400).json({
+            "message": res.message
+        }) 
+    }
+
     //get files, match file, delete file
-    return s3ListFiles(idType).then(files => {
+    return s3ListFiles(uid, pid).then(files => {
         for (file of files) {
-            if (file.includes(`images/${idType}/${id}`)) {
+            if (file.includes(`images/${uid}/${pid}/image`)) {
                 return file
             }
         }
