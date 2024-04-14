@@ -227,14 +227,6 @@ _uploading images_: Used to upload images
 ||| img image | REQUIRED || _or_
 ||| ||| error message
 
-_accessing images_: Used to get a signed URL to an image (can be used to download or display img)
-| Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
-| :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
-| _ec2Host/images/userProfilePic/access_ | _get__ | _JSON body of following_ | _optional or required_ | _200_ | string
-| :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
-||| uid int | REQUIRED || signed URL to image
-|||||| _or_
-|||||| error message
 
 _deleting images_: Used to delete image (signed URLs become invalid)
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
@@ -252,24 +244,18 @@ _uploading images_: Used to upload images
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
 | _ec2Host/images/postPic/upload_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string
 | :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
+||| uid int | REQUIRED || 'image upload successful'
 ||| pid int | REQUIRED || 'image upload successful'
 ||| img image | REQUIRED || _or_
 ||| ||| error message
 
-_accessing images_: Used to get a signed URL to an image (can be used to download or display img)
-| Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
-| :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
-| _ec2Host/images/postPic/access_ | _get__ | _JSON body of following_ | _optional or required_ | _200_ | string
-| :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
-||| pid int | REQUIRED || signed URL to image
-|||||| _or_
-|||||| error message
 
 _deleting images_: Used to delete image (signed URLs become invalid)
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
 | _ec2Host/images/postPic/delete_ | _delete_ | _JSON body of following_ | _optional or required_ | _200_ | string
 | :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
+||| uid int | REQUIRED || 'image upload successful'
 ||| pid int | REQUIRED || 'image delete successful'
 |||||| _or_
 |||||| error message
