@@ -43,9 +43,14 @@ pipeline {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ww-dev-cred', keyFileVariable: 'SSH_D_KEY')]) {
                     withCredentials([file(credentialsId: 'serverenv', variable: 'EnvFile')]) {
                         script {
-                            sh '''
-                                ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'cd WWBUILD/backend && pwd && sudo kill -9 "`cat pid.txt`"'
-                            '''
+                            try {
+                                sh '''
+                                    ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'cd WWBUILD/backend && pwd && sudo kill -9 "`cat pid.txt`"'
+                                '''
+                            } catch(Exception e) {
+
+                            }
+                            
                             try {
                                 def cm =  "  ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'rm -r WWBUILD'"
                                 def result = sh(script: cm, returnStatus: true)
