@@ -15,7 +15,6 @@ import 'package:geolocator/geolocator.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
-
   @override
   State<MapScreen> createState() => _MapState();
 }
@@ -24,30 +23,30 @@ class _MapState extends State<MapScreen> {
   late GoogleMapController mapController;
   final Set<Marker> _markers = {}; //makes set of markers
   Set<String> _tappedMarkerIds = {};
-  CameraPosition _currentCameraPosition = CameraPosition(
-    target: const LatLng(42.381030, -72.529010),
+  CameraPosition _currentCameraPosition = const CameraPosition(
+    target: LatLng(42.381030, -72.529010),
     zoom: 12.0,
   );
 
   bool _isCameraMoving = false;
   Future<void> _addMarker(String markerId, LatLng position) async { //method to add marker
-  final icon = await BitmapDescriptor.fromAssetImage(
-    const ImageConfiguration(),
-    'assets/images/markericon.png',
-  );
-
-  setState(() {
-    _markers.add(
-      Marker(
-        markerId: MarkerId(markerId),
-        position: position,
-        onTap: () {
-          _tappedMarkerIds.add(markerId);
-        },
-        icon: icon,
-      ),
+    final icon = await BitmapDescriptor.fromAssetImage(
+      const ImageConfiguration(),
+      'assets/images/markericon.png',
     );
-  });
+
+    setState(() {
+      _markers.add(
+        Marker(
+          markerId: MarkerId(markerId),
+          position: position,
+          onTap: () {
+            _tappedMarkerIds.add(markerId);
+          },
+          icon: icon,
+        ),
+      );
+    });
 }
 
 void _removeMarker(String markerId) { //method to remove marker
