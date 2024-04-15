@@ -65,7 +65,7 @@ describe("selecting users", () => {
                 "email": 'jj@umass',
                 "username": null,
                 "bio": null,
-                "pfplink": null,
+                "imglink": null,
                 "superuser": null,
                 "locationperm": null,
                 "notificationperm": null,
@@ -103,13 +103,14 @@ describe("selecting users", () => {
             {
                 "uid": "345",
                 "email": "jj@umass",
-                "username": "John",
-                "bio": "Student",
-                "pfplink": "test_link",
-                "superuser": true,
-                "locationperm": true,
-                "notificationperm": true,
-                "colorblindrating": 10
+
+                "username": null,
+                "bio": null,
+                "imglink": null,
+                "superuser": null,
+                "locationperm": null,
+                "notificationperm": null,
+                "colorblindrating": null
             }
         ])
     })
@@ -139,7 +140,7 @@ describe("selecting users", () => {
                 "email": "jj@umass",
                 "username": null,
                 "bio": null,
-                "pfplink": null,
+                "imglink": null,
                 "superuser": null,
                 "locationperm": null,
                 "notificationperm": null,
@@ -150,7 +151,7 @@ describe("selecting users", () => {
                 "email": "jj@umass",
                 "username": null,
                 "bio": null,
-                "pfplink": null,
+                "imglink": null,
                 "superuser": null,
                 "locationperm": null,
                 "notificationperm": null,
@@ -175,7 +176,7 @@ describe("creating users", () => {
             email: 'jj@umass.edu',
             username: 'jamesbarr',
             bio: 'bio',
-            pfpLink: 'just a link rn',
+            imglink: 'just a link rn',
             superUser: false,
             locationPerm: false,
             notificationPerm: true,
@@ -187,7 +188,7 @@ describe("creating users", () => {
         .send(`email=${testInput.email}`)
         .send(`username=${testInput.username}`)
         .send(`bio=${testInput.bio}`)
-        .send(`pfpLink=${testInput.pfpLink}`)
+        .send(`imglink=${testInput.imglink}`)
         .send(`superUser=${testInput.superUser}`)
         .send(`locationPerm=${testInput.locationPerm}`)
         .send(`notificationPerm=${testInput.notificationPerm}`)
@@ -200,7 +201,7 @@ describe("creating users", () => {
     testInput = {
         email: 'jj@umass.edu',
         username: 'jamesbarr',
-        pfpLink: 'just a link rn',
+        imglink: 'just a link rn',
         notificationPerm: true,
         colorBlindRating: 2
     }
@@ -208,7 +209,7 @@ describe("creating users", () => {
     .post('/users/createUser')
     .send(`email=${testInput.email}`)
     .send(`username=${testInput.username}`)
-    .send(`pfpLink=${testInput.pfpLink}`)
+    .send(`imglink=${testInput.imglink}`)
     .send(`notificationPerm=${testInput.notificationPerm}`)
     .send(`colorBlindRating=${testInput.colorBlindRating}`)
     assert.strictEqual(resp.body.message, `user created`)
@@ -225,6 +226,7 @@ describe("updating users", () => {
         assert.strictEqual(resp1.status, 200)
         assert.strictEqual(resp1.body.message, `user created`)
         const uid = resp1.body.uid
+
         
         const resp2 = await request(app)
         .put('/users/updateUserByUID')
@@ -244,7 +246,7 @@ describe("updating users", () => {
                     "email": email,
                     "username": null,
                     "bio": null,
-                    "pfplink": null,
+                    "imglink": null,
                     "superuser": null,
                     "locationperm": null,
                     "notificationperm": null,

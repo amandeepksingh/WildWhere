@@ -2,12 +2,13 @@ CREATE EXTENSION IF NOT EXISTS cube;
 
 CREATE EXTENSION IF NOT EXISTS earthdistance;
 
-CREATE TABLE users (
-    uid VARCHAR(128) PRIMARY KEY, 
-    email TEXT,
-    username TEXT,
-    bio TEXT,
-    pfpLink TEXT,
+
+CREATE TABLE Users (
+    uid CHAR(16) PRIMARY KEY, 
+    email VARCHAR(50),
+    username VARCHAR(50),
+    bio VARCHAR(50),
+    imgLink VARCHAR(5000),
     superUser BOOLEAN,
     locationPerm BOOLEAN,
     notificationPerm BOOLEAN,

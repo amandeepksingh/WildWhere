@@ -1,0 +1,284 @@
+//imports
+const express = require('express')
+const Pool = require('pg').Pool;
+const multer = require('multer')
+const path = require('path')
+const fs = require('fs').promises;
+const fsAsync = require('fs');
+const AWSs3Module = require('@aws-sdk/client-s3');
+const AWSPreSigner = require('@aws-sdk/s3-request-presigner');
+require('dotenv').config({path: "../.env"});
+
+//creates DB connection
+const pool = new Pool({
+    user: process.env.dbUser,
+    host: process.env.dbHost,
+    database: process.env.dbName,
+    password: process.env.dbPass,
+    port: process.env.dbPort,
+	// ssl: {
+	// 	rejectUnauthorized:false
+	// } //used only on EC2
+});
+
+//configure storage point for files
+const imageStore = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'images')
+    },
+    filename: function (req, file, cb) {
+      cb(null, "unassigned" + path.extname(file.originalname))
+    }
+})
+const imageUpload = multer({ storage: imageStore })
+
+//configure S3Client
+const s3Client = new AWSs3Module.S3Client({
+    credentials: {
+        accessKeyId: process.env.accessKeyID,
+        secretAccessKey: process.env.secretAccessKey,
+    },
+    region: 'us-east-2'
+})
+
+//route to endpoints
+const images = express()
+images.post('/userProfilePic/upload', imageUpload.fields([{name: 'uid'}, {name: 'img', maxCount: 1}]), (req, res, next) => imgFuncs.upload("users", req, res, next))
+images.delete('/userProfilePic/delete', (req, res, next) => imgFuncs.delete("users", req, res, next)) 
+images.post('/postPic/upload', imageUpload.fields([{name: 'pid'}, {name: 'img', maxCount: 1}]), (req, res, next) => imgFuncs.upload("posts", req, res, next))
+images.delete('/postPic/delete', (req, res, next) => imgFuncs.delete("posts", req, res, next)) 
+
+//s3 helper functions
+class s3Helpers {
+    static s3Put(localStream, uploadPath, extension) {
+        /**
+         * puts file to s3
+         * @param:
+         *      path string
+         *      fileName string
+         *      extension string
+         * @returns
+         *      void
+         */
+        const params = {
+            Bucket: process.env.accessPoint,
+            Key: uploadPath,
+            Body: fsAsync.createReadStream(localStream),
+            ContentType: `image/${extension.substring(1)}`
+        }
+        return s3Client.send(new AWSs3Module.PutObjectCommand(params))
+    }
+    
+    static s3ListFiles(path) {
+        /**
+         * lists file on specified path in s3
+         * @param:
+         *      path string
+         * @returns:
+         *      files on path
+         * note that return is empty array if path is empty
+         */
+        const params = {
+            Bucket: process.env.accessPoint,
+            Prefix: path
+        }
+        return s3Client.send(new AWSs3Module.ListObjectsV2Command(params)).then(data => {
+            if (data.Contents === undefined) {
+                return []
+            } else {
+                return data.Contents.map(object => object.Key)
+            }
+        })
+    }
+    
+    static s3GetSignedURL(path, fileName) {
+        /**
+         * gets url for file in s3
+         * @param:
+         *      path string
+         *      fileName string
+         * @returns:
+         *      url for file
+         */
+        const params = {
+            Bucket: process.env.accessPoint,
+            Key: `${path}/${fileName}`
+        }
+        return AWSPreSigner.getSignedUrl(s3Client, new AWSs3Module.GetObjectCommand(params))
+    }
+    
+    static s3DeleteFile(fileName) {
+        /**
+         * deletes file from S3
+         * @param:
+         *      path string
+         *      fileName string
+         */
+        const params = {
+            Bucket: process.env.accessPoint,
+            Key: fileName
+        }
+        return s3Client.send(new AWSs3Module.DeleteObjectCommand(params))
+    }
+}
+
+class imgFuncs {
+    static async getFileNames(type, id) {
+        /**
+         * @param: type (users or posts) and id (uid or pid)
+         * @returns array of localPath, uploadPath, and extension as strings
+         */
+        const recieptPath = 'images/'
+        const recieptFileName = 'unassigned'
+        var extension
+        await fs.readdir(recieptPath).then(files => {
+            for (const file of files) {
+                if (file.includes(recieptFileName)) {
+                    extension = path.extname(file)
+                }
+            }
+        })
+        const localPath =  `${recieptPath}${recieptFileName}${extension}`
+        const uploadPath = `${type}/${id}${extension}`
+        return [localPath, uploadPath, extension]
+    }
+
+    static async clearS3(type, id) {
+        /**
+         * @param: type and id
+         * @returns void
+         */
+        const files = await s3Helpers.s3ListFiles(type)
+        var fileName
+        for (const file of files) {
+            if (file.includes(id)) {
+                fileName = file
+            }
+        }
+        if (fileName !== undefined) await s3Helpers.s3DeleteFile(fileName)
+    }
+
+    static async clearDB(type, id, idVal) {
+        const query = `UPDATE ${type} SET imglink = NULL WHERE ${id} = $1`
+        const vals = [idVal]
+        return pool.query(query, vals, (error, res) => {
+            if (error) {
+                return error
+            }
+            return res
+        })
+    }
+
+    static async putDB(type, id, idVal, url) {
+        const query = `UPDATE ${type} SET imglink = $1 WHERE ${id} = $2`
+        const vals = [url, idVal]
+        return pool.query(query, vals, (error, _) => {
+            if (error) {
+                return error
+            }
+        })
+    }
+
+    static async upload(type, req, res, next) {
+        /**
+         * @param:
+         *      type (users or posts)     
+         *      pid/uid string
+         *      img image
+         * @returns:
+         *      'image upload successful'
+         *          OR
+         *      error message
+         */
+
+        //parse params
+        var id
+        var idVal
+        if (type === "users") {
+            id = "uid"
+            if (req.body.uid === undefined) {
+                return res.status(400).json({message: `${id} is required`})
+            } else {
+                idVal = req.body.uid
+            }
+        } else if (type === "posts") {
+            id = "pid"
+            if (req.body.pid === undefined) {
+                return res.status(400).json({message: `${id} is required`})
+            } else {
+                idVal = req.body.pid
+            }
+        } else {
+            return res.status(500).json({message: "internal error"})
+        }
+        if (req.files === undefined || req.files['img'] === undefined) {
+            return res.status(400).json({message: 'img must be specified'});
+        }
+    
+        //getFileNames -> [localPath, uploadPath, extension]
+        const files = await imgFuncs.getFileNames(type, idVal)
+
+        //clear s3 and db
+        await imgFuncs.clearS3(type, idVal)
+        await imgFuncs.clearDB(type, id, idVal)
+        
+        //upload to S3
+        await s3Helpers.s3Put(files[0], files[1], files[2]) //cannot produce error
+    
+        //get s3 signed url
+        const url = await s3Helpers.s3GetSignedURL(type, idVal)
+    
+        //put url into db
+        const error = await imgFuncs.putDB(type, id, idVal, url)
+        if (error) {
+            return res.status(400).json({
+                "message": error.message
+            })
+        }
+        return res.status(200).json({message: url});
+    }
+
+    static async delete(type, req, res, next) {
+        /**
+         * @param:
+         *      type string
+         *      uid/pid string
+         * @returns
+         *      message
+         *          OR
+         *      error
+         */
+        //parse params
+        var id
+        var idVal
+        if (type === "users") {
+            id = "uid"
+            if (req.body.uid === undefined) {
+                return res.status(400).json({message: `${id} is required`})
+            } else {
+                idVal = req.body.uid
+            }
+        } else if (type === "posts") {
+            id = "pid"
+            if (req.body.pid === undefined) {
+                return res.status(400).json({message: `${id} is required`})
+            } else {
+                idVal = req.body.pid
+            }
+        } else {
+            return res.status(500).json({message: "internal error"})
+        }
+
+        //clear s3
+        await imgFuncs.clearS3(type, idVal)
+
+        //clear db entry
+        const err = await imgFuncs.clearDB(type, id, idVal)
+        if (err) {
+            return res.status(400).json({message: error.message})
+        }
+        return res.status(200).json({message: "image delete successful"})
+    }
+}
+
+module.exports = images
