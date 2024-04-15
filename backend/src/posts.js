@@ -1,10 +1,11 @@
 //imports
 const express = require('express')
 const Pool = require('pg').Pool;
-require('dotenv').config({path: "../.env"});
+require('dotenv').config({path: "../../.env"});
 const randomstring = require('randomstring')
 
 //creates DB connection
+console.log(`[Posts] ${process.cwd()}`);
 let pool;
 if(process.env.location == "local") {
 	console.log(`[Posts] using local pool`);

@@ -7,9 +7,10 @@ const fs = require('fs').promises;
 const fsAsync = require('fs');
 const AWSs3Module = require('@aws-sdk/client-s3');
 const AWSPreSigner = require('@aws-sdk/s3-request-presigner');
-require('dotenv').config({path: "../.env"});
+require('dotenv').config({path: "../../.env"});
 
 //creates DB connection
+console.log(`[Images] ${process.cwd()}`);
 let pool;
 if(process.env.location == "local") {
 	console.log(`[Images] using local pool`);
