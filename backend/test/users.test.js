@@ -36,6 +36,7 @@ describe("selecting users", () => {
         await teardown()
         const resp1 = await request(app)
         .post('/users/createUser')
+        .send('uid=ffd             ')
         .send('email=jj@umass')
         const uid = resp1.body.uid
 
@@ -50,6 +51,7 @@ describe("selecting users", () => {
         await teardown()
         const resp1 = await request(app)
         .post('/users/createUser')
+        .send('uid=ffd             ')
         .send('email=jj@umass')
         assert.deepStrictEqual(resp1.body.message, `user created`)
         const uid = resp1.body.uid
@@ -81,36 +83,26 @@ describe("selecting users", () => {
         .send('email=jj@umass')
         .send('username=John')
         .send('bio=Student')
-        .send('pfpLink=test_link')
-        .send('superUser=1')
-        .send('locationPerm=1')
-        .send('notificationPerm=1')
+        .send('superUser=true')
+        .send('locationPerm=true')
+        .send('notificationPerm=true')
         .send('colorBlindRating=10')
 
         const resp2 = await request(app)
         .get('/users/selectUser')
         .send(`uid=345`) //send body parameters
-        .send('email=jj@umass') //send body parameters
-        .send('username=John')
-        .send('bio=Student')
-        .send('pfpLink=test_link')
-        .send('superUser=1')
-        .send('locationPerm=1')
-        .send('notificationPerm=1')
-        .send('colorBlindRating=10')
         assert.strictEqual(resp2.status,200)
         assert.deepStrictEqual(resp2.body.message, [
             {
-                "uid": "345",
+                "uid": "345             ",
                 "email": "jj@umass",
-
-                "username": null,
-                "bio": null,
+                "username": "John",
+                "bio": "Student",
                 "imglink": null,
-                "superuser": null,
-                "locationperm": null,
-                "notificationperm": null,
-                "colorblindrating": null
+                "superuser": true,
+                "locationperm": true,
+                "notificationperm": true,
+                "colorblindrating": 10
             }
         ])
     })
@@ -118,16 +110,19 @@ describe("selecting users", () => {
         await teardown()
         const resp1 = await request(app)
         .post('/users/createUser')
+        .send('uid=ff1             ')
         .send('email=jj@umass')
         const uid1 = resp1.body.uid
 
         const resp1b = await request(app)
         .post('/users/createUser')
+        .send('uid=ff2             ')
         .send('email=jj@umass')
         const uid2 = resp1b.body.uid
 
         const resp1c = await request(app)
         .post('/users/createUser')
+        .send('uid=ff3             ')
         .send('email=aj@umass')
 
         const resp2 = await request(app)
@@ -166,6 +161,7 @@ describe("creating users", () => {
         await teardown()
         const resp = await request(app)
         .post('/users/createUser')
+        .send('uid=ffd             ')
         assert.strictEqual(resp.status, 200)
         assert.strictEqual(resp.body.message, `user created`)
    })
@@ -207,6 +203,7 @@ describe("creating users", () => {
     }
     const resp = await request(app)
     .post('/users/createUser')
+    .send('uid=ffd             ')
     .send(`email=${testInput.email}`)
     .send(`username=${testInput.username}`)
     .send(`imglink=${testInput.imglink}`)
@@ -223,6 +220,7 @@ describe("updating users", () => {
         const email = "jj@umass.edu"
         const resp1 = await request(app)
         .post('/users/createUser')
+        .send('uid=ffd             ')
         assert.strictEqual(resp1.status, 200)
         assert.strictEqual(resp1.body.message, `user created`)
         const uid = resp1.body.uid
@@ -262,6 +260,7 @@ describe("deleting users", () => {
         await teardown()
         const resp1 = await request(app)
         .post('/users/createUser')
+        .send('uid=ffd             ')
         assert.strictEqual(resp1.status, 200)
         assert.strictEqual(resp1.body.message, `user created`)
         const uid = resp1.body.uid

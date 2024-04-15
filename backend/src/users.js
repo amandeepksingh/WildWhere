@@ -103,7 +103,7 @@ function createUser(req, res, next) {
     }
 
     if(dict['uid'] === undefined) {
-        dict['uid'] = randomstring.generate(16)
+        return res.status(400).json({message: "uid is required"})
     }
 
     const fields = Object.keys(dict).join(', ')
