@@ -77,6 +77,7 @@ describe("selecting users", () => {
         await teardown()
         const resp1 = await request(app)
         .post('/users/createUser')
+        .send('uid=345')
         .send('email=jj@umass')
         .send('username=John')
         .send('bio=Student')
@@ -85,11 +86,10 @@ describe("selecting users", () => {
         .send('locationPerm=1')
         .send('notificationPerm=1')
         .send('colorBlindRating=10')
-        const uid = resp1.body.uid
 
         const resp2 = await request(app)
         .get('/users/selectUser')
-        .send(`uid=${uid}`) //send body parameters
+        .send(`uid=345`) //send body parameters
         .send('email=jj@umass') //send body parameters
         .send('username=John')
         .send('bio=Student')
@@ -101,7 +101,7 @@ describe("selecting users", () => {
         assert.strictEqual(resp2.status,200)
         assert.deepStrictEqual(resp2.body.message, [
             {
-                "uid": uid,
+                "uid": "345",
                 "email": "jj@umass",
                 "username": "John",
                 "bio": "Student",
@@ -171,6 +171,7 @@ describe("creating users", () => {
    it("USER: test create with all params", async () => {
         await teardown()
         testInput = {
+            uid: '345',
             email: 'jj@umass.edu',
             username: 'jamesbarr',
             bio: 'bio',
@@ -182,6 +183,7 @@ describe("creating users", () => {
         }
         const resp = await request(app)
         .post('/users/createUser')
+        .send(`uid=${testInput.uid}`)
         .send(`email=${testInput.email}`)
         .send(`username=${testInput.username}`)
         .send(`bio=${testInput.bio}`)
