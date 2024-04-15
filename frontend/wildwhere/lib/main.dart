@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:wildwhere/mapscreen.dart';
+import 'package:wildwhere/postslistpage.dart';
 import 'firebase_options.dart';
 import 'package:wildwhere/login.dart';
 

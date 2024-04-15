@@ -1,9 +1,9 @@
 class Post {
   final String uid;
   final String datetime;
-  final String coordinate;
-  final String animalName;
-  final String quantity;
+  final Map<String,dynamic> coordinate;
+  final String? animalName;
+  final int quantity;
   final String activity;
   final String? imgLink;
 
@@ -11,7 +11,7 @@ class Post {
     required this.uid,
     required this.datetime,
     required this.coordinate,
-    required this.animalName,
+    this.animalName,
     required this.quantity,
     required this.activity,
     this.imgLink,
@@ -22,10 +22,10 @@ class Post {
       uid: json['uid'],
       datetime: json['datetime'],
       coordinate: json['coordinate'],
-      animalName: json['animal'],
-      quantity: json['quantity'],
+      animalName: json['animalname'],
+      quantity: json['quantity'] as int,
       activity: json['activity'],
-      imgLink: json['imgLink']
+      imgLink: json['imglink']
     );
   }
 
@@ -34,10 +34,10 @@ class Post {
       'uid': uid,
       'datetime': datetime,
       'coordinate': coordinate,
-      'animal': animalName,
+      'animalname': animalName,
       'quantity': quantity,
       'activity': activity,
-      'imgLink': imgLink,
+      'imglink': imgLink,
     };
   }
 }
