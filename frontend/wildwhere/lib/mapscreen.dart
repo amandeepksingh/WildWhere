@@ -48,6 +48,7 @@ class _MapState extends State<MapScreen> {
 void _onStyleLoaded() async {
    await addImageFromAsset("assetImage", "assets/images/markericon.png");
    addMarker("marker1", 42.382418, -72.519032, "assetImage");
+   addMarker("marker2", 42.395944, -72.524378, "assetImage");
   }
 
 
@@ -62,7 +63,7 @@ void addMarker(String id, double latitude, double longitude, String iconImageId)
       SymbolOptions(
         geometry: LatLng(latitude, longitude),
         iconImage: iconImageId,
-        iconSize: 4,
+        iconSize: 2.5,
       ),
     );
   }
