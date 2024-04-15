@@ -25,9 +25,6 @@ async function teardown() { //TODO before each run. Using before() or after() se
 }
 
 describe("selecting posts", () => {
-    //TODO
-    //Note that this may be complicated due to coordinates.
-    //May need another function to select posts that are within a certain coordinate circle
     
         it("POST: test select with empty", async () => {
             await teardown()

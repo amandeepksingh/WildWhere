@@ -205,6 +205,7 @@ describe("updating users", () => {
         assert.strictEqual(resp1.status, 200)
         assert.strictEqual(resp1.body.message, `user created`)
         const uid = resp1.body.uid
+
         
         const resp2 = await request(app)
         .put('/users/updateUserByUID')
