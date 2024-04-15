@@ -91,7 +91,7 @@ class s3Helpers {
         })
     }
     
-    static s3GetSignedURL(path, fileName) {
+    static s3GetSignedURL(path, fileName, extension) {
         /**
          * gets url for file in s3
          * @param:
@@ -102,7 +102,7 @@ class s3Helpers {
          */
         const params = {
             Bucket: process.env.accessPoint,
-            Key: `${path}/${fileName}`
+            Key: `${path}/${fileName}${extension}`
         }
         return AWSPreSigner.getSignedUrl(s3Client, new AWSs3Module.GetObjectCommand(params))
     }
@@ -194,7 +194,7 @@ class imgFuncs {
         await s3Helpers.s3Put(localPath, uploadPath, extension) //cannot produce error
     
         //get s3 signed url
-        const url = await s3Helpers.s3GetSignedURL(type, idVal)
+        const url = await s3Helpers.s3GetSignedURL(type, idVal, extension)
     
         //put url into db
         const query = `UPDATE ${type} SET imglink = $1 WHERE ${id} = $2`
