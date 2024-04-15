@@ -34,6 +34,7 @@ describe("IMAGES: test user image upload", () => {
 
         //create user
         const resp1 = await request(app).post('/users/createUser')
+            .send('uid=ffd')
         const uid = resp1.body.uid;
         
         //add img
@@ -74,8 +75,10 @@ describe("IMAGES: test post image upload", () => {
 
         //create user
         const resp1 = await request(app).post('/users/createUser')
+            .send('uid=ffd')
         const uid = resp1.body.uid;
         const resp1b = await request(app).post('/posts/createPost')
+            .send('pid=ffd')
             .send(`uid=${uid}`)
             .send('coordinate=(0.0, 0.0)')
         const pid = resp1b.body.pid;
@@ -118,6 +121,7 @@ describe("IMAGES: test user delete image", () => {
     
         //add user
         const resp1 = await request(app).post('/users/createUser')
+            .send('uid=ffd')
         const uid = resp1.body.uid;
         
         //add img
@@ -152,8 +156,10 @@ describe("IMAGES: test post delete image", () => {
     
         //add user
         const resp1 = await request(app).post('/users/createUser')
+            .send('uid=ffd')
         const uid = resp1.body.uid;
         const resp1b = await request(app).post('/posts/createPost')
+            .send('pid=ffd')
             .send(`uid=${uid}`)
             .send('coordinate=(0.0, 0.0)')
         const pid = resp1b.body.pid;

@@ -30,7 +30,7 @@ function selectUser(req, res, next) {
      *  email string (optional)
      *  username string (optional)
      *  bio string (optional)
-     *  imglink linkToImg (optional)
+     *  pfplink linkToImg (optional)
      *  superUser boolean (optional)
      *  locationPerm boolean (optional)
      *  notificationPerm boolean (optional)
@@ -41,14 +41,14 @@ function selectUser(req, res, next) {
      *      email string,
      *      username string,
      *      bio string,
-     *      imglink linkToImg,
+     *      pfplink linkToImg,
      *      superUser boolean,
      *      locationPerm boolean,
      *      notificationPerm boolean,
      *      colorBlindrating int
      *  }
      */
-    const columns = ["uid", "email", "username", "bio", "imglink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
+    const columns = ["uid", "email", "username", "bio", "pfpLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
     var condits = {}
     for(const col of columns) {
         if(req.body[col]) {
@@ -82,7 +82,7 @@ function createUser(req, res, next) {
      *  email string (optional)
      *  username string (optional)
      *  bio string (optional)
-     *  imglink linkToImg (optional)
+     *  pfplink linkToImg (optional)
      *  superUser boolean (optional)
      *  locationPerm boolean (optional)
      *  notificationPerm boolean (optional)
@@ -94,7 +94,7 @@ function createUser(req, res, next) {
      *      error message
      *  uid string (on success)
      */
-    const columns = ["uid", "email", "username", "bio", "imglink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
+    const columns = ["uid", "email", "username", "bio", "pfpLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
     var dict = {}
     for(const col of columns) {
         if(req.body[col]) {
@@ -103,7 +103,7 @@ function createUser(req, res, next) {
     }
 
     if(dict['uid'] === undefined) {
-        dict['uid'] = randomstring.generate(16)
+        return res.status(400).json({message: "uid is required"})
     }
 
     const fields = Object.keys(dict).join(', ')
@@ -134,7 +134,7 @@ function updateUserByUID(req, res, next) {
      *  email string (optional)
      *  username string (optional)
      *  bio string (optional)
-     *  imglink linkToImg (optional)
+     *  pfplink linkToImg (optional)
      *  superUser boolean (optional)
      *  locationPerm boolean (optional)
      *  notificationPerm boolean (optional)
@@ -151,7 +151,7 @@ function updateUserByUID(req, res, next) {
         }) //handles misformatted input
     }
 
-    const columns = ["email", "username", "bio", "imglink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
+    const columns = ["email", "username", "bio", "pfpLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
     const updates = {}
     for(const col of columns) {
         if(req.body[col]) {

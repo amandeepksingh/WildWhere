@@ -132,7 +132,7 @@ _creating users_: Used to create user with attributes matching the input JSON bo
 | :-------: | :----: | :-------------: | :-------------: | :------------------: | :---------------: |
 | _ec2Host/users/createUser_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string |
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---: |
-||| uid string | AUTO-GENERATED (starts from 1) || user created
+||| uid string | REQUIRED || user created
 ||| email string | optional || _or_
 ||| username string | optional || error message
 ||| bio string | optional || 
@@ -192,7 +192,7 @@ _creating posts_: Used to create post with attributes matching the input JSON bo
 | :-------: | :----: | :-------------: | :-------------: | :------------------: | :---------------: |
 | _ec2Host/posts/createPost_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string |
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---: |
-||| pid string | AUTO-GENERATED (starts from 1) || post created
+||| pid string | AUTO-GENERATED (random) || post created
 ||| uid string | REQUIRED || _or_
 ||| imgLink string | optional || error message
 ||| datetime timestamp YYYY-MM-DD HH:MM:SS | optional ||
