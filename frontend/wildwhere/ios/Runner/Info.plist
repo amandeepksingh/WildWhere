@@ -2,6 +2,19 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleURLTypes</key>
+    <array>
+    	<dict>
+    		<key>CFBundleTypeRole</key>
+    		<string>Editor</string>
+    		<key>CFBundleURLSchemes</key>
+    		<array>
+    			<string>com.googleusercontent.apps.846106559591-c2l9dcbp4hk38s2ejne016emfpin63ae</string>
+    		</array>
+    	</dict>
+    </array>
+    <key>GIDClientID</key>
+    <string>846106559591-c2l9dcbp4hk38s2ejne016emfpin63ae.apps.googleusercontent.com</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -20,6 +33,10 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>The app needs library permissions.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>The app needs camera permissions.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>The app needs location permission</string>
 	<key>NSLocationAlwaysUsageDescription</key>

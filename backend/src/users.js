@@ -78,6 +78,7 @@ function selectUser(req, res, next) {
 function createUser(req, res, next) {
     /**
      * @param:
+     *  uid string (optional)
      *  email string (optional)
      *  username string (optional)
      *  bio string (optional)
@@ -93,8 +94,7 @@ function createUser(req, res, next) {
      *      error message
      *  uid string (on success)
      */
-    //NO UID (randomly generated)
-    const columns = ["email", "username", "bio", "pfpLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
+    const columns = ["uid", "email", "username", "bio", "pfpLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
     var dict = {}
     for(const col of columns) {
         if(req.body[col]) {
@@ -102,8 +102,9 @@ function createUser(req, res, next) {
         }
     }
 
-    const uid = randomstring.generate(16)
-    dict['uid'] = uid
+    if(dict['uid'] === undefined) {
+        return res.status(400).json({message: "uid is required"})
+    }
 
     const fields = Object.keys(dict).join(', ')
     const placeholders = Object.keys(dict).map((_, i) => `$${i + 1}`).join(', ')
@@ -121,7 +122,7 @@ function createUser(req, res, next) {
         }
         return res.status(200).json({
             message: "user created",
-            uid: uid
+            uid: dict['uid']
         })
     })
 }

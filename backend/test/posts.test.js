@@ -25,9 +25,6 @@ async function teardown() { //TODO before each run. Using before() or after() se
 }
 
 describe("selecting posts", () => {
-    //TODO
-    //Note that this may be complicated due to coordinates.
-    //May need another function to select posts that are within a certain coordinate circle
     
         it("POST: test select with empty", async () => {
             await teardown()
@@ -42,6 +39,30 @@ describe("selecting posts", () => {
             
             const create_user = await request(app)
             .post('/users/createUser')
+            .send('uid=ffd             ')
+            const uid = create_user.body.uid
+
+            const create_post = await request(app)
+            .post('/posts/createPost')
+            .send(`uid=${uid}`)
+            .send('coordinate=(0.0, 0.0)')
+            assert.strictEqual(create_post.body.message, "post created")
+            const pid = create_post.body.pid
+
+            const resp = await request(app)
+            .get('/posts/selectPost')
+            .send(`uid=${uid}`) //send body parameters
+            .send('coordinate=(0.0, 0.0)')
+            .send('animalName=bear')
+            assert.strictEqual(resp.status, 200)
+            assert.deepStrictEqual(resp.body.message, [])
+        })
+            it("POST: test select with few constraints", async () => {
+            await teardown()
+            
+            const create_user = await request(app)
+            .post('/users/createUser')
+            .send('uid=ffd             ')
             const uid = create_user.body.uid
 
             const create_post = await request(app)
@@ -74,6 +95,7 @@ describe("selecting posts", () => {
 
             const create_user = await request(app)
             .post('/users/createUser')
+            .send('uid=ffd             ')
             const uid = create_user.body.uid
 
             const create_post = await request(app)
@@ -112,6 +134,7 @@ describe("selecting posts", () => {
 
             const create_user = await request(app)
             .post('/users/createUser')
+            .send('uid=ffd             ')
             const uid = create_user.body.uid
 
             const create_post1 = await request(app)
@@ -153,11 +176,12 @@ describe("selecting posts", () => {
                 }
             ])
         })
-        it("POST: null radius", async () => {
+                it("POST: null radius", async () => {
             await teardown()
 
             const create_user = await request(app)
             .post('/users/createUser')
+            .send('uid=ffd             ')
             const uid = create_user.body.uid
             
             const create_post1 = await request(app)
@@ -193,6 +217,7 @@ describe("selecting posts", () => {
 
             const create_user = await request(app)
             .post('/users/createUser')
+            .send('uid=ffd             ')
             const uid = create_user.body.uid
 
             const create_post1 = await request(app)
@@ -229,6 +254,7 @@ describe("selecting posts", () => {
 
             const create_user = await request(app)
             .post('/users/createUser')
+            .send('uid=ffd             ')
             const uid = create_user.body.uid
 
             const create_post1 = await request(app)
@@ -297,6 +323,7 @@ describe("selecting posts", () => {
 
             const create_user = await request(app)
             .post('/users/createUser')
+            .send('uid=ffd             ')
             const uid = create_user.body.uid
             
             const create_post1 = await request(app)
@@ -334,6 +361,7 @@ describe("selecting posts", () => {
 
             const create_user = await request(app)
             .post('/users/createUser')
+            .send('uid=ffd             ')
             const uid = create_user.body.uid
             
             const create_post1 = await request(app)
@@ -371,6 +399,7 @@ describe("selecting posts", () => {
 
             const create_user = await request(app)
             .post('/users/createUser')
+            .send('uid=ffd             ')
             const uid = create_user.body.uid
             
             const create_post1 = await request(app)
@@ -427,6 +456,7 @@ it("POST: test create without coordinates", async () => {
 
     const create_user = await request(app)
     .post('/users/createUser')
+    .send('uid=ffd             ')
     const uid = create_user.body.uid
 
     const resp = await request(app)
@@ -441,6 +471,7 @@ it("POST: test create without coordinates", async () => {
 
         const create_user = await request(app)
         .post('/users/createUser')
+        .send('uid=ffd             ')
         assert.strictEqual(create_user.status, 200)
         const uid = create_user.body.uid
 
@@ -456,6 +487,7 @@ it("POST: test create without coordinates", async () => {
 
         const create_user = await request(app)
         .post('/users/createUser')
+        .send('uid=ffd             ')
         const uid = create_user.body.uid
         
         const resp = await request(app)
@@ -472,6 +504,7 @@ it("POST: test create without coordinates", async () => {
 
     const create_user = await request(app)
     .post('/users/createUser')
+    .send('uid=ffd             ')
     const uid = create_user.body.uid
 
     const resp = await request(app)
@@ -490,6 +523,7 @@ describe("updating posts", () => {
 
         const create_user = await request(app)
         .post('/users/createUser')
+        .send('uid=ffd             ')
         const uid = create_user.body.uid
 
         const create_post = await request(app)
@@ -534,6 +568,7 @@ describe("deleting posts", () => {
 
         const create_user = await request(app)
         .post('/users/createUser')
+        .send('uid=ffd             ')
         assert.strictEqual(create_user.body.message,'user created')
         assert.strictEqual(create_user.status, 200)
         const uid = create_user.body.uid

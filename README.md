@@ -108,7 +108,9 @@ The request will return a response that has a status code and a message, which c
     //returns "user created"
 ```
 
-#### Users
+### Description
+
+#### User Description
 
 _selecting users_: Used to select all users matching input JSON body and return an array of each of those users' attributes.
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
@@ -125,13 +127,12 @@ _selecting users_: Used to select all users matching input JSON body and return 
 ||| notificationPerm boolean | optional || notificationPerm boolean
 ||| colorBlindRating int | optional || colorBlindRating int
 
-
 _creating users_: Used to create user with attributes matching the input JSON body.
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :-------------: | :------------------: | :---------------: |
 | _ec2Host/users/createUser_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string |
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---: |
-||| uid string | AUTO-GENERATED (starts from 1) || user created
+||| uid string | REQUIRED || user created
 ||| email string | optional || _or_
 ||| username string | optional || error message
 ||| bio string | optional || 
@@ -167,7 +168,7 @@ _deleting users_: Used to delete user with given UID.
 
 
 
-#### Posts
+#### Post Description
 
 _selecting posts_: Used to select all posts matching input JSON body and return an array of each of those posts' attributes.
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
@@ -185,12 +186,13 @@ _selecting posts_: Used to select all posts matching input JSON body and return 
 ||| quantity int | optional || quantity int
 ||| activity string | optional || activity string
 
+
 _creating posts_: Used to create post with attributes matching the input JSON body.
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :-------------: | :------------------: | :---------------: |
 | _ec2Host/posts/createPost_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string |
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---: |
-||| pid string | AUTO-GENERATED (starts from 1) || post created
+||| pid string | AUTO-GENERATED (random) || post created
 ||| uid string | REQUIRED || _or_
 ||| imgLink string | optional || error message
 ||| datetime timestamp YYYY-MM-DD HH:MM:SS | optional ||
@@ -222,6 +224,50 @@ _deleting posts_: Used to delete post with given PID.
 |||||| _or_
 |||||| error message
 
-#### Database infrastructure
+### Images
+
+#### User Images
+
+_uploading images_: Used to upload images
+| Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
+| :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
+| _ec2Host/images/userProfilePic/upload_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string
+| :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
+||| uid int | REQUIRED || link to pfp
+||| img image | REQUIRED || _or_
+||| ||| error message
+
+
+_deleting images_: Used to delete image (signed URLs become invalid)
+| Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
+| :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
+| _ec2Host/images/userProfilePic/delete_ | _delete_ | _JSON body of following_ | _optional or required_ | _200_ | string
+| :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
+||| uid int | REQUIRED || 'image delete successful'
+|||||| _or_
+|||||| error message
+
+#### Post Images
+
+_uploading images_: Used to upload images
+| Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
+| :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
+| _ec2Host/images/postPic/upload_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string
+| :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
+||| pid int | REQUIRED || link to pfp
+||| img image | REQUIRED || _or_
+||| ||| error message
+
+
+_deleting images_: Used to delete image (signed URLs become invalid)
+| Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
+| :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
+| _ec2Host/images/postPic/delete_ | _delete_ | _JSON body of following_ | _optional or required_ | _200_ | string
+| :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
+||| pid int | REQUIRED || 'image delete successful'
+|||||| _or_
+|||||| error message
+
+### Database infrastructure
 
 Our PostgreSQL database is hosted on RDS as a part of the AWS suite. We use an EC2 to interact with it and the tables we use in the database are shown below: ![db schema diagram](Schema.png)
