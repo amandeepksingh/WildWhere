@@ -1,7 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:wildwhere/post.dart';
 
 class Database {
+
+  
+
 
   Future<http.Response> createPost({
     required String uid, 

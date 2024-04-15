@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:wildwhere/data.dart';
 import 'package:wildwhere/map_preferences.dart';
 import 'package:wildwhere/profile.dart';
+import 'package:wildwhere/database.dart';
 import 'package:wildwhere/report.dart';
 import 'package:wildwhere/settings.dart';
 import 'package:geolocator/geolocator.dart';
@@ -43,12 +44,36 @@ class _MapState extends State<MapScreen> {
     _controller = controller;
     controller.onSymbolTapped.add(_onSymbolTapped);
     controller.addListener(_onCameraMove);
+    addImageFromAsset("assetImage", "assets/images/markericon.png");
   }
 
+  Future<void> _fetchDataFromDatabase() async {
+    try {
+      var url = Uri.parse(
+        'http://ec2-13-58-233-86.us-east-2.compute.amazonaws.com:80/posts/selectPost?pid=1 ');
+      var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = json.decode(response.body);
+      final double lat = data['message'][0]['coordinate']['y'];
+      final double long = data['message'][0]['coordinate']['x'];
+      LatLng positionFromDB = LatLng(lat, long);
+        _addMarker('Marker from Database', positionFromDB.latitude, positionFromDB.longitude);
+    } else {
+      throw Exception('Error accessing post from database!');
+    } 
+    } catch (e) {
+        throw Exception(e);
+    }
+}
+
+
 void _onStyleLoaded() async {
-   await addImageFromAsset("assetImage", "assets/images/markericon.png");
-   addMarker("marker1", 42.382418, -72.519032, "assetImage");
-   addMarker("marker2", 42.395944, -72.524378, "assetImage");
+   _addMarker("marker1", 42.382418, -72.519032,);
   }
 
 
@@ -58,11 +83,11 @@ Future<void> addImageFromAsset(String name, String assetName) async {
     await _controller?.addImage(name, list);
   }
 
-void addMarker(String id, double latitude, double longitude, String iconImageId) {
+void _addMarker(String id, double latitude, double longitude) {
     _controller?.addSymbol(
       SymbolOptions(
         geometry: LatLng(latitude, longitude),
-        iconImage: iconImageId,
+        iconImage: "assetImage",
         iconSize: 2.5,
       ),
     );
