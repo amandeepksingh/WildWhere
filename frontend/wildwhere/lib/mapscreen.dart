@@ -5,63 +5,49 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+//import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:wildwhere/data.dart';
 import 'package:wildwhere/map_preferences.dart';
 import 'package:wildwhere/profile.dart';
+import 'package:wildwhere/database.dart';
 import 'package:wildwhere/report.dart';
 import 'package:wildwhere/settings.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:mapbox_gl/mapbox_gl.dart';
+import 'dart:typed_data';
+import 'package:flutter/services.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
+
   @override
   State<MapScreen> createState() => _MapState();
 }
 
 class _MapState extends State<MapScreen> {
-  late GoogleMapController mapController;
-  final Set<Marker> _markers = {}; //makes set of markers
-  Set<String> _tappedMarkerIds = {};
-  CameraPosition _currentCameraPosition = const CameraPosition(
-    target: LatLng(42.381030, -72.529010),
-    zoom: 12.0,
-  );
+  MapboxMapController? _controller;
+  Symbol? selectedSymbol;
+  Offset? symbolWidgetPosition;
+  
+   @override
+  void initState() {
+    super.initState();
+  }
 
-  bool _isCameraMoving = false;
-  Future<void> _addMarker(String markerId, LatLng position) async { //method to add marker
-    final icon = await BitmapDescriptor.fromAssetImage(
-      const ImageConfiguration(),
-      'assets/images/markericon.png',
-    );
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
+  }
 
-    setState(() {
-      _markers.add(
-        Marker(
-          markerId: MarkerId(markerId),
-          position: position,
-          onTap: () {
-            _tappedMarkerIds.add(markerId);
-          },
-          icon: icon,
-        ),
-      );
-    });
-}
+  void _onMapCreated(MapboxMapController controller) {
+    _controller = controller;
+    controller.onSymbolTapped.add(_onSymbolTapped);
+    controller.addListener(_onCameraMove);
+    addImageFromAsset("assetImage", "assets/images/markericon.png");
+  }
 
-void _removeMarker(String markerId) { //method to remove marker
-  setState(() {
-    _markers.removeWhere((marker) => marker.markerId.value == markerId);
-    _tappedMarkerIds.remove(markerId);
-  });
-}
-
-
-Future<void> _onMapCreated(GoogleMapController controller) async {
-  mapController = controller;
-}
-
-Future<void> _fetchDataFromDatabase() async {
+  Future<void> _fetchDataFromDatabase() async {
     try {
       var url = Uri.parse(
         'http://ec2-13-58-233-86.us-east-2.compute.amazonaws.com:80/posts/selectPost?pid=1 ');
@@ -76,7 +62,7 @@ Future<void> _fetchDataFromDatabase() async {
       final double lat = data['message'][0]['coordinate']['y'];
       final double long = data['message'][0]['coordinate']['x'];
       LatLng positionFromDB = LatLng(lat, long);
-      _addMarker('Marker from Database', positionFromDB);
+        _addMarker('Marker from Database', positionFromDB.latitude, positionFromDB.longitude);
     } else {
       throw Exception('Error accessing post from database!');
     } 
@@ -85,15 +71,50 @@ Future<void> _fetchDataFromDatabase() async {
     }
 }
 
-@override
-void initState() {
-  super.initState();
-  _fetchDataFromDatabase();
-  _addMarker('marker1', const LatLng(42.381830, -72.519714));
-  _addMarker('marker2', const LatLng(42.389561, -72.503375));
-}
+
+void _onStyleLoaded() async {
+   _addMarker("marker1", 42.382418, -72.519032,);
+  }
 
 
+Future<void> addImageFromAsset(String name, String assetName) async {
+    final ByteData bytes = await rootBundle.load(assetName);
+    final Uint8List list = bytes.buffer.asUint8List();
+    await _controller?.addImage(name, list);
+  }
+
+void _addMarker(String id, double latitude, double longitude) {
+    _controller?.addSymbol(
+      SymbolOptions(
+        geometry: LatLng(latitude, longitude),
+        iconImage: "assetImage",
+        iconSize: 2.5,
+      ),
+    );
+  }
+
+void _onSymbolTapped(Symbol symbol) {
+    setState(() {
+      selectedSymbol = symbol;
+      _updateSymbolPosition();
+    });
+  }
+void _onCameraMove() {
+    if (_controller != null && selectedSymbol != null) {
+      _updateSymbolPosition();
+    }
+  }
+
+
+void _updateSymbolPosition() async {
+    if (selectedSymbol == null || _controller == null) return;
+    var screenLocation = await _controller!.toScreenLocation(selectedSymbol!.options.geometry!);
+    setState(() {
+      symbolWidgetPosition = Offset(screenLocation.x - 100, screenLocation.y - 125);
+    });
+  }
+
+  
 @override
 Widget build(BuildContext context) {
   var reportOverlayControl = OverlayPortalController();
@@ -116,72 +137,30 @@ Widget build(BuildContext context) {
           ),
         ],
       ),
-      body: Stack(
-        children: [
-          GoogleMap(
-            onMapCreated: _onMapCreated,
-            initialCameraPosition: _currentCameraPosition,
-            markers: _markers,
-            myLocationEnabled: true,
-            myLocationButtonEnabled: false,
-            zoomGesturesEnabled: true,
-            zoomControlsEnabled: true,
-            padding: const EdgeInsets.fromLTRB(0, 0, 10, 20),
-            onTap: (LatLng position) {
-              setState(() {
-                _tappedMarkerIds.clear();
-              });
-            },
-            onCameraMove: (CameraPosition position) {
-              setState(() {
-                _currentCameraPosition = position;
-                _isCameraMoving = true;
-              });
-            },
-            onCameraIdle: (){
-              setState(() {
-                _isCameraMoving = false;
-              });
-            },
+    body: Stack(
+      children: [
+        MapboxMap(
+          //styleString: "mapbox://styles/mberezuns/clv04vk35010701pk5pat427l",
+          accessToken: "your-mapbox-access-token",
+          onMapCreated: _onMapCreated,
+          onStyleLoadedCallback: _onStyleLoaded,
+          trackCameraPosition: true,
+          initialCameraPosition: const CameraPosition(
+            target: LatLng(42.381030, -72.529010),
+            zoom: 12,
           ),
-          if(!_isCameraMoving)
-          for (var markerId in _tappedMarkerIds)
-            Builder(
-              builder: (context) {
-                final marker = _markers.firstWhere(
-                  (m) => m.markerId.value == markerId,
-                  orElse: () => throw Exception('Marker not found'),
-                );
-                final markerPosition = marker.position;
-                final markerScreenPosition = _getMarkerScreenPosition(markerPosition);
-
-                return Positioned(
-                  left: markerScreenPosition.dx - 100,
-                  top: markerScreenPosition.dy - 235,
-                  child: Container(
-                  width: 200,
-                  height: 150,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Custom Marker: $markerId',
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
+          onMapClick: (point, latLng) {
+            setState(() {
+              selectedSymbol = null;
+              symbolWidgetPosition = null;
+            });
+          },
+        ),
+        if (symbolWidgetPosition != null) Positioned(
+          left: symbolWidgetPosition!.dx,
+          top: symbolWidgetPosition!.dy,
+          child: _buildInfoBox(),
+        )
       ],
     ),
     floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -205,7 +184,7 @@ Widget build(BuildContext context) {
       child: Column(
         children: <Widget>[
           FloatingActionButton(
-            onPressed: () => currentLocation(mapController),
+            onPressed: () => currentLocation(_controller),
             shape: const CircleBorder(),
             elevation: 2,
             backgroundColor: const Color.fromARGB(255, 255, 255, 255),
@@ -231,25 +210,20 @@ Widget build(BuildContext context) {
   ]);
   }
 
-  Offset _getMarkerScreenPosition(LatLng markerPosition) {
-      final width = MediaQuery.of(context).size.width;
-      final height = MediaQuery.of(context).size.height;
-      final centerLatLng = _currentCameraPosition.target;
-      final zoom = _currentCameraPosition.zoom;
-      final scale = math.pow(2, zoom).toDouble();
-      final centerPoint = _latLngToOffset(centerLatLng, scale);
-      final markerPoint = _latLngToOffset(markerPosition, scale);
-      final translateX = (markerPoint.dx - centerPoint.dx) * scale;
-      final translateY = (markerPoint.dy - centerPoint.dy) * scale;
-      return Offset(width / 2 + translateX, height / 2 + translateY);
+  Widget _buildInfoBox() {
+    return Container(
+      width: 200,
+      height: 100,
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: const [BoxShadow( color: Colors.black26, offset: Offset(0, 2),)],
+      ),
+      child: Text(selectedSymbol != null ? "Details about the marker ${selectedSymbol!.id}" : "Tap a marker"),
+    );
   }
 
-  Offset _latLngToOffset(LatLng latLng, double scale) {
-      final x = (latLng.longitude + 180) / 360 * scale;
-      final y = (1 - math.log(math.tan(latLng.latitude * math.pi / 180) + 1 / math.cos(latLng.latitude * math.pi / 180)) / math.pi) / 2 * scale;
-      return Offset(x, y);
-  }
-  
 }
 
 //Handles drop-down selection navigation

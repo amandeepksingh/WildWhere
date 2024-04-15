@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:wildwhere/mapscreen.dart';
 import 'firebase_options.dart';
 import 'package:wildwhere/login.dart';
 
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: const Login() //Landing page
+        home: const MapScreen() //Landing page
     );
   }
 }

@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:wildwhere/database.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:wildwhere/post.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ReportPage extends StatefulWidget {
@@ -41,28 +42,40 @@ class _ReportPageState extends State<ReportPage> {
       return; // Stop further execution
     }
     resetErrorState();
+
     Location location = Location();
-    Database db = Database();
     Position position = await location.currentLocation();
     String latitude = position.latitude.toString();
     String longitude = position.longitude.toString();
     String coordinate = '($longitude, $latitude)';
     String datetime = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
+ 
+    Post newPost = Post(
+    uid: uid,
+    datetime: datetime,
+    coordinate: coordinate,
+    animalName: animal!,
+    quantity: quantity!,
+    activity: activity!,
+  );
+    
     try {
-      http.Response postResponse = await db.createPost(
-      uid: uid as String, datetime: datetime, coordinate: coordinate,
-      animalname: animal as String, quantity: quantity as String, activity: activity as String);
-      final Map<String, dynamic> newPost = json.decode(postResponse.body);
-      if (postResponse.statusCode != 200) {
-        throw Exception(postResponse.body);
-      } else {
-          var pid = newPost['pid']; 
-          print("Post ID: $pid");
-          
+      Database db = Database();
+      http.Response response = await db.createPost(newPost); //Pass post object to createPost
+      
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        print("Post created with ID: ${responseData['pid']}");
       }
-    } catch (e) {
-      throw Exception(e);
+      else{
+        throw Exception('Failed to create post');
+      }
+    } 
+    
+    catch (e) {
+      print('Error: $e');
     }
+      
   }
 
   void resetErrorState() {
