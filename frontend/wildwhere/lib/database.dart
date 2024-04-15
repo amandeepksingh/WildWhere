@@ -4,6 +4,25 @@ import 'package:wildwhere/post.dart';
 
 class Database {
 
+  Future<List<Post>> getAllPosts() async {
+    var url = Uri.parse('http://ec2-13-58-233-86.us-east-2.compute.amazonaws.com:80/posts/selectPost');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      List<dynamic> postsJson = json.decode(response.body);
+      return postsJson.map((json) => Post.fromJson(json)).toList();
+    } else {
+      // Error handling if the request fails
+      throw Exception('Failed to fetch posts. Server responded with ${response.statusCode}: ${response.body}');
+    }
+  }
+
   Future<http.Response> createPost(Post post) async {
     var url = Uri.parse('http://ec2-13-58-233-86.us-east-2.compute.amazonaws.com:80/posts/createPost');
     var jsonData = jsonEncode(post.toJson());
