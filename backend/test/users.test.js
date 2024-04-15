@@ -81,36 +81,26 @@ describe("selecting users", () => {
         .send('email=jj@umass')
         .send('username=John')
         .send('bio=Student')
-        .send('pfpLink=test_link')
-        .send('superUser=1')
-        .send('locationPerm=1')
-        .send('notificationPerm=1')
+        .send('superUser=true')
+        .send('locationPerm=true')
+        .send('notificationPerm=true')
         .send('colorBlindRating=10')
 
         const resp2 = await request(app)
         .get('/users/selectUser')
         .send(`uid=345`) //send body parameters
-        .send('email=jj@umass') //send body parameters
-        .send('username=John')
-        .send('bio=Student')
-        .send('pfpLink=test_link')
-        .send('superUser=1')
-        .send('locationPerm=1')
-        .send('notificationPerm=1')
-        .send('colorBlindRating=10')
         assert.strictEqual(resp2.status,200)
         assert.deepStrictEqual(resp2.body.message, [
             {
-                "uid": "345",
+                "uid": "345             ",
                 "email": "jj@umass",
-
-                "username": null,
-                "bio": null,
+                "username": "John",
+                "bio": "Student",
                 "imglink": null,
-                "superuser": null,
-                "locationperm": null,
-                "notificationperm": null,
-                "colorblindrating": null
+                "superuser": true,
+                "locationperm": true,
+                "notificationperm": true,
+                "colorblindrating": 10
             }
         ])
     })
