@@ -123,26 +123,6 @@ class s3Helpers {
 }
 
 class imgFuncs {
-    static async getFileNames(type, id) {
-        /**
-         * @param: type (users or posts) and id (uid or pid)
-         * @returns array of localPath, uploadPath, and extension as strings
-         */
-        const recieptPath = 'images/'
-        const recieptFileName = 'unassigned'
-        var extension
-        await fs.readdir(recieptPath).then(files => {
-            for (const file of files) {
-                if (file.includes(recieptFileName)) {
-                    extension = path.extname(file)
-                }
-            }
-        })
-        const localPath =  `${recieptPath}${recieptFileName}${extension}`
-        const uploadPath = `${type}/${id}${extension}`
-        return [localPath, uploadPath, extension]
-    }
-
     static async clearS3(type, id) {
         /**
          * @param: type and id
@@ -156,27 +136,6 @@ class imgFuncs {
             }
         }
         if (fileName !== undefined) await s3Helpers.s3DeleteFile(fileName)
-    }
-
-    static async clearDB(type, id, idVal) {
-        const query = `UPDATE ${type} SET imglink = NULL WHERE ${id} = $1`
-        const vals = [idVal]
-        return pool.query(query, vals, (error, res) => {
-            if (error) {
-                return error
-            }
-            return res
-        })
-    }
-
-    static async putDB(type, id, idVal, url) {
-        const query = `UPDATE ${type} SET imglink = $1 WHERE ${id} = $2`
-        const vals = [url, idVal]
-        return pool.query(query, vals, (error, _) => {
-            if (error) {
-                return error
-            }
-        })
     }
 
     static async upload(type, req, res, next) {
@@ -215,27 +174,39 @@ class imgFuncs {
             return res.status(400).json({message: 'img must be specified'});
         }
     
-        //getFileNames -> [localPath, uploadPath, extension]
-        const files = await imgFuncs.getFileNames(type, idVal)
+        const recieptPath = "images/"
+        const recieptFileName = 'unassigned'
+        var extension
+        await fs.readdir(recieptPath).then(files => {
+            for (const file of files) {
+                if (file.includes(recieptFileName)) {
+                    extension = path.extname(file)
+                }
+            }
+        })
+        const localPath =  `${recieptPath}${recieptFileName}${extension}`
+        const uploadPath = `${type}/${idVal}${extension}`
 
         //clear s3 and db
         await imgFuncs.clearS3(type, idVal)
-        await imgFuncs.clearDB(type, id, idVal)
         
         //upload to S3
-        await s3Helpers.s3Put(files[0], files[1], files[2]) //cannot produce error
+        await s3Helpers.s3Put(localPath, uploadPath, extension) //cannot produce error
     
         //get s3 signed url
         const url = await s3Helpers.s3GetSignedURL(type, idVal)
     
         //put url into db
-        const error = await imgFuncs.putDB(type, id, idVal, url)
-        if (error) {
-            return res.status(400).json({
-                "message": error.message
-            })
-        }
-        return res.status(200).json({message: url});
+        const query = `UPDATE ${type} SET imglink = $1 WHERE ${id} = $2`
+        const vals = [url, idVal]
+        return pool.query(query, vals, (error, _) => {
+            if (error) {
+                return res.status(400).json({
+                    "message": error.message
+                })
+            }
+            return res.status(200).json({message: url});
+        })
     }
 
     static async delete(type, req, res, next) {
@@ -273,11 +244,14 @@ class imgFuncs {
         await imgFuncs.clearS3(type, idVal)
 
         //clear db entry
-        const err = await imgFuncs.clearDB(type, id, idVal)
-        if (err) {
-            return res.status(400).json({message: error.message})
-        }
-        return res.status(200).json({message: "image delete successful"})
+        const query = `UPDATE ${type} SET imglink = NULL WHERE ${id} = $1`
+        const vals = [idVal]
+        return pool.query(query, vals, (error, _) => {
+            if (error) {
+                return res.status(400).json({message: error.message})
+            }
+            res.status(200).json({message: "image delete successful"})
+        })
     }
 }
 
