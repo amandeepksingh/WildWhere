@@ -28,4 +28,17 @@ class Post {
       imgLink: json['imgLink']
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'uid': uid,
+      'datetime': datetime,
+      'coordinate': coordinate,
+      'animal': animalName,
+      'quantity': quantity,
+      'activity': activity,
+      'imgLink': imgLink,
+    };
+  }
 }
+
