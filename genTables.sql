@@ -7,7 +7,7 @@ CREATE TABLE Users (
     email VARCHAR(50),
     username VARCHAR(50),
     bio VARCHAR(50),
-    pfpLink VARCHAR(5000),
+    imgLink VARCHAR(5000),
     superUser BOOLEAN,
     locationPerm BOOLEAN,
     notificationPerm BOOLEAN,

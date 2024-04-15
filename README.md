@@ -233,7 +233,7 @@ _uploading images_: Used to upload images
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
 | _ec2Host/images/userProfilePic/upload_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string
 | :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
-||| uid int | REQUIRED || 'image upload successful'
+||| uid int | REQUIRED || link to pfp
 ||| img image | REQUIRED || _or_
 ||| ||| error message
 
@@ -254,8 +254,7 @@ _uploading images_: Used to upload images
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
 | _ec2Host/images/postPic/upload_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string
 | :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
-||| uid int | REQUIRED || 'image upload successful'
-||| pid int | REQUIRED || 'image upload successful'
+||| pid int | REQUIRED || link to pfp
 ||| img image | REQUIRED || _or_
 ||| ||| error message
 
@@ -265,7 +264,6 @@ _deleting images_: Used to delete image (signed URLs become invalid)
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
 | _ec2Host/images/postPic/delete_ | _delete_ | _JSON body of following_ | _optional or required_ | _200_ | string
 | :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
-||| uid int | REQUIRED || 'image upload successful'
 ||| pid int | REQUIRED || 'image delete successful'
 |||||| _or_
 |||||| error message
