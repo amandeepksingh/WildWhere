@@ -276,4 +276,3 @@ void currentLocation(var controller) async {
     ),
   );
 }
-

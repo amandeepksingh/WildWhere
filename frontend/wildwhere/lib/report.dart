@@ -7,6 +7,7 @@ import 'package:wildwhere/database.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:wildwhere/post.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ReportPage extends StatefulWidget {
   const ReportPage({super.key});
@@ -16,12 +17,21 @@ class ReportPage extends StatefulWidget {
 }
 
 class _ReportPageState extends State<ReportPage> {
-  XFile? selectedImage;
   final _imagePicker = ImagePicker();
+  late User? user;
+  late String? uid;
+  XFile? selectedImage;
   String? animal;
   String? quantity;
   String? activity;
   bool showError = false;
+
+  @override
+  void initState() {
+    super.initState();
+    user = FirebaseAuth.instance.currentUser;
+    uid = user?.uid; // Use null-aware operator to handle null user
+  }
 
   Future<void> submitOnPressed() async {
      if (animal == null || quantity == null || activity == null) {
@@ -39,8 +49,7 @@ class _ReportPageState extends State<ReportPage> {
     String longitude = position.longitude.toString();
     String coordinate = '($longitude, $latitude)';
     String datetime = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
-    String uid = '434Vdwivv7beTIyG'; //temporary, need to pull from user -> STORE WITH SHARED_PREFERENCES PACKAGE!!!!
-    
+ 
     Post newPost = Post(
     uid: uid,
     datetime: datetime,

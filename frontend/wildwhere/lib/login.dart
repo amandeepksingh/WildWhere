@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:wildwhere/database.dart';
 import 'package:wildwhere/mapscreen.dart';
+import 'package:wildwhere/profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Login extends StatefulWidget {
@@ -26,9 +28,21 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _user != null ? MapScreen() : logInScreen(),
-    );
+    if (_user == null) {
+      return logInScreen();
+    } else {
+      Database db = Database();
+      var userData = FirebaseAuth.instance.currentUser;
+      if (userData?.metadata.creationTime ==
+          userData?.metadata.lastSignInTime) {
+        //first-time signin
+        var response = db.createUser(uid: userData!.uid);
+        return const Profile();
+      } else {
+        //returning user
+        return const MapScreen();
+      }
+    }
   }
 
   Widget logInScreen() {
@@ -68,7 +82,7 @@ class _LoginState extends State<Login> {
     try {
       GoogleAuthProvider _googleAuthProvider = GoogleAuthProvider();
       _auth.signInWithProvider(_googleAuthProvider);
-    } catch(error) {
+    } catch (error) {
       print(error);
     }
   }
@@ -77,7 +91,7 @@ class _LoginState extends State<Login> {
     try {
       FacebookAuthProvider _facebookAuthProvider = FacebookAuthProvider();
       _auth.signInWithProvider(_facebookAuthProvider);
-    } catch(error) {
+    } catch (error) {
       print(error);
     }
   }
@@ -86,7 +100,7 @@ class _LoginState extends State<Login> {
     try {
       AppleAuthProvider _appleAuthProvider = AppleAuthProvider();
       _auth.signInWithProvider(_appleAuthProvider);
-    } catch(error) {
+    } catch (error) {
       print(error);
     }
   }
@@ -106,7 +120,8 @@ class _LoginState extends State<Login> {
         child: Text('Sign in with Facebook', style: TextStyle(fontSize: 20)),
       ),
       style: OutlinedButton.styleFrom(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
           foregroundColor: const Color.fromARGB(255, 0, 0, 0),
           elevation: 5),
     );
@@ -127,7 +142,8 @@ class _LoginState extends State<Login> {
         child: Text('Sign in with Google', style: TextStyle(fontSize: 20)),
       ),
       style: OutlinedButton.styleFrom(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
           foregroundColor: const Color.fromARGB(255, 0, 0, 0),
           elevation: 5),
     );
@@ -148,8 +164,8 @@ class _LoginState extends State<Login> {
         child: Text('Sign in with Apple', style: TextStyle(fontSize: 20)),
       ),
       style: OutlinedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
           foregroundColor: const Color.fromARGB(255, 0, 0, 0),
           elevation: 5),
     );
