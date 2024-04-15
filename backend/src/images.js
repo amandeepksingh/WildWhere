@@ -10,16 +10,33 @@ const AWSPreSigner = require('@aws-sdk/s3-request-presigner');
 require('dotenv').config({path: "../.env"});
 
 //creates DB connection
-const pool = new Pool({
-    user: process.env.dbUser,
-    host: process.env.dbHost,
-    database: process.env.dbName,
-    password: process.env.dbPass,
-    port: process.env.dbPort,
-	// ssl: {
-	// 	rejectUnauthorized:false
-	// } //used only on EC2
-});
+let pool;
+if(process.env.location == "local") {
+	console.log(`[Images] using local pool`);
+     pool = new Pool({
+        user: process.env.dbUser,
+        host: process.env.dbHost,
+        database: process.env.dbName,
+        password: process.env.dbPass,
+        port: process.env.dbPort,
+        // ssl: {
+        // 	rejectUnauthorized:false
+        // } //used only on EC2
+    });    
+} else {
+	console.log(`[Images] using server pool`);
+     pool = new Pool({
+        user: process.env.dbUser,
+        host: process.env.dbHost,
+        database: process.env.dbName,
+        password: process.env.dbPass,
+        port: process.env.dbPort,
+        ssl: {
+        	rejectUnauthorized:false
+        } //used only on EC2
+    });
+}
+
 
 //configure storage point for files
 const imageStore = multer.diskStorage({

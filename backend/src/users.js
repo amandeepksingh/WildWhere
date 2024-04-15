@@ -5,16 +5,34 @@ require('dotenv').config({path: "../.env"});
 const randomstring = require('randomstring')
 
 //creates DB connection
-const pool = new Pool({
-    user: process.env.dbUser,
-    host: process.env.dbHost,
-    database: process.env.dbName,
-    password: process.env.dbPass,
-    port: process.env.dbPort,
-	// ssl: {
-	// 	rejectUnauthorized:false
-	// } //used only on EC2
-});
+let pool;
+if(process.env.location == "local") {
+	console.log(`[Users] using local pool`);
+     pool = new Pool({
+        user: process.env.dbUser,
+        host: process.env.dbHost,
+        database: process.env.dbName,
+        password: process.env.dbPass,
+        port: process.env.dbPort,
+        // ssl: {
+        // 	rejectUnauthorized:false
+        // } //used only on EC2
+    });    
+} else {
+	console.log(`[Users] using server pool`);
+     pool = new Pool({
+        user: process.env.dbUser,
+        host: process.env.dbHost,
+        database: process.env.dbName,
+        password: process.env.dbPass,
+        port: process.env.dbPort,
+        ssl: {
+        	rejectUnauthorized:false
+        } //used only on EC2
+    });
+}
+
+
 
 //creates users and routes methods and endpoints to functions
 const users = express();
