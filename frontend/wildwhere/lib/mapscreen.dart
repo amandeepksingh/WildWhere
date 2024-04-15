@@ -16,6 +16,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'dart:typed_data';
 import 'package:flutter/services.dart';
+import 'package:wildwhere/postslistpage.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -122,6 +123,7 @@ Widget build(BuildContext context) {
   return Stack(children: <Widget>[
     Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         automaticallyImplyLeading: false,
         elevation: 2,
         title: const Text('Sightings'),
@@ -140,8 +142,8 @@ Widget build(BuildContext context) {
     body: Stack(
       children: [
         MapboxMap(
-          //styleString: "mapbox://styles/mberezuns/clv04vk35010701pk5pat427l",
-          accessToken: "your-mapbox-access-token",
+          styleString: "mapbox://styles/mberezuns/clv1ba4fz019m01p61mdggons",
+          accessToken: "pk.eyJ1IjoibWJlcmV6dW5zIiwiYSI6ImNsdjA1MTk0djFlcDIybG14bHNtem1xeGEifQ.Xcg2SVacZ2TjY0zcKVKTig",
           onMapCreated: _onMapCreated,
           onStyleLoadedCallback: _onStyleLoaded,
           trackCameraPosition: true,
@@ -160,6 +162,14 @@ Widget build(BuildContext context) {
           left: symbolWidgetPosition!.dx,
           top: symbolWidgetPosition!.dy,
           child: _buildInfoBox(),
+        ),
+        Positioned(
+          left: 20,
+          bottom: 20,
+          child: FloatingActionButton(
+            onPressed: _navigateToPostsPage,
+            tooltip: 'View Posts',
+          )
         )
       ],
     ),
@@ -208,6 +218,13 @@ Widget build(BuildContext context) {
       ),
     ),
   ]);
+  }
+
+  void _navigateToPostsPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const PostsListPage()),
+    );
   }
 
   Widget _buildInfoBox() {

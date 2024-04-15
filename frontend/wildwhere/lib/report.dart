@@ -19,7 +19,7 @@ class _ReportPageState extends State<ReportPage> {
   XFile? selectedImage;
   final _imagePicker = ImagePicker();
   String? animal;
-  String? quantity;
+  int? quantity;
   String? activity;
   bool showError = false;
 
@@ -35,9 +35,10 @@ class _ReportPageState extends State<ReportPage> {
 
     Location location = Location();
     Position position = await location.currentLocation();
-    String latitude = position.latitude.toString();
-    String longitude = position.longitude.toString();
-    String coordinate = '($longitude, $latitude)';
+    Map<String, dynamic> coordinate = {
+    'x': position.longitude.toString(),
+    'y': position.latitude.toString()
+  };
     String datetime = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
     String uid = '434Vdwivv7beTIyG'; //temporary, need to pull from user -> STORE WITH SHARED_PREFERENCES PACKAGE!!!!
     
@@ -218,24 +219,24 @@ class _ReportPageState extends State<ReportPage> {
   }
 
   Widget animalQuantityButton() {
-    return DropdownButton<String>(
-      value: quantity,
-      isExpanded: true,
-      items: <String>['1', '2', '3', '4', '5-10']
-          .map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-      onChanged: (String? newQuantity) {
-        setState(() {
-          quantity = newQuantity;
-        });
-      },
-      hint: const Text('Select a quantity'),
-    );
-  }
+  return DropdownButton<int>(
+    value: quantity,
+    isExpanded: true,
+    items: <int>[1, 2, 3, 4, 5]  // Changed from strings to integers
+        .map<DropdownMenuItem<int>>((int value) {
+      return DropdownMenuItem<int>(
+        value: value,
+        child: Text(value.toString()), // Convert int to string for display
+      );
+    }).toList(),
+    onChanged: (int? newValue) {
+      setState(() {
+        quantity = newValue;
+      });
+    },
+    hint: const Text('Select a quantity'),
+  );
+}
 
   Widget animalActivityButton() {
     return DropdownButton<String>(

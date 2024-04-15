@@ -14,8 +14,11 @@ class Database {
       },
     );
 
+   print(response.body);
+
     if (response.statusCode == 200) {
-      List<dynamic> postsJson = json.decode(response.body);
+      Map<String,dynamic> data = json.decode(response.body);
+      List<dynamic> postsJson = data['message'];
       return postsJson.map((json) => Post.fromJson(json)).toList();
     } else {
       // Error handling if the request fails
