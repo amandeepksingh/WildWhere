@@ -63,6 +63,11 @@ pipeline {
                                 scp -o StrictHostKeyChecking=no -i $SSH_D_KEY \$EnvFile ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
                                 ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'node --version'
                             '''
+                            dir('WWBUILD') {
+                                sh '''
+                                    ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'mv serverenv .env'
+                                '''
+                            }
                             
                         
                             
