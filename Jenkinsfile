@@ -77,11 +77,11 @@ pipeline {
                             '''
 
                             try {
-                                timeout(time: 24, unit:'SECONDS') {
+                                //timeout(time: 24, unit:'SECONDS') {
                                     sh '''
                                         ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'cd WWBUILD/backend && npm install --save && sudo setsid npm start >/dev/null 2>&1 < /dev/null & '
                                     '''
-                                }
+                              //  }
  
                             } catch(Exception e) {
 
