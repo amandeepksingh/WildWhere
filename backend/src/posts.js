@@ -121,14 +121,13 @@ function selectPost(req, res, next) {
 function createPost(req, res, next) {
     /**
      * @param:
-     *  pid string (required),
      *  uid string (required),
      *  imgLink string (optional),
      *  datetime string (optional),
-     *  coordinate (float,float) (optional),
-     *  animalName string,
-     *  quantity int,
-     *  activity string
+     *  coordinate (float,float) (required),
+     *  animalName string (optional),
+     *  quantity int (optional),
+     *  activity string (optional)
      * @returns:
      *  message string
      *      "post created"
@@ -179,9 +178,9 @@ function updatePostByPID(req, res, next) {
      *  imgLink string (optional),
      *  datetime string (optional),
      *  coordinate (float,float) (optional),
-     *  animalName string,
-     *  quantity int,
-     *  activity string
+     *  animalName string (optional),
+     *  quantity int (optional),
+     *  activity string (optional)
      * @returns:
      *  message string
      *      `post with pid ${pid} updated`
