@@ -5,12 +5,18 @@ const posts = require('./posts')
 const users = require('./users')
 const images = require('./images')
 const getHelpTxt = require('./help');
-
+const morgan = require('morgan');
+const logger = require('./logger')
 //creates app
 const app = express();
 
-app.use(bodyParser.urlencoded({extended: true})); //enables app to parse urlencoded
-app.use(bodyParser.json({})); //enables app to parse JSON bodies
+//setup logger and integrate as middleware
+new logger();
+app.use(morgan('combined', { stream: logger.requestLogStream }));
+
+//enables app to parse JSON bodies
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json({})); //allows parsing body from requests
 
 //sends /posts to posts, /users to users
 app.use('/posts', posts)

@@ -2,6 +2,7 @@
 const express = require('express')
 const Pool = require('pg').Pool;
 require('dotenv').config({path: "../.env"});
+const randomstring = require('randomstring')
 
 //creates DB connection
 const pool = new Pool({
@@ -25,21 +26,27 @@ posts.delete('/deletePostByPID', (req, res, next) => deletePostByPID(req, res, n
 function selectPost(req, res, next) {
     /**
      * @param:
-     *  pid int (optional),
-     *  uid int (optional),
+     *  pid string (optional),
+     *  uid string (optional),
      *  radius int (optional), 
      *  imgLink string (optional),
      *  starttime string (optional),
-     *  enttime string (optional),
+     *  endtime string (optional),
      *  coordinate (float,float) (optional)
+     *  animalName string (optional)
+     *  quantity int (optional)
+     *  activity string (optional)
      * @returns:
      *   message []{
-     *      pid int,
-     *      uid int,
+     *      pid string,
+     *      uid string,
      *      radius int,
      *      imgLink string,
      *      datetime string,
-     *      coordinate (x: float, y: float)
+     *      coordinate (x: float, y: float),
+     *      animalName string,
+     *      quantity int,
+     *      activity string
      *  }
      */
     var condits = []
@@ -80,6 +87,18 @@ function selectPost(req, res, next) {
         condits.push(`datetime <= TO_TIMESTAMP($${i++}, 'YYYY/MM/DD/HH24:MI:ss')`)
         values.push(req.body.endtime)
     }
+    if (req.body.animalName) {
+        condits.push(`animalName = $${i++}`)
+        values.push(req.body.animalName)
+    }
+    if (req.body.quantity) {
+        condits.push(`quantity = $${i++}`)
+        values.push(req.body.quantity)
+    }
+    if (req.body.activity) {
+        condits.push(`activity = $${i++}`)
+        values.push(req.body.activity)
+    }
 
     const query = condits.length === 0 ? "SELECT * FROM posts" 
         : {
@@ -102,25 +121,35 @@ function selectPost(req, res, next) {
 function createPost(req, res, next) {
     /**
      * @param:
-     *  pid int (required),
-     *  uid int (required),
+     *  pid string (required),
+     *  uid string (required),
      *  imgLink string (optional),
      *  datetime string (optional),
-     *  coordinate (float,float) (optional)
+     *  coordinate (float,float) (optional),
+     *  animalName string,
+     *  quantity int,
+     *  activity string
      * @returns:
      *  message string
-     *      post created
+     *      "post created"
      *      OR
      *      error message
+     *  pid string (on success)
     */
     var dict = {}
-    //NO PID, AUTO-INCREMENT STARTING FROM 2
+    //NO PID (randomly generated)
     if (req.body.uid) dict['uid'] = req.body.uid
     else return res.status(400).json({"message": "missing uid"}) //handles misformatted input
     if (req.body.imgLink) dict['imgLink'] = req.body.imgLink //s3 later on
     if (req.body.datetime) dict['datetime'] = req.body.datetime //check postgres
     if (req.body.coordinate) dict['coordinate'] = req.body.coordinate // postgres: string with format '(x, y)' where x, y are floats
     else return res.status(400).json({"message": "missing coordinates"})
+    if (req.body.animalName) dict['animalName'] = req.body.animalName
+    if (req.body.quantity) dict['quantity'] = req.body.quantity
+    if (req.body.activity) dict['activity'] = req.body.activity
+
+    const pid = randomstring.generate(16)
+    dict['pid'] = pid
 
     const fields = Object.keys(dict).join(', ')
     const placeholders = Object.keys(dict).map((_, i) => `$${i + 1}`).join(', ')
@@ -136,8 +165,8 @@ function createPost(req, res, next) {
             })
         }
         return res.status(200).json({
-            //could return the pid later
-            message: `post created`
+            message: "post created",
+            pid: pid
         })
     })
 }
@@ -145,14 +174,17 @@ function createPost(req, res, next) {
 function updatePostByPID(req, res, next) {
     /**
      * @param:
-     *  pid int (required),
-     *  uid int (optional),
+     *  pid string (required),
+     *  uid string (optional),
      *  imgLink string (optional),
      *  datetime string (optional),
-     *  coordinate (float,float) (optional)
+     *  coordinate (float,float) (optional),
+     *  animalName string,
+     *  quantity int,
+     *  activity string
      * @returns:
      *  message string
-     *      post updated
+     *      `post with pid ${pid} updated`
      *      OR
      *      error message
      */
@@ -167,6 +199,9 @@ function updatePostByPID(req, res, next) {
     if (req.body.imgLink) updates["imgLink"] = req.body.imgLink
     if (req.body.datetime) updates["datetime"] = req.body.datetime //check postgres format
     if (req.body.coordinate) updates["coordinate"] = req.body.coordinate //check postgres format
+    if (req.body.animalName) updates['animalName'] = req.body.animalName
+    if (req.body.quantity) updates['quantity'] = req.body.quantity
+    if (req.body.activity) updates['activity'] = req.body.activity
 
     const len = Object.keys(updates).length
     if(len > 0) {
@@ -183,7 +218,7 @@ function updatePostByPID(req, res, next) {
                 })
             }
             return res.status(200).json({
-                message: `post updated`
+                message: `post with pid ${req.body.pid} updated`
             })
         })
     }
@@ -192,10 +227,11 @@ function updatePostByPID(req, res, next) {
 function deletePostByPID(req, res, next) {
     /**
      *   @param:
-     *      pid int (required)
+     *      pid string (required)
      *   @returns:
      *       message string:
      *           `post with pid ${pid} deleted if existed`
+     *           OR
      *           error message
      */
     if (req.body.pid === undefined) {

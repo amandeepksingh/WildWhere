@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "846106559591",
+    "project_id": "wildwherev2",
+    "storage_bucket": "wildwherev2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:846106559591:android:c290af779d60c8a44f80c2",
+        "android_client_info": {
+          "package_name": "com.example.wildwhere"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "846106559591-07injo27jk3hq946ps6efgn7ou59b2pp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.wildwhere",
+            "certificate_hash": "689372c7d5822af326b740441a24152ce3cf085f"
+          }
+        },
+        {
+          "client_id": "846106559591-3s7urtels7q5hsrhmd84rcsufvvub7hm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxjO8qixmP0FwY1HmQz6ZjSodvDqNPu3E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "846106559591-3s7urtels7q5hsrhmd84rcsufvvub7hm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "846106559591-c2l9dcbp4hk38s2ejne016emfpin63ae.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.wildwhere"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
