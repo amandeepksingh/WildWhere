@@ -48,7 +48,7 @@ function selectUser(req, res, next) {
      *  email string (optional)
      *  username string (optional)
      *  bio string (optional)
-     *  pfplink linkToImg (optional)
+     *  imgLink string (optional)
      *  superUser boolean (optional)
      *  locationPerm boolean (optional)
      *  notificationPerm boolean (optional)
@@ -59,14 +59,14 @@ function selectUser(req, res, next) {
      *      email string,
      *      username string,
      *      bio string,
-     *      pfplink linkToImg,
+     *      imgLink string,
      *      superUser boolean,
      *      locationPerm boolean,
      *      notificationPerm boolean,
      *      colorBlindrating int
      *  }
      */
-    const columns = ["uid", "email", "username", "bio", "pfpLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
+    const columns = ["uid", "email", "username", "bio", "imgLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
     var condits = {}
     for(const col of columns) {
         if(req.body[col]) {
@@ -100,7 +100,7 @@ function createUser(req, res, next) {
      *  email string (optional)
      *  username string (optional)
      *  bio string (optional)
-     *  pfplink linkToImg (optional)
+     *  imgLink string (optional)
      *  superUser boolean (optional)
      *  locationPerm boolean (optional)
      *  notificationPerm boolean (optional)
@@ -112,7 +112,7 @@ function createUser(req, res, next) {
      *      error message
      *  uid string (on success)
      */
-    const columns = ["uid", "email", "username", "bio", "pfpLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
+    const columns = ["uid", "email", "username", "bio", "imgLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
     var dict = {}
     for(const col of columns) {
         if(req.body[col]) {
@@ -152,7 +152,7 @@ function updateUserByUID(req, res, next) {
      *  email string (optional)
      *  username string (optional)
      *  bio string (optional)
-     *  pfplink linkToImg (optional)
+     *  imgLink string (optional)
      *  superUser boolean (optional)
      *  locationPerm boolean (optional)
      *  notificationPerm boolean (optional)
@@ -169,7 +169,7 @@ function updateUserByUID(req, res, next) {
         }) //handles misformatted input
     }
 
-    const columns = ["email", "username", "bio", "pfpLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
+    const columns = ["email", "username", "bio", "imgLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
     const updates = {}
     for(const col of columns) {
         if(req.body[col]) {
