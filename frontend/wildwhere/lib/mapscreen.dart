@@ -187,6 +187,7 @@ Widget build(BuildContext context) {
     ),
     floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     floatingActionButton: FloatingActionButton.large(
+        heroTag: "reportPage",
         onPressed: reportOverlayControl.toggle,
         elevation: 10,
         shape: const CircleBorder(),
@@ -206,6 +207,7 @@ Widget build(BuildContext context) {
       child: Column(
         children: <Widget>[
           FloatingActionButton(
+            heroTag: "centerLocation",
             onPressed: () => currentLocation(mapController),
             shape: const CircleBorder(),
             elevation: 2,
@@ -214,6 +216,7 @@ Widget build(BuildContext context) {
           ),
           const SizedBox(height: 10),
           FloatingActionButton(
+            heroTag: "mapPref",
             onPressed: prefOverlayControl.toggle,
             shape: const CircleBorder(),
             elevation: 2,
