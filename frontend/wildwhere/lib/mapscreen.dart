@@ -48,29 +48,6 @@ class _MapState extends State<MapScreen> {
     addImageFromAsset("assetImage", "assets/images/markericon.png");
   }
 
-  Future<void> _fetchDataFromDatabase() async {
-    try {
-      var url = Uri.parse(
-        'http://ec2-13-58-233-86.us-east-2.compute.amazonaws.com:80/posts/selectPost?pid=1 ');
-      var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = json.decode(response.body);
-      final double lat = data['message'][0]['coordinate']['y'];
-      final double long = data['message'][0]['coordinate']['x'];
-      LatLng positionFromDB = LatLng(lat, long);
-        _addMarker('Marker from Database', positionFromDB.latitude, positionFromDB.longitude);
-    } else {
-      throw Exception('Error accessing post from database!');
-    } 
-    } catch (e) {
-        throw Exception(e);
-    }
-}
 
 
 void _onStyleLoaded() async {
