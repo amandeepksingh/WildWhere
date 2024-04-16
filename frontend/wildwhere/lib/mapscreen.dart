@@ -54,7 +54,6 @@ class _MapState extends State<MapScreen> {
 
 
 void _onStyleLoaded() async {
-   _addMarker("marker1", 42.382418, -72.519032);
    _loadMarkers();
   }
 
