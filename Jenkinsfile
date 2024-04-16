@@ -81,9 +81,9 @@ pipeline {
                                     sh '''
                                         ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'cd WWBUILD/backend && npm install --save'
                                     '''
-                                    // sh '''
-                                    //     ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'cd WWBUILD/backend && chmod +x wwstart.sh && sudo ./wwstart.sh'
-                                    // '''
+                                    sh '''
+                                        ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'cd WWBUILD/backend && npm run serve'
+                                    '''
                               //  }
  
                             } catch(Exception e) {
