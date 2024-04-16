@@ -14,7 +14,6 @@ class Database {
       },
     );
 
-   print(response.body);
 
     if (response.statusCode == 200) {
       Map<String,dynamic> data = json.decode(response.body);

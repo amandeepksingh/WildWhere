@@ -74,7 +74,7 @@ class _MapState extends State<MapScreen> {
 
 
 void _onStyleLoaded() async {
-   _addMarker("marker1", 42.382418, -72.519032,);
+   _addMarker("marker1", 42.382418, -72.519032);
   }
 
 
@@ -144,6 +144,8 @@ Widget build(BuildContext context) {
         MapboxMap(
           styleString: "mapbox://styles/mberezuns/clv1ba4fz019m01p61mdggons",
           accessToken: "pk.eyJ1IjoibWJlcmV6dW5zIiwiYSI6ImNsdjA1MTk0djFlcDIybG14bHNtem1xeGEifQ.Xcg2SVacZ2TjY0zcKVKTig",
+          myLocationEnabled: true,
+          myLocationRenderMode: MyLocationRenderMode.NORMAL,
           onMapCreated: _onMapCreated,
           onStyleLoadedCallback: _onStyleLoaded,
           trackCameraPosition: true,
