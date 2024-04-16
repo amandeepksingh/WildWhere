@@ -17,6 +17,7 @@ import 'package:mapbox_gl/mapbox_gl.dart';
 import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:wildwhere/postslistpage.dart';
+import 'package:wildwhere/post.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -29,6 +30,8 @@ class _MapState extends State<MapScreen> {
   MapboxMapController? _controller;
   Symbol? selectedSymbol;
   Offset? symbolWidgetPosition;
+  Map<String, dynamic> symbolDataMap = {};
+  Map<String, dynamic>? currentPostData;
   
    @override
   void initState() {
@@ -52,6 +55,7 @@ class _MapState extends State<MapScreen> {
 
 void _onStyleLoaded() async {
    _addMarker("marker1", 42.382418, -72.519032);
+   _loadMarkers();
   }
 
 
@@ -61,22 +65,42 @@ Future<void> addImageFromAsset(String name, String assetName) async {
     await _controller?.addImage(name, list);
   }
 
-void _addMarker(String id, double latitude, double longitude) {
-    _controller?.addSymbol(
-      SymbolOptions(
-        geometry: LatLng(latitude, longitude),
-        iconImage: "assetImage",
-        iconSize: 2.5,
-      ),
-    );
+void _loadMarkers() async {
+  try {
+    List<Post> posts = await Database().getAllPosts();
+    for (Post post in posts) {
+      _addMarker(post.pid!, post.coordinate['y'] as double, post.coordinate['x'] as double, post: post);
+    }
+  } catch (e) {
+    print("Failed to load posts: $e");
   }
+}
+
+
+void _addMarker(String id, double latitude, double longitude, {Post? post}) {
+  _controller?.addSymbol(
+    SymbolOptions(
+      geometry: LatLng(latitude, longitude),
+      iconImage: "assetImage",
+      iconSize: 2.5,
+    ),
+  ).then((symbol) {
+    // Storing post data in the map
+    if (post != null) {
+      symbolDataMap[symbol.id] = post.toJson();
+    }
+  });
+}
 
 void _onSymbolTapped(Symbol symbol) {
     setState(() {
       selectedSymbol = symbol;
       _updateSymbolPosition();
+      // Fetch detailed information from the map using symbol ID
+      currentPostData = symbolDataMap[symbol.id];
     });
   }
+
 void _onCameraMove() {
     if (_controller != null && selectedSymbol != null) {
       _updateSymbolPosition();
@@ -207,18 +231,29 @@ Widget build(BuildContext context) {
   }
 
   Widget _buildInfoBox() {
-    return Container(
-      width: 200,
-      height: 100,
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: const [BoxShadow( color: Colors.black26, offset: Offset(0, 2),)],
-      ),
-      child: Text(selectedSymbol != null ? "Details about the marker ${selectedSymbol!.id}" : "Tap a marker"),
-    );
+  if (selectedSymbol == null || currentPostData == null) {
+    return SizedBox.shrink(); // Return an empty container if no symbol is selected
   }
+
+  Map<String, dynamic> data = currentPostData!;
+    String infoText = "PID: ${data['pid']}\n"
+                      "Animal: ${data['animalName']}\n"
+                      "Activity: ${data['activity']}\n"
+                      "Quantity: ${data['quantity']}\n";
+                      
+
+  return Container(
+    width: 200,
+    height: 100,
+    padding: const EdgeInsets.all(10),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(10),
+      boxShadow: const [BoxShadow(color: Colors.black26, offset: Offset(0, 2))],
+    ),
+    child: Text(infoText),
+  );
+}
 
 }
 
