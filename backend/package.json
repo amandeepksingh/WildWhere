@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/server.js",
     "test": "npx mocha --serial",
-    "coverage": "npx nyc mocha"
+    "coverage": "npx nyc mocha",
+    "serve": "forever start src/server.js"
   },
   "author": "",
   "license": "ISC",
