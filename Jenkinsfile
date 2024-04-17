@@ -108,61 +108,59 @@ pipeline {
                 // }
                sh 'echo "Deploying..."'
                withCredentials([sshUserPrivateKey(credentialsId: 'ww-prod-cred', keyFileVariable: 'SSH_KEY')]) {
-                        // sh '''
-                        //     ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'sudo su'
-                        //     ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'whoami'
-                        // '''
-                    script {
-                        def reg = input(
-                        message: 'Deploy on to production server?', 
-                        parameters: [
-                            [$class: 'ChoiceParameterDefinition', 
-                                choices: 'yes\nno', 
-                                name: 'input', 
-                                description: 'A select box option']
-                        ])
-                        println "$reg"
-                        if(reg == "yes") {
-                            try {
-                            sh '''
-                                ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'sudo rm -rf WWBUILD'
-                            '''
-                        } catch(Exception e) {
-
-                        }
-                    
-                            sh '''
-                                ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'mkdir WWBUILD'
-                                scp -o StrictHostKeyChecking=no -i $SSH_KEY -r backend ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
-                                scp -o StrictHostKeyChecking=no -i $SSH_KEY .env ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
-                                scp -o StrictHostKeyChecking=no -i $SSH_KEY genTables.sql ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
-                                scp -o StrictHostKeyChecking=no -i $SSH_KEY \$EnvFile ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
-                                ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'node --version'
-                            '''
-                           
-                            sh '''
-                                ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'cd WWBUILD && pwd && mv serverenv .env'
-                            '''
-
-                            try {
-                                //timeout(time: 24, unit:'SECONDS') {
+                withCredentials([file(credentialsId: 'serverenv', variable: 'EnvFile')]) {
+                            script {
+                                def reg = input(
+                                message: 'Deploy on to production server?', 
+                                parameters: [
+                                    [$class: 'ChoiceParameterDefinition', 
+                                        choices: 'yes\nno', 
+                                        name: 'input', 
+                                        description: 'A select box option']
+                                ])
+                                println "$reg"
+                                if(reg == "yes") {
+                                    try {
                                     sh '''
-                                        ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'cd WWBUILD/backend && npm install --save'
+                                        ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'sudo rm -rf WWBUILD'
                                     '''
-                                    sh '''
-                                        ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'cd WWBUILD/backend && sudo npm run serve'
-                                    '''
-                              //  }
- 
-                            } catch(Exception e) {
+                                } catch(Exception e) {
 
-                            }
-                        } else {
-                            println "we have decided not to go forward with prod build"
+                                }
+                            
+                                    sh '''
+                                        ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'mkdir WWBUILD'
+                                        scp -o StrictHostKeyChecking=no -i $SSH_KEY -r backend ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
+                                        scp -o StrictHostKeyChecking=no -i $SSH_KEY .env ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
+                                        scp -o StrictHostKeyChecking=no -i $SSH_KEY genTables.sql ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
+                                        scp -o StrictHostKeyChecking=no -i $SSH_KEY \$EnvFile ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
+                                        ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'node --version'
+                                    '''
+                                
+                                    sh '''
+                                        ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'cd WWBUILD && pwd && mv serverenv .env'
+                                    '''
+
+                                    try {
+                                        //timeout(time: 24, unit:'SECONDS') {
+                                            sh '''
+                                                ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'cd WWBUILD/backend && npm install --save'
+                                            '''
+                                            sh '''
+                                                ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'cd WWBUILD/backend && sudo npm run serve'
+                                            '''
+                                    //  }
+        
+                                    } catch(Exception e) {
+
+                                    }
+                                } else {
+                                    println "we have decided not to go forward with prod build"
+                                }
+                                
+                            } 
                         }
-                        
-                    } 
-                }
+               }
             } 
         }
     }
