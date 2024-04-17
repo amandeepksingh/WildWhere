@@ -56,6 +56,7 @@ This README provides instructions on how to find the WildWhere project’s build
 - then install the required dependencies by running ```npm install --save```
 - You can now run the scripts indicated in the package.json such as ```npm run start ```
 - Edit and have fun! When you are done, ```git status``` will list changed files ```git commit -a``` will automatically stage and commit all changes. If you choose to only commit certain files ```git add <file>``` will stage the file for commit, you must manually write ```git commit``` to commit, write a commit message save the file and quit. To push to remote run ```git push```. <b>MAKE SURE</b> you do not have any aws secrets.
+ - if you need to work on something else and the work is not complete you do not need to commit. Instead you may stash the changes to save for later by using ```git stash```. To reapply the changes run ```git stash apply```. To get rid of them ```git stash drop```
 - when you are done with the branch you can either submit a pull request, which will require review, or you can delete the branch
   - to submit a pull request you must go through the github website
   - to delete branch, first switch to another branch by running ```git checkout <another-branch>``` then ```git branch -d <your_onboarding_branch>```(if it chooses not to delete you can use the ```-D``` flag instead of ```-d```), which will only delete the branch locally. To delete on the remote run ```git push origin --delete <another-branch>``` 
