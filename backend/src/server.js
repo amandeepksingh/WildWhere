@@ -2,7 +2,7 @@
 const express = require('express');
 const app = require('./app');
 const fs = require('fs');
-require('dotenv').config({path: "../../../.env"});
+require('dotenv').config({path: "../../.env"});
 
 if(process.env.location == "local") {
 	console.log(`[server] Detected that you are running locally`);
@@ -25,7 +25,7 @@ if(process.env.location == "local") {
 const server = express();
 server.use(app);
 
-console.log(`[Server] ${process.cwd()}`);
+
 
 //Server listens
 server.listen(process.env.ec2port, () =>{ //server listens to calls

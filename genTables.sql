@@ -2,8 +2,7 @@ CREATE EXTENSION IF NOT EXISTS cube;
 
 CREATE EXTENSION IF NOT EXISTS earthdistance;
 
-
-CREATE TABLE Users (
+CREATE TABLE users (
     uid CHAR(16) PRIMARY KEY, 
     email VARCHAR(50),
     username VARCHAR(50),

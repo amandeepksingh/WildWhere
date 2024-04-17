@@ -121,7 +121,7 @@ _selecting users_: Used to select all users matching input JSON body and return 
 ||| email string | optional || email string
 ||| username string | optional || username string
 ||| bio string | optional || bio string
-||| pfplink linkToImg | optional || pfplink linkToImg
+||| imgLink string | optional || imgLink string
 ||| superUser boolean | optional || superUser boolean
 ||| locationPerm boolean | optional || locationPerm boolean
 ||| notificationPerm boolean | optional || notificationPerm boolean
@@ -136,7 +136,7 @@ _creating users_: Used to create user with attributes matching the input JSON bo
 ||| email string | optional || _or_
 ||| username string | optional || error message
 ||| bio string | optional || 
-||| pfplink linkToImg | optional || 
+||| imgLink string | optional || 
 ||| superUser boolean | optional || 
 ||| locationPerm boolean | optional || 
 ||| notificationPerm boolean | optional || 
@@ -151,7 +151,7 @@ _updating users_: Used to update user with given UID so the match the input JSON
 ||| email string | optional || _or_
 ||| username string | optional || error message
 ||| bio string | optional || 
-||| pfplink linkToImg | optional || 
+||| imgLink string | optional || 
 ||| superUser boolean | optional || 
 ||| locationPerm boolean | optional || 
 ||| notificationPerm boolean | optional || 

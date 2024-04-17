@@ -41,30 +41,58 @@ pipeline {
                sh 'echo "test sees" & ls -l -a'
                sh 'echo deploying to test server'
                 withCredentials([sshUserPrivateKey(credentialsId: 'ww-dev-cred', keyFileVariable: 'SSH_D_KEY')]) {
-                    script {
-                        try {
-                            def cm =  "  ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'rm -r WWBUILD'"
-                            def result = sh(script: cm, returnStatus: true)
+                    withCredentials([file(credentialsId: 'serverenv', variable: 'EnvFile')]) {
+                        script {
+                            try {
+                                sh '''
+                                    ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'cd WWBUILD/backend && pwd && sudo kill -9 "`cat pid.txt`"'
+                                '''
+                            } catch(Exception e) {
 
-                            if(result != 0) {
-                                echo "no need to remove previous build"
+                            }
+                            
+                            try {
+                                def cm =  "  ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'rm -r WWBUILD'"
+                                def result = sh(script: cm, returnStatus: true)
+
+                                if(result != 0) {
+                                    echo "no need to remove previous build"
+                                }
+                            
+                            } catch(Exception e) {
+
                             }
                         
-                        } catch(Exception e) {
+                            sh '''
+                                ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'mkdir WWBUILD'
+                                scp -o StrictHostKeyChecking=no -i $SSH_D_KEY -r backend ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
+                                scp -o StrictHostKeyChecking=no -i $SSH_D_KEY .env ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
+                                scp -o StrictHostKeyChecking=no -i $SSH_D_KEY genTables.sql ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
+                                scp -o StrictHostKeyChecking=no -i $SSH_D_KEY \$EnvFile ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
+                                ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'node --version'
+                            '''
+                           
+                            sh '''
+                                ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'cd WWBUILD && pwd && mv serverenv .env'
 
-                        }
-                    
-                        sh '''
-                            ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'mkdir WWBUILD'
-                            scp -o StrictHostKeyChecking=no -i $SSH_D_KEY -r backend ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
-                            scp -o StrictHostKeyChecking=no -i $SSH_D_KEY .env ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
-                            scp -o StrictHostKeyChecking=no -i $SSH_D_KEY genTables.sql ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
-                            ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'node --version'
-                            
-                        '''
-                       
-                        
-                    } 
+                            '''
+
+                            try {
+                                //timeout(time: 24, unit:'SECONDS') {
+                                    sh '''
+                                        ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'cd WWBUILD/backend && npm install --save'
+                                        ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json'
+                                    '''
+                                    sh '''
+                                        ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'cd WWBUILD/backend && sudo npm run serve'
+                                    '''
+                              //  }
+ 
+                            } catch(Exception e) {
+
+                            }
+                        } 
+                    }
                 }
             }
         }
@@ -103,13 +131,33 @@ pipeline {
 
                         }
                     
-                        sh '''
-                            ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'mkdir WWBUILD'
-                            scp -o StrictHostKeyChecking=no -i $SSH_KEY -r backend ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
-                            scp -o StrictHostKeyChecking=no -i $SSH_KEY .env ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
-                            ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'node --version'
-                            
-                        '''
+                            sh '''
+                                ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'mkdir WWBUILD'
+                                scp -o StrictHostKeyChecking=no -i $SSH_D_KEY -r backend ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
+                                scp -o StrictHostKeyChecking=no -i $SSH_D_KEY .env ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
+                                scp -o StrictHostKeyChecking=no -i $SSH_D_KEY genTables.sql ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
+                                scp -o StrictHostKeyChecking=no -i $SSH_D_KEY \$EnvFile ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
+                                ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'node --version'
+                            '''
+                           
+                            sh '''
+                                ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'cd WWBUILD && pwd && mv serverenv .env'
+                                ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json'
+                            '''
+
+                            try {
+                                //timeout(time: 24, unit:'SECONDS') {
+                                    sh '''
+                                        ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'cd WWBUILD/backend && npm install --save'
+                                    '''
+                                    sh '''
+                                        ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'cd WWBUILD/backend && sudo npm run serve'
+                                    '''
+                              //  }
+ 
+                            } catch(Exception e) {
+
+                            }
                         } else {
                             println "we have decided not to go forward with prod build"
                         }

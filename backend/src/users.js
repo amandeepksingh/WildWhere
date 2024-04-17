@@ -1,11 +1,10 @@
 //imports
 const express = require('express')
 const Pool = require('pg').Pool;
-require('dotenv').config({path: "../../.env"});
 const logger = require('./logger');
+require('dotenv').config({path: "../.env"});
 
 //creates DB connection
-console.log(`[Users] ${process.cwd()}`);
 let pool;
 if(process.env.location == "local") {
 	console.log(`[Users] using local pool`);
@@ -49,7 +48,7 @@ function selectUser(req, res, next) {
      *  email string (optional)
      *  username string (optional)
      *  bio string (optional)
-     *  pfplink linkToImg (optional)
+     *  imgLink string (optional)
      *  superUser boolean (optional)
      *  locationPerm boolean (optional)
      *  notificationPerm boolean (optional)
@@ -60,7 +59,7 @@ function selectUser(req, res, next) {
      *      email string,
      *      username string,
      *      bio string,
-     *      pfplink linkToImg,
+     *      imgLink string,
      *      superUser boolean,
      *      locationPerm boolean,
      *      notificationPerm boolean,
@@ -103,7 +102,7 @@ function createUser(req, res, next) {
      *  email string (optional)
      *  username string (optional)
      *  bio string (optional)
-     *  pfplink linkToImg (optional)
+     *  imgLink string (optional)
      *  superUser boolean (optional)
      *  locationPerm boolean (optional)
      *  notificationPerm boolean (optional)
@@ -158,7 +157,7 @@ function updateUserByUID(req, res, next) {
      *  email string (optional)
      *  username string (optional)
      *  bio string (optional)
-     *  pfplink linkToImg (optional)
+     *  imgLink string (optional)
      *  superUser boolean (optional)
      *  locationPerm boolean (optional)
      *  notificationPerm boolean (optional)
@@ -176,7 +175,7 @@ function updateUserByUID(req, res, next) {
         }) //handles misformatted input
     }
 
-    const columns = ["email", "username", "bio", "pfpLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
+    const columns = ["email", "username", "bio", "imgLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
     const updates = {}
     for(const col of columns) {
         if(req.body[col]) {
