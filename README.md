@@ -70,6 +70,12 @@ Unless special circumstances we NEVER edit and push directly on main.
 #### Server location
 The code will automatically detect that you are running on local and will resolve the server to localhost(127.0.0.1).
 
+#### Deploying to a server
+Normally ask a network admin and they will build your changes to a development server. Moreover, if your changes are merged into main the server should automatically deploy to development by the end of the day. However, if you are given access to the pipeline:
+- make sure your changes are merged to main, then manually build the pipeline. This will deploy to our development server. 
+- Unless explicitly given permission, do not build to our production server
+
+
 ### Backend API
 
 To run against the backend API, use the host listed for the EC2. This varies since it changes every time it's started up, but right now it is ec2-13-58-233-86.us-east-2.compute.amazonaws.com
