@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:wildwhere/data.dart';
-import 'package:wildwhere/map_preferences.dart';
 import 'package:wildwhere/profile.dart';
+import 'package:wildwhere/database.dart';
 import 'package:wildwhere/report.dart';
 import 'package:wildwhere/settings.dart';
 import 'package:geolocator/geolocator.dart';
@@ -22,10 +22,10 @@ class _MapState extends State<MapScreen> {
   MapboxMapController? _controller;
   Symbol? selectedSymbol;
   Offset? symbolWidgetPosition;
-
   Map<String, dynamic> symbolDataMap = {};
   Map<String, dynamic>? currentPostData;
-  
+  Future<Position>? position;
+
   @override
   void initState() {
     super.initState();
@@ -44,10 +44,8 @@ class _MapState extends State<MapScreen> {
     addImageFromAsset("assetImage", "assets/images/markericon.png");
   }
 
-
-void _onStyleLoaded() async {
-   _loadMarkers();
-
+  void _onStyleLoaded() async {
+    _loadMarkers();
   }
 
   Future<void> addImageFromAsset(String name, String assetName) async {
@@ -56,32 +54,35 @@ void _onStyleLoaded() async {
     await _controller?.addImage(name, list);
   }
 
-void _loadMarkers() async {
-  try {
-    List<Post> posts = await Database().getAllPosts();
-    for (Post post in posts) {
-      _addMarker(post.pid!, post.coordinate['y'] as double, post.coordinate['x'] as double, post: post);
+  void _loadMarkers() async {
+    try {
+      List<Post> posts = await Database().getAllPosts();
+      for (Post post in posts) {
+        _addMarker(post.pid!, post.coordinate['y'] as double,
+            post.coordinate['x'] as double,
+            post: post);
+      }
+    } catch (e) {
+      print("Failed to load posts: $e");
     }
-  } catch (e) {
-    print("Failed to load posts: $e");
   }
-}
 
-
-void _addMarker(String id, double latitude, double longitude, {Post? post}) {
-  _controller?.addSymbol(
-    SymbolOptions(
-      geometry: LatLng(latitude, longitude),
-      iconImage: "assetImage",
-      iconSize: 2.5,
-    ),
-  ).then((symbol) {
-    // Storing post data in the map
-    if (post != null) {
-      symbolDataMap[symbol.id] = post.toJson();
-    }
-  });
-}
+  void _addMarker(String id, double latitude, double longitude, {Post? post}) {
+    _controller
+        ?.addSymbol(
+      SymbolOptions(
+        geometry: LatLng(latitude, longitude),
+        iconImage: "assetImage",
+        iconSize: 2.5,
+      ),
+    )
+        .then((symbol) {
+      // Storing post data in the map
+      if (post != null) {
+        symbolDataMap[symbol.id] = post.toJson();
+      }
+    });
+  }
 
   void _onSymbolTapped(Symbol symbol) {
     setState(() {
@@ -92,9 +93,7 @@ void _addMarker(String id, double latitude, double longitude, {Post? post}) {
     });
   }
 
-
-void _onCameraMove() {
-
+  void _onCameraMove() {
     if (_controller != null && selectedSymbol != null) {
       _updateSymbolPosition();
     }
@@ -109,51 +108,29 @@ void _onCameraMove() {
           Offset(screenLocation.x - 100, screenLocation.y - 125);
     });
   }
-  
-@override
-Widget build(BuildContext context) {
-  var reportOverlayControl = OverlayPortalController();
-  var prefOverlayControl = OverlayPortalController();
-  return Stack(children: <Widget>[
-    Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        automaticallyImplyLeading: false,
-        elevation: 2,
-        title: const Text('Sightings'),
-        actions: [
-          PopupMenuButton(
-            onSelected: (item) => onSelected(context, item),
-            itemBuilder: (context) => [
-              const PopupMenuItem(value: 0, child: Text('Profile')),
-              const PopupMenuItem(value: 1, child: Text('Settings')),
-              const PopupMenuItem(value: 2, child: Text('Data & Statistics')),
-            ],
-            icon: const Icon(Icons.reorder),
-          ),
-        ],
-      ),
-    body: Stack(
-      children: [
-        MapboxMap(
-          styleString: "mapbox://styles/mberezuns/clv1ba4fz019m01p61mdggons",
-          accessToken: "pk.eyJ1IjoibWJlcmV6dW5zIiwiYSI6ImNsdjA1MTk0djFlcDIybG14bHNtem1xeGEifQ.Xcg2SVacZ2TjY0zcKVKTig",
-          myLocationEnabled: true,
-          myLocationRenderMode: MyLocationRenderMode.NORMAL,
-          onMapCreated: _onMapCreated,
-          onStyleLoadedCallback: _onStyleLoaded,
-          trackCameraPosition: true,
-          initialCameraPosition: const CameraPosition(
-            target: LatLng(42.381030, -72.529010),
-            zoom: 12,
-          ),
-          onMapClick: (point, latLng) {
-            setState(() {
-              selectedSymbol = null;
-              symbolWidgetPosition = null;
-            });
-          },
 
+  @override
+  Widget build(BuildContext context) {
+    var reportOverlayControl = OverlayPortalController();
+    //var prefOverlayControl = OverlayPortalController();
+    return Stack(children: <Widget>[
+      Scaffold(
+        appBar: AppBar(
+          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+          automaticallyImplyLeading: false,
+          elevation: 2,
+          title: const Text('Sightings'),
+          actions: [
+            PopupMenuButton(
+              onSelected: (item) => onSelected(context, item),
+              itemBuilder: (context) => [
+                const PopupMenuItem(value: 0, child: Text('Profile')),
+                const PopupMenuItem(value: 1, child: Text('Settings')),
+                const PopupMenuItem(value: 2, child: Text('Data & Statistics')),
+              ],
+              icon: const Icon(Icons.reorder),
+            ),
+          ],
         ),
         body: Stack(
           children: [
@@ -162,6 +139,8 @@ Widget build(BuildContext context) {
                   "mapbox://styles/mberezuns/clv1ba4fz019m01p61mdggons",
               accessToken:
                   "pk.eyJ1IjoibWJlcmV6dW5zIiwiYSI6ImNsdjA1MTk0djFlcDIybG14bHNtem1xeGEifQ.Xcg2SVacZ2TjY0zcKVKTig",
+              myLocationEnabled: true,
+              myLocationRenderMode: MyLocationRenderMode.NORMAL,
               onMapCreated: _onMapCreated,
               onStyleLoadedCallback: _onStyleLoaded,
               trackCameraPosition: true,
@@ -182,17 +161,6 @@ Widget build(BuildContext context) {
                 top: symbolWidgetPosition!.dy,
                 child: _buildInfoBox(),
               ),
-            Positioned(
-                left: 20,
-                bottom: 20,
-                child: FloatingActionButton(
-                  shape: const CircleBorder(),
-                  backgroundColor: const Color.fromARGB(255, 14, 138, 43),
-                  elevation: 10,
-                  onPressed: _navigateToPostsPage,
-                  tooltip: 'View Posts',
-                  child: const Icon(Icons.list)
-                ))
           ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -224,6 +192,13 @@ Widget build(BuildContext context) {
             ),
             const SizedBox(height: 10),
             FloatingActionButton(
+              onPressed: _navigateToPostsPage,
+              shape: const CircleBorder(),
+              elevation: 2,
+              backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+              child: const Icon(Icons.list),
+              )
+            /*FloatingActionButton(
               onPressed: prefOverlayControl.toggle,
               shape: const CircleBorder(),
               elevation: 2,
@@ -236,6 +211,7 @@ Widget build(BuildContext context) {
                 child: const Icon(Icons.layers_outlined),
               ),
             ),
+            */
           ],
         ),
       ),
@@ -250,31 +226,31 @@ Widget build(BuildContext context) {
   }
 
   Widget _buildInfoBox() {
-  if (selectedSymbol == null || currentPostData == null) {
-    return SizedBox.shrink(); // Return an empty container if no symbol is selected
-  }
+    if (selectedSymbol == null || currentPostData == null) {
+      return const SizedBox
+          .shrink(); // Return an empty container if no symbol is selected
+    }
 
-  Map<String, dynamic> data = currentPostData!;
+    Map<String, dynamic> data = currentPostData!;
     String infoText = "PID: ${data['pid']}\n"
-                      "Animal: ${data['animalName']}\n"
-                      "Activity: ${data['activity']}\n"
-                      "Quantity: ${data['quantity']}\n";
-                      
+        "Animal: ${data['animalName']}\n"
+        "Activity: ${data['activity']}\n"
+        "Quantity: ${data['quantity']}\n";
 
-  return Container(
-    width: 200,
-    height: 100,
-    padding: const EdgeInsets.all(10),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(10),
-      boxShadow: const [BoxShadow(color: Colors.black26, offset: Offset(0, 2))],
-    ),
-    child: Text(infoText),
-  );
-}
-
-
+    return Container(
+      width: 200,
+      height: 100,
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: const [
+          BoxShadow(color: Colors.black26, offset: Offset(0, 2))
+        ],
+      ),
+      child: Text(infoText),
+    );
+  }
 }
 
 //Handles drop-down selection navigation

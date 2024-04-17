@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:wildwhere/mapscreen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:wildwhere/edit_profile.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -9,16 +12,44 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<Profile> {
+  String? username;
+  String? pronouns;
+  String? bio;
+  String? email = FirebaseAuth.instance.currentUser?.email;
+  XFile? selectedImage;
 
-  @override 
+  void updateUsername(String newUsername) {
+    setState(() => username = newUsername);
+  }
+
+  void updatePronouns(String newPronouns) {
+    setState(() => pronouns = newPronouns);
+  }
+
+  void updateBio(String newBio) {
+    setState(() => bio = newBio);
+  }
+
+  void updateEmail(String newEmail) {
+    setState(() => email = newEmail);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       //creates the top bar format of the user's profile
       appBar: AppBar(
         title: const Text('User Profile'),
-        leading: BackButton(
-          onPressed: () => Navigator.pop(context),
-        ),
+        leading: BackButton(onPressed: () {
+          final NavigatorState? navigator = Navigator.maybeOf(context);
+
+          if (navigator!.canPop()) {
+            Navigator.pop(context);
+          } else {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const MapScreen()));
+          }
+        }),
         backgroundColor: const Color.fromARGB(255, 212, 246, 172),
       ),
       //creates the View Settings and Edit Profile buttons
@@ -27,18 +58,19 @@ class _ProfilePageState extends State<Profile> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 20), // Add spacing above the buttons
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(
-                  'Username', // have this set so it takes 
+                  username ?? 'Username', // have this set so it takes
                   //input from whenever edit profile is updated
                   //and persists until the next change
-                  style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                  style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
                 ),
               ],
             ),
-            const SizedBox(height: 5), // spacing between buttons and profile image/bio
+            const SizedBox(
+                height: 5), // spacing between buttons and profile image/bio
             //creates the user's profile image and their bio
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -59,15 +91,17 @@ class _ProfilePageState extends State<Profile> {
                     width: 260,
                     height: 75,
                     child: Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: const Color.fromARGB(255, 137, 137, 137), width: 0.5),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: const Text(
-                              "Insert Bio here...",
-                              style: TextStyle(fontSize: 10),
-                            ),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            color: const Color.fromARGB(255, 137, 137, 137),
+                            width: 0.5),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: const Text(
+                        "Insert Bio here...",
+                        style: TextStyle(fontSize: 10),
+                      ),
                     ),
                   ),
                 ],
@@ -79,10 +113,15 @@ class _ProfilePageState extends State<Profile> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    // handles edit profile button press
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => EditProfile()),
+                      MaterialPageRoute(
+                          builder: (context) => EditProfile(
+                                onUpdateUsername: updateUsername,
+                                onUpdatePronouns: updatePronouns,
+                                onUpdateBio: updateBio,
+                                onUpdateEmail: updateEmail,
+                              )),
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -110,183 +149,17 @@ class _ProfilePageState extends State<Profile> {
             const SizedBox(height: 200), // Add spacing below the text
             const Text(
               "No Posts Yet",
-              style: TextStyle(fontSize: 18,
-              color: Color.fromARGB(255, 137, 137, 137)),
+              style: TextStyle(
+                  fontSize: 18, color: Color.fromARGB(255, 137, 137, 137)),
             ),
           ],
         ),
       ),
     );
-  } 
-}
-
-// ignore: must_be_immutable
-class EditProfile extends StatelessWidget {
-  XFile? selectedProfileImage;
-  final _profileImage = ImagePicker();
-
-  EditProfile({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Edit Profile'),
-        backgroundColor: const Color.fromARGB(255, 212, 246, 172),
-      ),
-      body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(30.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.image, size: 70),
-                  Text("Change Profile Image",
-                      style: TextStyle(fontSize: 20)),
-                ],
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                OutlinedButton(
-                  onPressed: getImageFromGallery,
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                      const Color.fromARGB(255, 92, 110, 71),
-                    ),
-                  ),
-                  child: const Text("Upload from library",
-                    style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-                  ),
-                ),
-                OutlinedButton(
-                  onPressed: getImageFromCamera,
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                      const Color.fromARGB(255, 92, 110, 71),
-                    ),
-                  ),
-                  child: const Text("Take a photo",
-                    style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-                  )
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            const Divider(
-              color: Colors.black,
-              thickness: 0.25,
-            ),
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      // Navigate to separate page to edit name
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const NameEditPage()),
-                      );
-                    },
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Expanded(child: Text("Name: ")),
-                      ],
-                    ),
-                  ),
-                ),
-                const Divider(
-                  color: Colors.black,
-                  thickness: 0.25,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      // Navigate to separate page to edit username
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const UsernameEditPage()),
-                      );
-                    },
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Expanded(child: Text("Username: ")),
-                      ],
-                    ),
-                  ),
-                ),
-                const Divider(
-                  color: Colors.black,
-                  thickness: 0.25,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      // Navigate to separate page to edit pronouns
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const PronounsEditPage()),
-                      );
-                    },
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Expanded(child: Text("Pronouns: ")),
-                      ],
-                    ),
-                  ),
-                ),
-                const Divider(
-                  color: Colors.black,
-                  thickness: 0.25,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      // Navigate to separate page to edit bio
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const BioEditPage()),
-                      );
-                    },
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Expanded(child: Text("Bio: ")),
-                      ],
-                    ),
-                  ),
-                ),
-                const Divider(
-                  color: Colors.black,
-                  thickness: 0.25,
-                ),
-              ],
-            ),
-          ]
-        ),
-      ),
-    );
-  }
-
-  Future getImageFromGallery() async {
-    selectedProfileImage = await _profileImage.pickImage(source: ImageSource.gallery);
-  }
-
-  Future getImageFromCamera() async {
-    selectedProfileImage = await _profileImage.pickImage(source: ImageSource.camera);
   }
 }
+
+//ignore: must_be_immutable
 
 class NameEditPage extends StatelessWidget {
   const NameEditPage({super.key});
@@ -304,7 +177,8 @@ class NameEditPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
             child: TextField(
               controller: nameController,
               decoration: const InputDecoration(
@@ -325,7 +199,7 @@ class NameEditPage extends StatelessWidget {
                 minimumSize: const Size(375, 50),
               ),
               child: const Text('Save Changes',
-                style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
+                  style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
             ),
           ),
         ],
@@ -350,7 +224,8 @@ class UsernameEditPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
             child: TextField(
               controller: userNameController,
               decoration: const InputDecoration(
@@ -371,7 +246,7 @@ class UsernameEditPage extends StatelessWidget {
                 minimumSize: const Size(375, 50),
               ),
               child: const Text('Save Changes',
-                style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
+                  style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
             ),
           ),
         ],
@@ -396,7 +271,8 @@ class PronounsEditPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
             child: TextField(
               controller: pronounsController,
               decoration: const InputDecoration(
@@ -417,7 +293,7 @@ class PronounsEditPage extends StatelessWidget {
                 minimumSize: const Size(375, 50),
               ),
               child: const Text('Save Changes',
-                style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
+                  style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
             ),
           ),
         ],
@@ -442,7 +318,8 @@ class BioEditPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
             child: TextField(
               controller: bioController,
               decoration: const InputDecoration(
@@ -463,7 +340,7 @@ class BioEditPage extends StatelessWidget {
                 minimumSize: const Size(375, 50),
               ),
               child: const Text('Save Changes',
-                style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
+                  style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
             ),
           ),
         ],

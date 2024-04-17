@@ -17,9 +17,9 @@ class ReportPage extends StatefulWidget {
 }
 
 class _ReportPageState extends State<ReportPage> {
+
   final _imagePicker = ImagePicker();
-  late User? user;
-  late String? uid;
+  String? uid = FirebaseAuth.instance.currentUser?.uid;
   XFile? selectedImage;
   String? animal;
   int? quantity;
@@ -29,12 +29,10 @@ class _ReportPageState extends State<ReportPage> {
   @override
   void initState() {
     super.initState();
-    user = FirebaseAuth.instance.currentUser;
-    uid = user?.uid; // Use null-aware operator to handle null user
   }
 
   Future<void> submitOnPressed() async {
-     if (animal == null || quantity == null || activity == null) {
+    if (animal == null || quantity == null || activity == null) {
       // If any selection is null, update the state to show the error message
       setState(() {
         showError = true;
@@ -44,39 +42,37 @@ class _ReportPageState extends State<ReportPage> {
     resetErrorState();
 
     Location location = Location();
-    Position position = await location.currentLocation();
+    Position position = await location.getCurrentLocation();
     Map<String, dynamic> coordinate = {
-    'x': position.longitude.toString(),
-    'y': position.latitude.toString()
-  };
+      'x': position.longitude.toString(),
+      'y': position.latitude.toString()
+    };
     String datetime = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
- 
+
     Post newPost = Post(
-    uid: uid!,
-    datetime: datetime,
-    coordinate: coordinate,
-    animalName: animal!,
-    quantity: quantity!,
-    activity: activity!,
-  );
-    
+      uid: uid!,
+      datetime: datetime,
+      coordinate: coordinate,
+      animalName: animal!,
+      quantity: quantity!,
+      activity: activity!,
+    );
+
     try {
       Database db = Database();
-      http.Response response = await db.createPost(newPost); //Pass post object to createPost
-      
+      http.Response response =
+          await db.createPost(newPost); //Pass post object to createPost
+
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
-        print("Post created with ID: ${responseData['pid']}");
-      }
-      else{
+        print(
+            "Post created with ID: ${responseData['pid']}"); //Print created pid for development purposes
+      } else {
         throw Exception('Failed to create post');
       }
-    } 
-    
-    catch (e) {
+    } catch (e) {
       print('Error: $e');
     }
-      
   }
 
   void resetErrorState() {
@@ -106,7 +102,7 @@ class _ReportPageState extends State<ReportPage> {
                 body: Column(
                   children: [
                     if (showError) // Conditionally display the error message
-                       const Padding(
+                      const Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
                           'Please fill out all selections.',
@@ -143,16 +139,14 @@ class _ReportPageState extends State<ReportPage> {
                     ),
                     const SizedBox(height: 40),
                     IntrinsicWidth(
-                      child:
-                      Column(
+                        child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         animalTypeButton(),
                         animalQuantityButton(),
                         animalActivityButton()
                       ],
-                    )
-                    ),
+                    )),
                     Expanded(
                         child: Align(
                             alignment: const FractionalOffset(.5, .9),
@@ -211,8 +205,7 @@ class _ReportPageState extends State<ReportPage> {
         'American Red Squirrel',
         'Northern Flying Squirrel',
         'Southern Flying Squirrel'
-        ]
-          .map<DropdownMenuItem<String>>((String value) {
+      ].map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
           child: Text(value),
@@ -228,24 +221,24 @@ class _ReportPageState extends State<ReportPage> {
   }
 
   Widget animalQuantityButton() {
-  return DropdownButton<int>(
-    value: quantity,
-    isExpanded: true,
-    items: <int>[1, 2, 3, 4, 5]  // Changed from strings to integers
-        .map<DropdownMenuItem<int>>((int value) {
-      return DropdownMenuItem<int>(
-        value: value,
-        child: Text(value.toString()), // Convert int to string for display
-      );
-    }).toList(),
-    onChanged: (int? newValue) {
-      setState(() {
-        quantity = newValue;
-      });
-    },
-    hint: const Text('Select a quantity'),
-  );
-}
+    return DropdownButton<int>(
+      value: quantity,
+      isExpanded: true,
+      items: <int>[1, 2, 3, 4, 5] // Changed from strings to integers
+          .map<DropdownMenuItem<int>>((int value) {
+        return DropdownMenuItem<int>(
+          value: value,
+          child: Text(value.toString()), // Convert int to string for display
+        );
+      }).toList(),
+      onChanged: (int? newValue) {
+        setState(() {
+          quantity = newValue;
+        });
+      },
+      hint: const Text('Select a quantity'),
+    );
+  }
 
   Widget animalActivityButton() {
     return DropdownButton<String>(
@@ -258,8 +251,7 @@ class _ReportPageState extends State<ReportPage> {
         'Hunting',
         'Mating',
         'Territorial Defense',
-        ]
-          .map<DropdownMenuItem<String>>((String value) {
+      ].map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
           child: Text(value),
@@ -273,6 +265,4 @@ class _ReportPageState extends State<ReportPage> {
       hint: const Text('Select an activity'),
     );
   }
-
 }
-

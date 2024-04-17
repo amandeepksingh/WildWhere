@@ -8,7 +8,6 @@ class UserController {
   static void init() {
     FirebaseAuth.instance.authStateChanges().listen((User? currentUser) {
       user = currentUser;
-      print("User state changed: ${currentUser?.uid}");
     });
   }
 
