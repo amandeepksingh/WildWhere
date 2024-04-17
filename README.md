@@ -43,13 +43,31 @@ This README provides instructions on how to find the WildWhere project’s build
 
 ## Backend
 
-### Backend Setup
+### Backend Onboarding
+- install git: https://git-scm.com/downloads and follow the instructions to download'
+- go to an intended folder to place a repository, open the a shell and run ``` git clone https://github.com/amandeepksingh/WildWhere.git``` make sure you are logged in and have the necessary permissions.
+- run ```git log``` to see commit history (make sure you can see them and that they match to the commit numbers) then also run ```git branch -r``` to make sure you have cloned the repository and see all remote branches
+- run ```git branch -c main <your_onboarding_branch>``` to copy the main branch and make your own branch
+- run ```git switch <your_onboarding_branch>``` to switch to the branch you made
+- because your branch is not on the remote repository run ``` git push -u origin <your_onboarding_branch>``` to push to the remote and set the upstream branch, check to make sure that after it is successful that you can see your branch on the repository.
+- switch directories to the /WILDWHERE/backend
+- install nvm via the node version manager github repo: https://github.com/nvm-sh/nvm
+- once it is installed run ``` nvm install node ```
+- then install the required dependencies by running ```npm install --save```
+- You can now run the scripts indicated in the package.json such as ```npm run start ```
+- Edit and have fun!
+- when you are done with the branch you can either submit a pull request, which will require review, or you can delete the branch
+  - to submit a pull request you must go through the github website
+  - to delete branch, first switch to another branch by running ```git checkout <another-branch>``` then ```git branch -d <your_onboarding_branch>```(if it chooses not to delete you can use the ```-D``` flag instead of ```-d```), which will only delete the branch locally. To delete on the remote run ```git push origin --delete <another-branch>``` 
 
-- Clone the git repo  
-- Install Postgresql  
-- Create a database called Wildwhere  
-- Run genTables.sql in the Wildwhere database  
-- Test that you can run the server and the tests
+#### Naming conventions
+Other than your onboarding branch we require that the branch name correlates to the feature name or release or problem you are trying to fix.
+
+#### Merging to main
+Unless special circumstances we NEVER edit and push directly on main. 
+
+#### Server location
+The code will automatically detect that you are running on local and will resolve the server to localhost(127.0.0.1).
 
 ### Backend API
 
