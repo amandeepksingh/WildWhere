@@ -1,5 +1,4 @@
 class Post {
-  final String? pid;
   final String uid;
   final String datetime;
   final Map<String,dynamic> coordinate;
@@ -9,7 +8,6 @@ class Post {
   final String? imgLink;
 
   Post({
-    this.pid,
     required this.uid,
     required this.datetime,
     required this.coordinate,
@@ -21,7 +19,6 @@ class Post {
 
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
-      pid: json['pid'],
       uid: json['uid'],
       datetime: json['datetime'],
       coordinate: json['coordinate'],
@@ -33,14 +30,12 @@ class Post {
   }
 
   Map<String, dynamic> toJson() {
-    String formattedCoordinate = '(${coordinate['x']}, ${coordinate['y']})';
     return {
-      'pid': pid,
       'uid': uid,
       'datetime': datetime,
-      'coordinate': formattedCoordinate,
-      'animalName': animalName,
-      'quantity': quantity.toString(),
+      'coordinate': coordinate,
+      'animalname': animalName,
+      'quantity': quantity,
       'activity': activity,
       'imglink': imgLink,
     };
