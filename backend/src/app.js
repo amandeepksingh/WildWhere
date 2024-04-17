@@ -6,7 +6,7 @@ const users = require('./users')
 const images = require('./images')
 const getHelpTxt = require('./help');
 const morgan = require('morgan');
-const logger = require('./logger')
+const logger = require('./logger');
 //creates app
 const app = express();
 

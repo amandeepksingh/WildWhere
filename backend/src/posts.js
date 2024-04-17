@@ -1,8 +1,9 @@
 //imports
 const express = require('express')
 const Pool = require('pg').Pool;
+const logger = require('./logger');
 require('dotenv').config({path: "../.env"});
-const randomstring = require('randomstring')
+const randomstring = require('randomstring');
 
 //creates DB connection
 let pool;
@@ -64,6 +65,7 @@ function selectPost(req, res, next) {
      *      activity string
      *  }
      */
+    logger.log(`originalURL: ${JSON.stringify(req.originalUrl)} - body: ${JSON.stringify(req.body)} - headers: ${JSON.stringify(req.rawHeaders)}`)
     var condits = []
     var values = []
     var i = 1
@@ -121,6 +123,7 @@ function selectPost(req, res, next) {
             values: values
         }
 
+    logger.log(`query: ${JSON.stringify(query)}`)
     return pool.query(query, (error, result) => {
         if (error) {
             return res.status(400).json({
@@ -150,6 +153,7 @@ function createPost(req, res, next) {
      *      error message
      *  pid string (on success)
     */
+    logger.log(`originalURL: ${JSON.stringify(req.originalUrl)} - body: ${JSON.stringify(req.body)} - headers: ${JSON.stringify(req.rawHeaders)}`)
     var dict = {}
     //NO PID (randomly generated)
     if (req.body.uid) dict['uid'] = req.body.uid
@@ -172,6 +176,7 @@ function createPost(req, res, next) {
         values: Object.values(dict)
     }
 
+    logger.log(`query: ${JSON.stringify(query)}`)
     return pool.query(query, (error, result) => {
         if (error) {
             return res.status(400).json({
@@ -202,6 +207,7 @@ function updatePostByPID(req, res, next) {
      *      OR
      *      error message
      */
+    logger.log(`originalURL: ${JSON.stringify(req.originalUrl)} - body: ${JSON.stringify(req.body)} - headers: ${JSON.stringify(req.rawHeaders)}`)
     if (req.body.pid === undefined) {
         return res.status(400).json({
             "message": "missing pid"
@@ -225,6 +231,7 @@ function updatePostByPID(req, res, next) {
             values: Object.values(updates).concat([ req.body.pid ])
         }
         
+    logger.log(`query: ${JSON.stringify(query)}`)
         return pool.query(query, (error, result) => {
             if (error) {
                 return res.status(400).json({
@@ -248,12 +255,14 @@ function deletePostByPID(req, res, next) {
      *           OR
      *           error message
      */
+    logger.log(`originalURL: ${JSON.stringify(req.originalUrl)} - body: ${JSON.stringify(req.body)} - headers: ${JSON.stringify(req.rawHeaders)}`)
     if (req.body.pid === undefined) {
         return res.status(400).json({
             "message": "missing pid"
         }) //handles misformatted input
     }
 
+    logger.log(`query: DELETE FROM posts WHERE pid = $1 - vals: ${[req.body.pid]}`)
     return pool.query("DELETE FROM posts WHERE pid = $1", [req.body.pid], (error, result) => {
         if (error) {
             return res.status(400).json({

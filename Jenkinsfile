@@ -75,12 +75,14 @@ pipeline {
                            
                             sh '''
                                 ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'cd WWBUILD && pwd && mv serverenv .env'
+
                             '''
 
                             try {
                                 //timeout(time: 24, unit:'SECONDS') {
                                     sh '''
                                         ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'cd WWBUILD/backend && npm install --save'
+                                        ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json'
                                     '''
                                     sh '''
                                         ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'cd WWBUILD/backend && sudo npm run serve'
@@ -139,7 +141,12 @@ pipeline {
                             '''
                            
                             sh '''
+<<<<<<< HEAD
                                 ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'cd WWBUILD && pwd && mv serverenv .env'
+=======
+                                ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'cd WWBUILD && pwd && mv serverenv .env'
+                                ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json'
+>>>>>>> 0cb5eb4bd307bd885adfad25239904e1c3fd6613
                             '''
 
                             try {
