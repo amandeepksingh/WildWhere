@@ -56,7 +56,7 @@ class _ProfilePageState extends State<Profile> {
                     ],
                   ),
                   SizedBox(
-                    width: 275,
+                    width: 260,
                     height: 75,
                     child: Container(
                             padding: const EdgeInsets.all(12),
