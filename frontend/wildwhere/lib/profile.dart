@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:wildwhere/database.dart';
+import 'package:wildwhere/mapscreen.dart';
+import 'package:http/http.dart' as http;
+import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:convert';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -9,16 +14,22 @@ class Profile extends StatefulWidget {
 
 class _ProfilePageState extends State<Profile> {
 
-  @override 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       //creates the top bar format of the user's profile
       appBar: AppBar(
         title: const Text('User Profile'),
-        leading: BackButton(
-          onPressed: () => Navigator.pop(context),
-        ),
-        backgroundColor: Color.fromARGB(255, 212, 246, 172),
+        leading: BackButton(onPressed: () {
+          final NavigatorState? navigator = Navigator.maybeOf(context);
+          if (navigator!.canPop()) {
+            Navigator.pop(context);
+          } else {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const MapScreen()));
+          }
+        }),
+        backgroundColor: const Color.fromARGB(255, 212, 246, 172),
       ),
       //creates the View Settings and Edit Profile buttons
       body: Column(
@@ -75,15 +86,17 @@ class _ProfilePageState extends State<Profile> {
                   width: 275,
                   height: 75,
                   child: Container(
-                          padding: EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: const Color.fromARGB(255, 137, 137, 137), width: 0.5),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            "Insert Bio here...",
-                            style: TextStyle(fontSize: 10),
-                          ),
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: const Color.fromARGB(255, 137, 137, 137),
+                          width: 0.5),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      "Insert Bio here...",
+                      style: TextStyle(fontSize: 10),
+                    ),
                   ),
                 ),
               ],
@@ -102,11 +115,11 @@ class _ProfilePageState extends State<Profile> {
           SizedBox(height: 200), // Add spacing below the text
           Text(
             "No Posts Yet",
-            style: TextStyle(fontSize: 18,
-            color: const Color.fromARGB(255, 137, 137, 137)),
+            style: TextStyle(
+                fontSize: 18, color: const Color.fromARGB(255, 137, 137, 137)),
           ),
         ],
       ),
     );
-  } 
+  }
 }

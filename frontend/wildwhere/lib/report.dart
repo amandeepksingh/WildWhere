@@ -52,7 +52,7 @@ class _ReportPageState extends State<ReportPage> {
     String datetime = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
  
     Post newPost = Post(
-    uid: uid,
+    uid: uid!,
     datetime: datetime,
     coordinate: coordinate,
     animalName: animal!,
