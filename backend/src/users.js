@@ -2,7 +2,7 @@
 const express = require('express')
 const Pool = require('pg').Pool;
 require('dotenv').config({path: "../../.env"});
-const randomstring = require('randomstring')
+const logger = require('./logger');
 
 //creates DB connection
 console.log(`[Users] ${process.cwd()}`);
@@ -67,6 +67,7 @@ function selectUser(req, res, next) {
      *      colorBlindrating int
      *  }
      */
+    logger.log(`originalURL: ${JSON.stringify(req.originalUrl)} - body: ${JSON.stringify(req.body)} - headers: ${JSON.stringify(req.rawHeaders)}`)
     const columns = ["uid", "email", "username", "bio", "pfpLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
     var condits = {}
     for(const col of columns) {
@@ -82,6 +83,7 @@ function selectUser(req, res, next) {
             values: Object.values(condits)
         }
 
+    logger.log(`query: ${JSON.stringify(query)}`)
     return pool.query(query, (error, result) => {
         if (error) {
             return res.status(400).json({
@@ -113,6 +115,7 @@ function createUser(req, res, next) {
      *      error message
      *  uid string (on success)
      */
+    logger.log(`originalURL: ${JSON.stringify(req.originalUrl)} - body: ${JSON.stringify(req.body)} - headers: ${JSON.stringify(req.rawHeaders)}`)
     const columns = ["uid", "email", "username", "bio", "pfpLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
     var dict = {}
     for(const col of columns) {
@@ -133,6 +136,8 @@ function createUser(req, res, next) {
             text: `INSERT INTO users(${fields}) VALUES(${placeholders})`,
             values: Object.values(dict)
         }
+    
+    logger.log(`query: ${JSON.stringify(query)}`)
     return pool.query(query, (error, result) => {
         if (error) {
             return res.status(400).json({
@@ -164,6 +169,7 @@ function updateUserByUID(req, res, next) {
      *      OR
      *      error message
      */
+    logger.log(`originalURL: ${JSON.stringify(req.originalUrl)} - body: ${JSON.stringify(req.body)} - headers: ${JSON.stringify(req.rawHeaders)}`)
     if (req.body.uid === undefined) {
         return res.status(400).json({
             "message": "missing uid"
@@ -186,6 +192,7 @@ function updateUserByUID(req, res, next) {
             values: Object.values(updates).concat([ req.body.uid ])
         }
 
+        logger.log(`query: ${JSON.stringify(query)}`)
         return pool.query(query, (error, result) => {
             if (error) {
                 return res.status(400).json({
@@ -209,12 +216,14 @@ function deleteUserByUID(req, res, next) {
      *      OR
      *      error message
      */
+    logger.log(`originalURL: ${JSON.stringify(req.originalUrl)} - body: ${JSON.stringify(req.body)} - headers: ${JSON.stringify(req.rawHeaders)}`)
     if (req.body.uid === undefined) {
         return res.status(400).json({
             "message": "missing uid"
         }) //handles misformatted input
     }
     
+    logger.log(`query: DELETE FROM users WHERE uid = $1 - vals: ${[req.body.uid]}`)
     return pool.query("DELETE FROM users WHERE uid = $1", [req.body.uid], (error, result) => {
         if (error) {
             return res.status(400).json({
