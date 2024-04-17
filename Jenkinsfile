@@ -29,6 +29,7 @@ pipeline {
                sh 'ls -l -a'
                dir('backend') {
                     sh 'ls -la'
+                    sh 'rm .DS_Store'
                }
                dir('backend/src/process_src') {
 
@@ -123,32 +124,31 @@ pipeline {
                             try {
                             sh '''
                                 ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'sudo rm -rf WWBUILD'
-                                sh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-13-58-233-86.us-east-2.compute.amazonaws.com 'whoami'
                             '''
                         } catch(Exception e) {
 
                         }
                     
                             sh '''
-                                ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'mkdir WWBUILD'
-                                scp -o StrictHostKeyChecking=no -i $SSH_D_KEY -r backend ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
-                                scp -o StrictHostKeyChecking=no -i $SSH_D_KEY .env ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
-                                scp -o StrictHostKeyChecking=no -i $SSH_D_KEY genTables.sql ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
-                                scp -o StrictHostKeyChecking=no -i $SSH_D_KEY \$EnvFile ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
-                                ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'node --version'
+                                ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'mkdir WWBUILD'
+                                scp -o StrictHostKeyChecking=no -i $SSH_KEY -r backend ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
+                                scp -o StrictHostKeyChecking=no -i $SSH_KEY .env ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
+                                scp -o StrictHostKeyChecking=no -i $SSH_KEY genTables.sql ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
+                                scp -o StrictHostKeyChecking=no -i $SSH_KEY \$EnvFile ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
+                                ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'node --version'
                             '''
                            
                             sh '''
-                                ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'cd WWBUILD && pwd && mv serverenv .env'
+                                ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'cd WWBUILD && pwd && mv serverenv .env'
                             '''
 
                             try {
                                 //timeout(time: 24, unit:'SECONDS') {
                                     sh '''
-                                        ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'cd WWBUILD/backend && npm install --save'
+                                        ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'cd WWBUILD/backend && npm install --save'
                                     '''
                                     sh '''
-                                        ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'cd WWBUILD/backend && sudo npm run serve'
+                                        ssh -o StrictHostKeyChecking=no -i $SSH_KEY ec2-user@ec2-3-144-183-123.us-east-2.compute.amazonaws.com 'cd WWBUILD/backend && sudo npm run serve'
                                     '''
                               //  }
  
