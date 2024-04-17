@@ -13,7 +13,6 @@ class Database {
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
-   print(response.body);
 
     if (response.statusCode == 200) {
       Map<String,dynamic> data = json.decode(response.body);
@@ -77,7 +76,7 @@ class Database {
     required String pid
     }) async {
 
-    var url = Uri.parse('http://ec2-3-138-136-228.us-east-2.compute.amazonaws.com/posts/deletePostByPID?pid=$pid');
+    var url = Uri.parse('http://ec2-13-58-233-86.us-east-2.compute.amazonaws.com:80/posts/deletePostByPID?pid=$pid');
     var response = await http.delete(
       url,
       headers: <String, String>{
