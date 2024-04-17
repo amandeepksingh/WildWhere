@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:wildwhere/mapscreen.dart';
-import 'firebase_options.dart';
 import 'package:wildwhere/login.dart';
+import 'package:wildwhere/mapscreen.dart';
+import 'package:wildwhere/user_controller.dart';
+import 'firebase_options.dart';
 
 //Runs the application
 void main() async {
@@ -10,6 +11,11 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  /*
+  await FirebaseAuth.instance
+      .signOut();
+  */
+  UserController.init();
   runApp(const MyApp());
 }
 
@@ -20,11 +26,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'WildWhere Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: const MapScreen() //Landing page
+      title: 'WildWhere Beta',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: UserController.user != null ? const MapScreen() : const Login(),
     );
   }
 }

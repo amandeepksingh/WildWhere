@@ -46,7 +46,7 @@ describe("selecting users", () => {
         assert.strictEqual(resp2.status,200)
         assert.deepStrictEqual(resp2.body.message, [])
     })
-    it("USER: test select with many constraints", async () => {
+    it("USER: test select with few constraints", async () => {
         await teardown()
         const resp1 = await request(app)
         .post('/users/createUser')
@@ -73,29 +73,43 @@ describe("selecting users", () => {
             }
         ])
     })
-    it("USER: test select with few constraints", async () => {
+    it("USER: test select with ALL constraints", async () => {
         await teardown()
         const resp1 = await request(app)
         .post('/users/createUser')
+        .send('uid=345')
         .send('email=jj@umass')
-        const uid = resp1.body.uid
+        .send('username=John')
+        .send('bio=Student')
+        .send('pfpLink=test_link')
+        .send('superUser=1')
+        .send('locationPerm=1')
+        .send('notificationPerm=1')
+        .send('colorBlindRating=10')
 
         const resp2 = await request(app)
         .get('/users/selectUser')
-        .send(`uid=${uid}`) //send body parameters
+        .send(`uid=345`) //send body parameters
         .send('email=jj@umass') //send body parameters
+        .send('username=John')
+        .send('bio=Student')
+        .send('pfpLink=test_link')
+        .send('superUser=1')
+        .send('locationPerm=1')
+        .send('notificationPerm=1')
+        .send('colorBlindRating=10')
         assert.strictEqual(resp2.status,200)
         assert.deepStrictEqual(resp2.body.message, [
             {
-                "uid": uid,
+                "uid": "345",
                 "email": "jj@umass",
-                "username": null,
-                "bio": null,
-                "pfplink": null,
-                "superuser": null,
-                "locationperm": null,
-                "notificationperm": null,
-                "colorblindrating": null
+                "username": "John",
+                "bio": "Student",
+                "pfplink": "test_link",
+                "superuser": true,
+                "locationperm": true,
+                "notificationperm": true,
+                "colorblindrating": 10
             }
         ])
     })
@@ -110,6 +124,10 @@ describe("selecting users", () => {
         .post('/users/createUser')
         .send('email=jj@umass')
         const uid2 = resp1b.body.uid
+
+        const resp1c = await request(app)
+        .post('/users/createUser')
+        .send('email=aj@umass')
 
         const resp2 = await request(app)
         .get('/users/selectUser')
@@ -153,6 +171,7 @@ describe("creating users", () => {
    it("USER: test create with all params", async () => {
         await teardown()
         testInput = {
+            uid: '345',
             email: 'jj@umass.edu',
             username: 'jamesbarr',
             bio: 'bio',
@@ -164,6 +183,7 @@ describe("creating users", () => {
         }
         const resp = await request(app)
         .post('/users/createUser')
+        .send(`uid=${testInput.uid}`)
         .send(`email=${testInput.email}`)
         .send(`username=${testInput.username}`)
         .send(`bio=${testInput.bio}`)

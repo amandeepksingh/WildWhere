@@ -14,7 +14,6 @@ class Database {
       },
     );
 
-
     if (response.statusCode == 200) {
       Map<String,dynamic> data = json.decode(response.body);
       List<dynamic> postsJson = data['message'];
@@ -83,6 +82,34 @@ class Database {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
+    );
+    return response;
+  }
+
+   Future<http.Response> getUserByUID({required String uid}) async {
+    var url = Uri.parse(
+        'http://ec2-3-138-136-228.us-east-2.compute.amazonaws.com/users/selectUser?uid=$uid');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    return response;
+  }
+
+  Future<http.Response> createUser({required String uid}) async {
+    var url = Uri.parse(
+        'http://ec2-13-58-233-86.us-east-2.compute.amazonaws.com:80/users/createUser');
+    Map<String, dynamic> jsonBody = {};
+    jsonBody['uid'] = uid;
+    String json = jsonEncode(jsonBody);
+    var response = await http.post(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: json,
     );
     return response;
   }
