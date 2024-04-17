@@ -166,6 +166,7 @@ class imgFuncs {
          *          OR
          *      error message
          */
+        // logger.log(`originalURL: ${JSON.stringify(req.originalUrl)} - body: ${JSON.stringify(req.body)} - headers: ${JSON.stringify(req.rawHeaders)}`)
 
         //parse params
         var id
@@ -216,6 +217,7 @@ class imgFuncs {
         //put url into db
         const query = `UPDATE ${type} SET imglink = $1 WHERE ${id} = $2`
         const vals = [url, idVal]
+        // logger.log(`query: ${query}, vals: ${vals}`)
         return pool.query(query, vals, (error, _) => {
             if (error) {
                 return res.status(400).json({
@@ -236,6 +238,8 @@ class imgFuncs {
          *          OR
          *      error
          */
+        // logger.log(`originalURL: ${JSON.stringify(req.originalUrl)} - body: ${JSON.stringify(req.body)} - headers: ${JSON.stringify(req.rawHeaders)}`)
+
         //parse params
         var id
         var idVal
@@ -263,6 +267,7 @@ class imgFuncs {
         //clear db entry
         const query = `UPDATE ${type} SET imglink = NULL WHERE ${id} = $1`
         const vals = [idVal]
+        // logger.log(`query: ${query}, vals: ${vals}`)
         return pool.query(query, vals, (error, _) => {
             if (error) {
                 return res.status(400).json({message: error.message})
