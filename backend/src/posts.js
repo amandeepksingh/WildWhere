@@ -3,6 +3,7 @@ const express = require('express')
 const Pool = require('pg').Pool;
 const logger = require('./logger');
 require('dotenv').config({path: "../.env"});
+const randomstring = require('randomstring');
 
 //creates DB connection
 let pool;
