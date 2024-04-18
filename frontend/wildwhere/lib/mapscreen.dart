@@ -73,7 +73,7 @@ class _MapState extends State<MapScreen> {
       SymbolOptions(
         geometry: LatLng(latitude, longitude),
         iconImage: "assetImage",
-        iconSize: 2.5,
+        iconSize: 0.95,
       ),
     )
         .then((symbol) {
@@ -82,6 +82,11 @@ class _MapState extends State<MapScreen> {
         symbolDataMap[symbol.id] = post.toJson();
       }
     });
+  }
+
+  void refreshMarkers() async {
+    await _controller?.clearSymbols(); // Clear all existing markers
+    _loadMarkers(); // Reload markers from database
   }
 
   void _onSymbolTapped(Symbol symbol) { // Handles user taps on map symbols (markers).
@@ -172,7 +177,7 @@ class _MapState extends State<MapScreen> {
           child: OverlayPortal(
             controller: reportOverlayControl,
             overlayChildBuilder: (BuildContext context) {
-              return const ReportPage();
+              return ReportPage(onPostCreated: refreshMarkers);
             },
             child: const Icon(Icons.add_location_alt_outlined),
           ),
@@ -218,11 +223,12 @@ class _MapState extends State<MapScreen> {
     ]);
   }
 
-  void _navigateToPostsPage() {
-    Navigator.push(
+  void _navigateToPostsPage() async {
+    await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const PostsListPage()),
     );
+    refreshMarkers();
   }
 
   Widget _buildInfoBox() { // Generates informational box widget for currently selected marker.
@@ -288,7 +294,7 @@ class _MapState extends State<MapScreen> {
 void onSelected(BuildContext context, int item) {
   switch (item) {
     case 0:
-      Navigator.push(
+       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const Profile()));
       break;
 

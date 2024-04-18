@@ -10,7 +10,8 @@ import 'package:wildwhere/post.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ReportPage extends StatefulWidget {
-  const ReportPage({super.key});
+  final Function? onPostCreated; // Callback function to update the map
+  const ReportPage({Key? key, this.onPostCreated}) : super(key: key);
 
   @override
   State<ReportPage> createState() => _ReportPageState();
@@ -65,6 +66,7 @@ class _ReportPageState extends State<ReportPage> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
+        widget.onPostCreated!(); // Update the map
         print(
             "Post created with ID: ${responseData['pid']}"); //Print created pid for development purposes
       } else {
