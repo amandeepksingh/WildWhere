@@ -238,7 +238,7 @@ class _MapState extends State<MapScreen> {
         "Quantity: ${data['quantity']}\n";
 
     return Container(
-    width: 300,
+    width: 275,
     height: 100,
     padding: const EdgeInsets.all(10),
     decoration: BoxDecoration(
