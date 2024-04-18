@@ -19,11 +19,11 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapState extends State<MapScreen> {
-  MapboxMapController? _controller;
-  Symbol? selectedSymbol;
-  Offset? symbolWidgetPosition;
-  Map<String, dynamic> symbolDataMap = {};
-  Map<String, dynamic>? currentPostData;
+  MapboxMapController? _controller; // Controller to manage Mapbox map interaction.
+  Symbol? selectedSymbol; // Holds the currently selected map symbol, if any.
+  Offset? symbolWidgetPosition;  // Stores the position of the pop-up info box relative to the map view.
+  Map<String, dynamic> symbolDataMap = {}; // Maps each symbol's ID to its data for quick retrieval.
+  Map<String, dynamic>? currentPostData; // Data for the currently selected symbol.
   Future<Position>? position;
 
   @override
@@ -33,28 +33,28 @@ class _MapState extends State<MapScreen> {
 
   @override
   void dispose() {
-    _controller?.dispose();
+    _controller?.dispose(); // Clean up the controller when the widget is removed from the widget tree.
     super.dispose();
   }
 
-  void _onMapCreated(MapboxMapController controller) {
+  void _onMapCreated(MapboxMapController controller) { // Callback function when the map is created and ready.
     _controller = controller;
     controller.onSymbolTapped.add(_onSymbolTapped);
     controller.addListener(_onCameraMove);
     addImageFromAsset("assetImage", "assets/images/markericon.png");
   }
 
-  void _onStyleLoaded() async {
+  void _onStyleLoaded() async {  // Called when map style is fully loaded; we typically use this to add markers dynamically.
     _loadMarkers();
   }
 
-  Future<void> addImageFromAsset(String name, String assetName) async {
+  Future<void> addImageFromAsset(String name, String assetName) async { // Helper function to add a custom image asset to be used as a map marker icon.
     final ByteData bytes = await rootBundle.load(assetName);
     final Uint8List list = bytes.buffer.asUint8List();
     await _controller?.addImage(name, list);
   }
 
-  void _loadMarkers() async {
+  void _loadMarkers() async { // Load markers from a data source and add them to the map.
     try {
       List<Post> posts = await Database().getAllPosts();
       for (Post post in posts) {
@@ -67,7 +67,7 @@ class _MapState extends State<MapScreen> {
     }
   }
 
-  void _addMarker(String id, double latitude, double longitude, {Post? post}) {
+  void _addMarker(String id, double latitude, double longitude, {Post? post}) { // Adds a single marker to the map.
     _controller
         ?.addSymbol(
       SymbolOptions(
@@ -84,7 +84,7 @@ class _MapState extends State<MapScreen> {
     });
   }
 
-  void _onSymbolTapped(Symbol symbol) {
+  void _onSymbolTapped(Symbol symbol) { // Handles user taps on map symbols (markers).
     setState(() {
       selectedSymbol = symbol;
       _updateSymbolPosition();
@@ -93,13 +93,13 @@ class _MapState extends State<MapScreen> {
     });
   }
 
-  void _onCameraMove() {
+  void _onCameraMove() { // Refresh symbol position on camera (map view) move.
     if (_controller != null && selectedSymbol != null) {
       _updateSymbolPosition();
     }
   }
 
-  void _updateSymbolPosition() async {
+  void _updateSymbolPosition() async { // Update the position of the information box relative to the selected symbol.
     if (selectedSymbol == null || _controller == null) return;
     var screenLocation =
         await _controller!.toScreenLocation(selectedSymbol!.options.geometry!);
@@ -225,7 +225,7 @@ class _MapState extends State<MapScreen> {
     );
   }
 
-  Widget _buildInfoBox() {
+  Widget _buildInfoBox() { // Generates informational box widget for currently selected marker.
     if (selectedSymbol == null || currentPostData == null) {
       return const SizedBox
           .shrink(); // Return an empty container if no symbol is selected
