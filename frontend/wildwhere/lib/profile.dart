@@ -63,13 +63,8 @@ class _ProfilePageState extends State<Profile> {
       appBar: AppBar(
         title: Text('$username'),
         leading: BackButton(onPressed: () {
-          final NavigatorState? navigator = Navigator.maybeOf(context);
-          if (navigator!.canPop()) {
-            Navigator.pop(context);
-          } else {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => const MapScreen()));
-          }
         }),
         backgroundColor: const Color.fromARGB(255, 212, 246, 172),
       ),
