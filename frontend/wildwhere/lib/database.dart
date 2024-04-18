@@ -1,16 +1,21 @@
 import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:wildwhere/post.dart';
 import 'package:wildwhere/user.dart';
 
 class Database {
   String endpoint =
       'http://ec2-3-144-183-123.us-east-2.compute.amazonaws.com:80';
+  final http.Client client;
+
+  Database({http.Client? client}) : client = client ?? http.Client();
 
   Future<List<Post>> getAllPosts() async {
     var url = Uri.parse('$endpoint/posts/selectPost');
 
-    var response = await http.get(
+    var response = await client.get(
       url,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -31,7 +36,7 @@ class Database {
   Future<List<Post>> getAllUserPosts(String uid) async {
     var url = Uri.parse('$endpoint/posts/selectPost?uid=$uid');
 
-    var response = await http.get(
+    var response = await client.get(
       url,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -53,7 +58,7 @@ class Database {
     var url = Uri.parse('$endpoint/posts/createPost');
     var jsonData = jsonEncode(post);
     print(jsonData);
-    var response = await http.post(
+    var response = await client.post(
       url,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -65,7 +70,7 @@ class Database {
 
   Future<Post?> getPostByPID(String pid) async {
     var url = Uri.parse('$endpoint/posts/selectPost?pid=$pid');
-    var response = await http.get(
+    var response = await client.get(
       url,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -78,21 +83,28 @@ class Database {
   }
 
   //Only handles updating post images for now
-  Future<http.Response> updatePostByPID(
-      {required String pid, required imgLink}) async {
+  Future<http.Response> updatePostByPID({
+    required String pid,
+    required String imgLink,
+  }) async {
     var url = Uri.parse('$endpoint/posts/updatePostByPID');
-    Map<String, dynamic> jsonBody = {"pid": pid, "imgLink": imgLink};
-    var response = await http.put(url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonBody);
+    // Encode the request body as JSON
+    String jsonBody = jsonEncode({"pid": pid, "imgLink": imgLink});
+    // Make the HTTP PUT request with the JSON-encoded body
+    var response = await http.put(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonBody,
+    );
+
     return response;
   }
 
   Future<http.Response> deletePostByPID({required String pid}) async {
     var url = Uri.parse('$endpoint/posts/deletePostByPID?pid=$pid');
-    var response = await http.delete(
+    var response = await client.delete(
       url,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -103,7 +115,7 @@ class Database {
 
   Future<http.Response> getUserByUID({required String uid}) async {
     var url = Uri.parse('$endpoint/users/selectUser?uid=$uid');
-    var response = await http.get(
+    var response = await client.get(
       url,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -116,7 +128,7 @@ class Database {
     var url = Uri.parse('$endpoint/users/createUser');
     var jsonData = jsonEncode(user);
     print(jsonData);
-    var response = await http.post(
+    var response = await client.post(
       url,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -143,7 +155,7 @@ class Database {
       if (superUser != null) "superUser": superUser,
     };
     var data = jsonEncode(jsonBody);
-    var response = await http.put(url,
+    var response = await client.put(url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -163,5 +175,20 @@ class Database {
     } else {
       throw Exception('User data is empty or malformed');
     }
+  }
+
+  void uploadProfilePic(XFile file, String uid) async {
+    String picEndpoint = '$endpoint/images/userProfilePic/upload';
+    String fileName = file.path.split('/').last;
+    FormData data = FormData.fromMap({
+      "file": await MultipartFile.fromFile(file.path, filename: fileName),
+      "uid": uid
+    });
+    Dio dio = Dio();
+    dio.post(picEndpoint, data: data).then((response) {
+      var jsonResponse = jsonDecode(response.toString());
+      print(jsonResponse);
+    }).catchError((error) => print(error));
+    ;
   }
 }
