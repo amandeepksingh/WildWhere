@@ -245,7 +245,7 @@ class _MapState extends State<MapScreen> {
 
     return Container(
     width: 275,
-    height: 100,
+    height: 115,
     padding: const EdgeInsets.all(10),
     decoration: BoxDecoration(
       color: Colors.white,
