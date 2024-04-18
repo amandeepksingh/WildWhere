@@ -57,7 +57,7 @@ class GoogleSignInButtonState extends State<GoogleSignInButton> {
         http.Response response = await db.getUserByUID(uid: userData!.uid);
         var data = jsonDecode(response.body);
         if (data['message'].isEmpty) {
-          //check if user is in database
+          //new user
           app_user.User newUser = app_user.User(
             uid: userData.uid,
             email: userData.email,
@@ -68,20 +68,18 @@ class GoogleSignInButtonState extends State<GoogleSignInButton> {
           );
           http.Response response = await db.createUser(newUser);
           var data = jsonDecode(response.body);
-          print(data); //print return message for developer purposes
-        }
-        //checks if this is a user's first time signing in
-        if (userData.metadata.creationTime ==
-            userData.metadata.lastSignInTime) {
+          print(data);
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (context) =>
-                  const EditProfile())); //push to edit profile if yes
+                  const EditProfile())); //print return message for developer purposes
         } else {
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const MapScreen())); //push to mapscreen if returning user
+          //returning user
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) =>
+                  const MapScreen())); //push to mapscreen if returning user
         }
       }
-      //error handling for google sign in 
+      //error handling for google sign in
     } on FirebaseAuthException catch (error) {
       print(error.message);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -97,3 +95,4 @@ class GoogleSignInButtonState extends State<GoogleSignInButton> {
     }
   }
 }
+
