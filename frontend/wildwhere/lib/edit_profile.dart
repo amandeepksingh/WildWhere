@@ -187,10 +187,16 @@ class EditProfileState extends State<EditProfile> {
                           labelText: 'Pronouns',
                         ),
                       ),
+                      const SizedBox(height: 30),
                       ElevatedButton(
-                        onPressed: handleSave,
-                        child: const Text('Save Changes'),
-                      ),
+                          onPressed: handleSave,
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                const Color.fromARGB(255, 92, 110, 71),
+                              ),
+                              foregroundColor: MaterialStateProperty.all<Color>(
+                                  const Color.fromARGB(255, 255, 255, 255))),
+                          child: const Text('Save Changes')),
                     ],
                   )))
         ]),
@@ -250,6 +256,8 @@ class EditProfileState extends State<EditProfile> {
       // For the image, check both if the callback and the selected image are not null
       if (selectedProfileImage != null && widget.onUpdateImage != null) {
         widget.onUpdateImage!(selectedProfileImage!);
+        db.uploadProfilePic(
+            selectedProfileImage!, FirebaseAuth.instance.currentUser!.uid);
       }
 
       final NavigatorState? navigator = Navigator.maybeOf(context);
