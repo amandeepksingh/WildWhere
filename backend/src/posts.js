@@ -6,32 +6,18 @@ require('dotenv').config({path: "../.env"});
 const randomstring = require('randomstring');
 
 //creates DB connection
-let pool;
-if(process.env.location == "local") {
-	console.log(`[Posts] using local pool`);
-     pool = new Pool({
-        user: process.env.dbUser,
-        host: process.env.dbHost,
-        database: process.env.dbName,
-        password: process.env.dbPass,
-        port: process.env.dbPort,
-        // ssl: {
-        // 	rejectUnauthorized:false
-        // } //used only on EC2
-    });    
-} else {
-	console.log(`[Posts] using server pool`);
-     pool = new Pool({
-        user: process.env.dbUser,
-        host: process.env.dbHost,
-        database: process.env.dbName,
-        password: process.env.dbPass,
-        port: process.env.dbPort,
-        ssl: {
-        	rejectUnauthorized:false
-        } //used only on EC2
-    });
-}
+var pool;
+var poolObj = {
+    user: process.env.dbUser,
+    host: process.env.dbHost,
+    database: process.env.dbName,
+    password: process.env.dbPass,
+    port: process.env.dbPort,
+};
+if(process.env.location !== "local") poolObj.ssl = {rejectUnauthorized: false}; //for server pool
+pool = new Pool(poolObj);
+
+
 //creates posts and routes methods and endpoints to functions
 const posts = express();
 posts.get('/selectPost', (req, res, next) => selectPost(req, res, next))
@@ -88,7 +74,7 @@ function selectPost(req, res, next) {
         //condits.push(`length('coordinate :: POINT, point(${req.body.coordinate}) :: POINT' :: PATH) <= abs(${radius})`)
         //condits.push(`\|((coordinate[0] - ${req.body.coordinate}[0]) ^ 2 + (coordinate[1] - ${req.body.coordinate}[1]) ^ 2)  <= abs(${radius})`) 
         //condits.push(`(@-@ path '(coordinate, ${req.body.coordinate})') <= abs(${radius})`)
-    } else if (req.query.radius) return res.status(400).json({"message": "non-null search radius entered with null coordinates"}) //if radius is entered into SELECT, then there must be a COORDINATE
+    } else if (req.query.radius) return res.status(400).json({"message": "non-null search radius entered with null coordinates"}); //if radius is entered into SELECT, then there must be a COORDINATE
     
     if (req.query.imgLink) {
         condits.push(`imgLink = $${i++}`)
@@ -117,22 +103,22 @@ function selectPost(req, res, next) {
         values.push(req.query.activity)
     }
 
-    const query = condits.length === 0 ? "SELECT * FROM posts" 
-        : {
+    const query = condits.length === 0 ? "SELECT * FROM posts" : {
             text: `SELECT * FROM posts WHERE ${condits.join(' AND ')}`,
             values: values
         }
 
-    logger.log(`query: ${JSON.stringify(query)}`)
+    logger.log(`query: ${JSON.stringify(query)}`);
     return pool.query(query, (error, result) => {
         if (error) {
             return res.status(400).json({
                 "message": error.message
-            }) //propogate errors from DB up
+            }); //propogate errors from DB up
         }
+        
         return res.status(200).json({
             message: result.rows
-        }) //expected return
+        }); //expected return
     })
 }
 
