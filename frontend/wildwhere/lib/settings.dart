@@ -19,18 +19,9 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(
         title: const Text('Settings'),
         centerTitle: true,
+        backgroundColor: const Color.fromARGB(255, 212, 246, 172),
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color.fromARGB(255, 212, 246, 172),
-              Colors.white,
-            ],
-          ),
-        ),
         child: ListView(
           children: [
             buttonHelper('Color Blind View', colorBlindToggle, (value) {
@@ -43,8 +34,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 largeTextToggle = value;
               });
             }, 'Increases text size on all pages'),
-            buttonHelper('Receive Notifications', notificationToggle,
-                (value) {
+            buttonHelper('Receive Notifications', notificationToggle, (value) {
               setState(() {
                 notificationToggle = value;
               });
@@ -66,8 +56,8 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget buttonHelper(String title, bool value,
-      ValueChanged<bool> onChanged, String description) {
+  Widget buttonHelper(String title, bool value, ValueChanged<bool> onChanged,
+      String description) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -87,8 +77,7 @@ class SliderHelper extends StatelessWidget {
   final double value;
   final ValueChanged<double> onChanged;
 
-  const SliderHelper(
-      {super.key, required this.value, required this.onChanged});
+  const SliderHelper({super.key, required this.value, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -104,4 +93,3 @@ class SliderHelper extends StatelessWidget {
     );
   }
 }
-
