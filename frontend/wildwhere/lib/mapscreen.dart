@@ -250,7 +250,9 @@ class _MapState extends State<MapScreen> {
       children: [
         // Image Container
         Expanded(
-          flex: 1,  // takes 1/2 of the space
+        flex: 1,  // takes 1/2 of the space
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10.0), 
           child: Image.network(
             data['imgLink'] ?? 'https://via.placeholder.com/150',  // Placeholder if no imgLink is available
             fit: BoxFit.cover,
@@ -260,6 +262,7 @@ class _MapState extends State<MapScreen> {
             }
           ),
         ),
+      ),
         
         // Text Container
         Expanded(
