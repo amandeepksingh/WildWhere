@@ -116,7 +116,7 @@ class _MapState extends State<MapScreen> {
     return Stack(children: <Widget>[
       Scaffold(
         appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+          backgroundColor: const Color.fromARGB(255, 212, 246, 172),
           automaticallyImplyLeading: false,
           elevation: 2,
           title: const Text('Sightings'),
