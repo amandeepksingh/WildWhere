@@ -36,7 +36,15 @@ This README provides instructions on how to find the WildWhere project’s build
       - Example build and run process on MacOS using XCode simulator:
    
          ![alt text](https://github.com/amandeepksingh/WildWhere/blob/main/frontend/wildwhere/assets/images/sc2.png)
-   
+
+### Testing
+
+- Clone the GitHub repository and save the project to your preferred folder.
+- For VSCode:
+  - Open the `database_test.dart` file.
+  - Go to Run > Start Debugging. You can also press the appropriate keyboard shortcut for your platform.
+- To run tests in the terminal:
+  - Run the following command from the root of the project: `flutter test test/database_test.dart`
 
  
   
