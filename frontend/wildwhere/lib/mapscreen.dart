@@ -238,18 +238,46 @@ class _MapState extends State<MapScreen> {
         "Quantity: ${data['quantity']}\n";
 
     return Container(
-      width: 200,
-      height: 100,
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: const [
-          BoxShadow(color: Colors.black26, offset: Offset(0, 2))
-        ],
-      ),
-      child: Text(infoText),
-    );
+    width: 300,
+    height: 100,
+    padding: const EdgeInsets.all(10),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(10),
+      boxShadow: const [BoxShadow(color: Colors.black26, offset: Offset(0, 2))]
+    ),
+    child: Row(
+      children: [
+        // Image Container
+        Expanded(
+          flex: 1,  // takes 1/2 of the space
+          child: Image.network(
+            data['imgLink'] ?? 'https://via.placeholder.com/150',  // Placeholder if no imgLink is available
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              // Fallback for when the image fails to load
+              return Icon(Icons.image_not_supported);
+            }
+          ),
+        ),
+        
+        // Text Container
+        Expanded(
+          flex: 1,  // takes 1/2 of the space
+          child: Container(
+            padding: EdgeInsets.only(left: 10), 
+            alignment: Alignment.centerLeft,  
+            child: Text(
+              infoText,
+              style: TextStyle(fontSize: 12),  //adjust text styling here
+              overflow: TextOverflow.ellipsis,  // Prevents overflow by using ellipsis
+              maxLines: 5,  
+            ),
+          ),
+        )
+      ],
+    ),
+  );
   }
 }
 
