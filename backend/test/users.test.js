@@ -94,7 +94,7 @@ describe("selecting users", () => {
         assert.strictEqual(resp2.status,200)
         assert.deepStrictEqual(resp2.body.message, [
             {
-                "uid": "345             ",
+                "uid": "345",
                 "email": "jj@umass",
                 "username": "John",
                 "bio": "Student",

@@ -75,6 +75,19 @@ Normally ask a network admin and they will build your changes to a development s
 - make sure your changes are merged to main, then manually build the pipeline. This will deploy to our development server. 
 - Unless explicitly given permission, do not build to our production server
 
+#### Testing
+To run the tests, we require postgresql to be installed on your local computer. If postgresql is not installed on your machine, we refer you to the very thorough documentation included at https://www.postgresql.org/download/. After you've successfully confirmed that postgresql is working on your local machine, move forward with the following steps:
+- please change the field 5th line of /WILDWHERE/.env to be the password associated with the user named postgres (this user is included in installation by default)
+- log into psql
+- create a database called wildwhere: run ```CREATE DATABASE Wildwhere;```
+- connect to Wildwhere: run ```\c wildwhere;```
+- add the necessary extensions: run ```CREATE EXTENSION IF NOT EXISTS cube;``` and ```CREATE EXTENSION IF NOT EXISTS earthdistance;```
+- create the users table: run ```CREATE TABLE users (uid varchar(50) PRIMARY KEY, email VARCHAR(50), username VARCHAR(50), bio VARCHAR(50), imgLink VARCHAR(5000), superUser BOOLEAN, locationPerm BOOLEAN, notificationPerm BOOLEAN, colorBlindRating INTEGER);```
+- create the posts table: run ```CREATE TABLE posts (pid varchar(50) PRIMARY KEY, uid VARCHAR(128) NOT NULL REFERENCES users(uid) ON DELETE CASCADE, imgLink TEXT, datetime TIMESTAMP, coordinate POINT NOT NULL, animalName TEXT, quantity INTEGER, activity TEXT);```
+- cd into the /WILDWHERE/backend directory
+- run tests: ```npm test```
+  - note that ```IMAGES: test user normal functionality```, ```IMAGES: test post normal functionality```, ```IMAGES: test user delete normal```, and ```IMAGES: test post delete normal``` require access to the s3 bucket to properly test. In the interest of security, we do not give these credentials to develops but have it stored in our aws instance so that these tests are run during build. As a result, these 4 tests will fail on the local run of ```npm test```
+
 
 ### Backend API
 
