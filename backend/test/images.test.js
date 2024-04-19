@@ -44,8 +44,7 @@ describe("IMAGES: test user image upload", () => {
         assert.strictEqual(resp2.status, 200)
         
         //check img in db
-        const resp3 = await request(app).get('/users/selectUser')
-            .send(`uid=${uid}`)
+        const resp3 = await request(app).get(`/users/selectUser?uid=${uid}`)
         assert.strictEqual(resp3.body.message[0].imglink, resp2.body.message)
 
         //teardown
@@ -90,8 +89,7 @@ describe("IMAGES: test post image upload", () => {
         assert.strictEqual(resp2.status, 200)
         
         //check img in db
-        const resp3 = await request(app).get('/posts/selectPost')
-            .send(`pid=${pid}`)
+        const resp3 = await request(app).get(`/posts/selectPost?pid=${pid}`)
         assert.strictEqual(resp3.body.message[0].imglink, resp2.body.message)
 
         //teardown
@@ -137,8 +135,7 @@ describe("IMAGES: test user delete image", () => {
         assert.strictEqual(resp3.body.message, 'image delete successful')
 
         //check img in db
-        const resp4 = await request(app).get('/users/selectUser')
-            .send(`uid=${uid}`)
+        const resp4 = await request(app).get(`/users/selectUser?uid=${uid}`)
         assert.strictEqual(resp4.body.message[0].imglink, null)
     })
 
@@ -177,8 +174,7 @@ describe("IMAGES: test post delete image", () => {
         assert.strictEqual(resp3.body.message, 'image delete successful')
 
         //check img in db
-        const resp4 = await request(app).get('/posts/selectPost?pid=${pid}')
-            .send(`pid=${pid}`)
+        const resp4 = await request(app).get(`/posts/selectPost?pid=${pid}`)
         assert.strictEqual(resp4.body.message[0].imglink, null)
     })
 

@@ -27,8 +27,7 @@ describe("selecting users", () => {
     it("USER: test select with empty", async () => {
         await teardown()
         const resp = await request(app)
-        .get('/users/selectUser')
-        .send('uid=1') //send body parameters
+        .get(`/users/selectUser?uid=1`) //send body parameters
         assert.strictEqual(resp.status,200)
         assert.deepStrictEqual(resp.body.message, [])
     })
@@ -41,8 +40,7 @@ describe("selecting users", () => {
         const uid = resp1.body.uid
 
         const resp2 = await request(app)
-        .get('/users/selectUser')
-        .send(`uid=${uid}`) //send body parameters
+        .get(`/users/selectUser?uid=${uid}`) //send body parameters
         .send('email=jj@umas') //send body parameters
         assert.strictEqual(resp2.status,200)
         assert.deepStrictEqual(resp2.body.message, [])
@@ -51,15 +49,13 @@ describe("selecting users", () => {
         await teardown()
         const resp1 = await request(app)
         .post('/users/createUser')
-        .send('uid=ffd             ')
+        .send('uid=ffd')
         .send('email=jj@umass')
         assert.deepStrictEqual(resp1.body.message, `user created`)
         const uid = resp1.body.uid
 
         const resp2 = await request(app)
-        .get('/users/selectUser')
-        .send(`uid=${uid}`) //send body parameters
-        .send('email=jj@umass') //send body parameters
+        .get(`/users/selectUser?uid=${uid}&email=jj@umass`) //send body parameters
         assert.strictEqual(resp2.status,200)
         assert.deepStrictEqual(resp2.body.message, [
             {
@@ -89,12 +85,11 @@ describe("selecting users", () => {
         .send('colorBlindRating=10')
 
         const resp2 = await request(app)
-        .get('/users/selectUser')
-        .send(`uid=345`) //send body parameters
+        .get(`/users/selectUser?uid=345`) //send body parameters
         assert.strictEqual(resp2.status,200)
         assert.deepStrictEqual(resp2.body.message, [
             {
-                "uid": "345             ",
+                "uid": "345",
                 "email": "jj@umass",
                 "username": "John",
                 "bio": "Student",
@@ -126,8 +121,7 @@ describe("selecting users", () => {
         .send('email=aj@umass')
 
         const resp2 = await request(app)
-        .get('/users/selectUser')
-        .send('email=jj@umass')
+        .get(`/users/selectUser?email=jj@umass`)
         assert.strictEqual(resp2.status,200)
         assert.deepStrictEqual(resp2.body.message, [
             {
@@ -220,7 +214,7 @@ describe("updating users", () => {
         const email = "jj@umass.edu"
         const resp1 = await request(app)
         .post('/users/createUser')
-        .send('uid=ffd             ')
+        .send('uid=ffd')
         assert.strictEqual(resp1.status, 200)
         assert.strictEqual(resp1.body.message, `user created`)
         const uid = resp1.body.uid
@@ -234,8 +228,7 @@ describe("updating users", () => {
         assert.strictEqual(resp2.body.message, `user with uid ${uid} updated`)
 
         const resp3 = await request(app)
-        .get('/users/selectUser')
-        .send(`uid=${uid}`)
+        .get(`/users/selectUser?uid=${uid}`)
         assert.strictEqual(resp3.status, 200)
         assert.deepStrictEqual(resp3.body.message, 
             [

@@ -84,7 +84,7 @@ function selectPost(req, res, next) {
     //FRONT END CAN IMPLEMENT INTERVAL FUCTIONALITY IF THEY WISH TO
     if (req.query.starttime) {
         condits.push(`TO_TIMESTAMP($${i++}, 'YYYY/MM/DD/HH24:MI:ss') <= datetime`)
-        values.push(req.body.starttime)
+        values.push(req.query.starttime)
     }
     if (req.query.endtime) {
         condits.push(`datetime <= TO_TIMESTAMP($${i++}, 'YYYY/MM/DD/HH24:MI:ss')`)
