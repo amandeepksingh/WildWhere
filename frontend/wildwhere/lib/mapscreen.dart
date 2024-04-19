@@ -243,9 +243,12 @@ class _MapState extends State<MapScreen> {
         "Activity: ${data['activity']}\n"
         "Quantity: ${data['quantity']}\n";
 
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+    
     return Container(
-    width: 275,
-    height: 115,
+    width: screenWidth * 0.7,
+    height: screenHeight * 0.13,
     padding: const EdgeInsets.all(10),
     decoration: BoxDecoration(
       color: Colors.white,
