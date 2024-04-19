@@ -36,7 +36,7 @@ class _PostsListPageState extends State<PostsListPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("All Posts"),
-        backgroundColor: Colors.green,
+        backgroundColor: const Color.fromARGB(255, 212, 246, 172),
       ),
       body: FutureBuilder<List<Post>>(
         future: _futurePosts,
