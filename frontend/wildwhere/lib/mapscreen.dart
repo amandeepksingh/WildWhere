@@ -248,7 +248,7 @@ class _MapState extends State<MapScreen> {
     
     return Container(
     width: screenWidth * 0.7,
-    height: screenHeight * 0.13,
+    height: screenHeight * 0.155,
     padding: const EdgeInsets.all(10),
     decoration: BoxDecoration(
       color: Colors.white,
@@ -283,7 +283,7 @@ class _MapState extends State<MapScreen> {
               infoText,
               style: TextStyle(fontSize: 12),  //adjust text styling here
               overflow: TextOverflow.ellipsis,  // Prevents overflow by using ellipsis
-              maxLines: 5,  
+              maxLines: 7,  
             ),
           ),
         )
