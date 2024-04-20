@@ -6,32 +6,18 @@ require('dotenv').config({path: "../.env"});
 const randomstring = require('randomstring');
 
 //creates DB connection
-let pool;
-if(process.env.location == "local") {
-	console.log(`[Posts] using local pool`);
-     pool = new Pool({
-        user: process.env.dbUser,
-        host: process.env.dbHost,
-        database: process.env.dbName,
-        password: process.env.dbPass,
-        port: process.env.dbPort,
-        // ssl: {
-        // 	rejectUnauthorized:false
-        // } //used only on EC2
-    });    
-} else {
-	console.log(`[Posts] using server pool`);
-     pool = new Pool({
-        user: process.env.dbUser,
-        host: process.env.dbHost,
-        database: process.env.dbName,
-        password: process.env.dbPass,
-        port: process.env.dbPort,
-        ssl: {
-        	rejectUnauthorized:false
-        } //used only on EC2
-    });
-}
+var pool;
+var poolObj = {
+    user: process.env.dbUser,
+    host: process.env.dbHost,
+    database: process.env.dbName,
+    password: process.env.dbPass,
+    port: process.env.dbPort,
+};
+if(process.env.location !== "local") poolObj.ssl = {rejectUnauthorized: false}; //for server pool
+pool = new Pool(poolObj);
+
+
 //creates posts and routes methods and endpoints to functions
 const posts = express();
 posts.get('/selectPost', (req, res, next) => selectPost(req, res, next))
@@ -70,69 +56,69 @@ function selectPost(req, res, next) {
     var values = []
     var i = 1
 
-    if (req.body.pid) {
+    if (req.query.pid) {
         condits.push(`pid = $${i++}`)
-        values.push(req.body.pid)
+        values.push(req.query.pid)
     }
-    if (req.body.uid) {
+    if (req.query.uid) {
         condits.push(`uid = $${i++}`)
-        values.push(req.body.uid)
+        values.push(req.query.uid)
     }
 
-    if (req.body.coordinate) {
-        radius = req.body.radius ? req.body.radius : 0 //if a COORDINATE exists without a radius, assume radius of 0, filters for posts with this coordinates
+    if (req.query.coordinate) {
+        radius = req.query.radius ? req.query.radius : 0 //if a COORDINATE exists without a radius, assume radius of 0, filters for posts with this coordinates
         //RADIUS in MILES
         condits.push(`coordinate<@>$${i++}::point <= abs($${i++})`)
-        values.push(req.body.coordinate)
+        values.push(req.query.coordinate)
         values.push(radius)
         //condits.push(`length('coordinate :: POINT, point(${req.body.coordinate}) :: POINT' :: PATH) <= abs(${radius})`)
         //condits.push(`\|((coordinate[0] - ${req.body.coordinate}[0]) ^ 2 + (coordinate[1] - ${req.body.coordinate}[1]) ^ 2)  <= abs(${radius})`) 
         //condits.push(`(@-@ path '(coordinate, ${req.body.coordinate})') <= abs(${radius})`)
-    } else if (req.body.radius) return res.status(400).json({"message": "non-null search radius entered with null coordinates"}) //if radius is entered into SELECT, then there must be a COORDINATE
+    } else if (req.query.radius) return res.status(400).json({"message": "non-null search radius entered with null coordinates"}); //if radius is entered into SELECT, then there must be a COORDINATE
     
-    if (req.body.imgLink) {
+    if (req.query.imgLink) {
         condits.push(`imgLink = $${i++}`)
-        values.push(req.body.imgLink)
+        values.push(req.query.imgLink)
     }
 
     //FRONT END CAN IMPLEMENT INTERVAL FUCTIONALITY IF THEY WISH TO
-    if (req.body.starttime) {
+    if (req.query.starttime) {
         condits.push(`TO_TIMESTAMP($${i++}, 'YYYY/MM/DD/HH24:MI:ss') <= datetime`)
-        values.push(req.body.starttime)
+        values.push(req.query.starttime)
     }
-    if (req.body.endtime) {
+    if (req.query.endtime) {
         condits.push(`datetime <= TO_TIMESTAMP($${i++}, 'YYYY/MM/DD/HH24:MI:ss')`)
-        values.push(req.body.endtime)
+        values.push(req.query.endtime)
     }
-    if (req.body.animalName) {
+    if (req.query.animalName) {
         condits.push(`animalName = $${i++}`)
-        values.push(req.body.animalName)
+        values.push(req.query.animalName)
     }
-    if (req.body.quantity) {
+    if (req.query.quantity) {
         condits.push(`quantity = $${i++}`)
-        values.push(req.body.quantity)
+        values.push(req.query.quantity)
     }
-    if (req.body.activity) {
+    if (req.query.activity) {
         condits.push(`activity = $${i++}`)
-        values.push(req.body.activity)
+        values.push(req.query.activity)
     }
 
-    const query = condits.length === 0 ? "SELECT * FROM posts" 
-        : {
+    const query = condits.length === 0 ? "SELECT * FROM posts" : {
             text: `SELECT * FROM posts WHERE ${condits.join(' AND ')}`,
             values: values
         }
 
-    logger.log(`query: ${JSON.stringify(query)}`)
+    logger.log(`query: ${JSON.stringify(query)}`);
     return pool.query(query, (error, result) => {
         if (error) {
             return res.status(400).json({
                 "message": error.message
-            }) //propogate errors from DB up
+            }); //propogate errors from DB up
         }
+        
         return res.status(200).json({
             message: result.rows
-        }) //expected return
+        }); //expected return
     })
 }
 
