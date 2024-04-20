@@ -3,7 +3,7 @@ CREATE EXTENSION IF NOT EXISTS cube;
 CREATE EXTENSION IF NOT EXISTS earthdistance;
 
 CREATE TABLE users (
-    uid CHAR(50) PRIMARY KEY, 
+    uid VARCHAR(50) PRIMARY KEY, 
     email VARCHAR(50),
     username VARCHAR(50),
     bio VARCHAR(50),
@@ -15,7 +15,7 @@ CREATE TABLE users (
 );
 
 CREATE TABLE posts (
-    pid CHAR(50) PRIMARY KEY,
+    pid VARCHAR(50) PRIMARY KEY,
     uid VARCHAR(128) NOT NULL REFERENCES users(uid) ON DELETE CASCADE,
     imgLink TEXT,
     datetime TIMESTAMP,
