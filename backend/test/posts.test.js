@@ -29,8 +29,7 @@ describe("selecting posts", () => {
         it("POST: test select with empty", async () => {
             await teardown()
             const resp = await request(app)
-            .get('/posts/selectPost')
-            .send('coordinate=(0.0, 0.0)') //send body parameters
+            .get('/posts/selectPost?coordinate=(0.0, 0.0)') //send body parameters
             assert.strictEqual(resp.status,200)
             assert.deepStrictEqual(resp.body.message, [])
         })
@@ -50,10 +49,7 @@ describe("selecting posts", () => {
             const pid = create_post.body.pid
 
             const resp = await request(app)
-            .get('/posts/selectPost')
-            .send(`uid=${uid}`) //send body parameters
-            .send('coordinate=(0.0, 0.0)')
-            .send('animalName=bear')
+            .get(`/posts/selectPost?uid=${uid}&coordinate=(0.0, 0.0)&animalName=bear`)
             assert.strictEqual(resp.status, 200)
             assert.deepStrictEqual(resp.body.message, [])
         })
@@ -62,7 +58,7 @@ describe("selecting posts", () => {
             
             const create_user = await request(app)
             .post('/users/createUser')
-            .send('uid=ffd             ')
+            .send('uid=ffd')
             const uid = create_user.body.uid
 
             const create_post = await request(app)
@@ -73,8 +69,7 @@ describe("selecting posts", () => {
             const pid = create_post.body.pid
 
             const resp = await request(app)
-            .get('/posts/selectPost')
-            .send(`uid=${uid}`) //send body parameters
+            .get(`/posts/selectPost?uid=${uid}`) //send body parameters
             .send('coordinate=(0.0, 0.0)')
             assert.strictEqual(resp.status, 200)
             assert.deepStrictEqual(resp.body.message, [
@@ -95,7 +90,7 @@ describe("selecting posts", () => {
 
             const create_user = await request(app)
             .post('/users/createUser')
-            .send('uid=ffd             ')
+            .send('uid=ffd')
             const uid = create_user.body.uid
 
             const create_post = await request(app)
@@ -109,9 +104,7 @@ describe("selecting posts", () => {
             const pid = create_post.body.pid
 
             const resp = await request(app)
-            .get('/posts/selectPost')
-            .send(`pid=${pid}`)
-            .send(`uid=${uid}`)
+            .get(`/posts/selectPost?pid=${pid}&uid=${uid}`)
             //T(HOUR + 5) ... + .000Z at the end
             .send('datetime=1997-12-17 07:37:16-08')
             .send('coordinate=(2.5, 7.9)')
@@ -134,7 +127,7 @@ describe("selecting posts", () => {
 
             const create_user = await request(app)
             .post('/users/createUser')
-            .send('uid=ffd             ')
+            .send('uid=ffd')
             const uid = create_user.body.uid
 
             const create_post1 = await request(app)
@@ -150,8 +143,7 @@ describe("selecting posts", () => {
             const pid2 = create_post2.body.pid
 
             const resp = await request(app)
-            .get('/posts/selectPost')
-            .send(`uid=${uid}`)
+            .get(`/posts/selectPost?uid=${uid}`)
             assert.strictEqual(resp.status,200)
             assert.deepStrictEqual(resp.body.message, [
                 {
@@ -196,8 +188,7 @@ describe("selecting posts", () => {
             .send('coordinate=(2.6, 0.0)')
 
             const resp = await request(app)
-            .get('/posts/selectPost')
-            .send('coordinate=(177.0, 0.0)')
+            .get(`/posts/selectPost?coordinate=(177.0, 0.0)`)
             assert.strictEqual(resp.status,200)
             assert.deepStrictEqual(resp.body.message, [
                 {
@@ -232,9 +223,7 @@ describe("selecting posts", () => {
             .send('coordinate=(2.6, 0.0)')
 
             const resp = await request(app)
-            .get('/posts/selectPost')
-            .send('radius=0')
-            .send('coordinate=(177.0, 0.0)')
+            .get(`/posts/selectPost?radius=0&coordinate=(177.0, 0.0)`)
             assert.strictEqual(resp.status,200)
             assert.deepStrictEqual(resp.body.message, [
                 {
@@ -281,9 +270,7 @@ describe("selecting posts", () => {
             const pid4 = create_post4.body.pid
 
             const resp = await request(app)
-            .get('/posts/selectPost')
-            .send('radius=8000')
-            .send('coordinate=(177.0, 0.0)')
+            .get(`/posts/selectPost?radius=8000&coordinate=(177.0, 0.0)`)
             assert.strictEqual(resp.status,200)
             assert.deepStrictEqual(resp.body.message, [
                 {
@@ -323,7 +310,7 @@ describe("selecting posts", () => {
 
             const create_user = await request(app)
             .post('/users/createUser')
-            .send('uid=ffd             ')
+            .send('uid=ffd')
             const uid = create_user.body.uid
             
             const create_post1 = await request(app)
@@ -340,8 +327,7 @@ describe("selecting posts", () => {
             const pid2 = create_post2.body.pid
             
             const resp = await request(app)
-            .get('/posts/selectPost')
-            .send('starttime=2000/12/17/07:37:16')
+            .get(`/posts/selectPost?starttime=2000/12/17/07:37:16`)
             assert.strictEqual(resp.status,200)
             assert.deepStrictEqual(resp.body.message, [
                 {
@@ -378,8 +364,7 @@ describe("selecting posts", () => {
             .send('coordinate=(2.6, 0.0)')
 
             const resp = await request(app)
-            .get('/posts/selectPost')
-            .send('endtime=2000/12/17/07:37:16')
+            .get(`/posts/selectPost?endtime=2000/12/17/07:37:16`)
             assert.strictEqual(resp.status,200)
             assert.deepStrictEqual(resp.body.message, [
                 {
@@ -399,7 +384,7 @@ describe("selecting posts", () => {
 
             const create_user = await request(app)
             .post('/users/createUser')
-            .send('uid=ffd             ')
+            .send('uid=ffd')
             const uid = create_user.body.uid
             
             const create_post1 = await request(app)
@@ -422,9 +407,7 @@ describe("selecting posts", () => {
             .send('coordinate=(2.6, 0.0)')
 
             const resp = await request(app)
-            .get('/posts/selectPost')
-            .send('starttime=2007/12/17/07:37:16')
-            .send('endtime=2009/12/17/07:37:16')
+            .get(`/posts/selectPost?starttime=2007/12/17/07:37:16&endtime=2009/12/17/07:37:16`)
             assert.strictEqual(resp.status,200)
             assert.deepStrictEqual(resp.body.message, [
                 {
@@ -542,8 +525,7 @@ describe("updating posts", () => {
         assert.strictEqual(resp1.body.message, `post with pid ${pid} updated`)
 
         const resp2 = await request(app)
-        .get('/posts/selectPost')
-        .send(`pid=${pid}`)
+        .get(`/posts/selectPost?pid=${pid}`)
         assert.strictEqual(resp2.status, 200)
         assert.deepStrictEqual(resp2.body.message, 
             [
@@ -568,7 +550,7 @@ describe("deleting posts", () => {
 
         const create_user = await request(app)
         .post('/users/createUser')
-        .send('uid=ffd             ')
+        .send('uid=ffd')
         assert.strictEqual(create_user.body.message,'user created')
         assert.strictEqual(create_user.status, 200)
         const uid = create_user.body.uid
@@ -588,8 +570,7 @@ describe("deleting posts", () => {
         assert.strictEqual(resp1.status, 200)
 
         const resp2 = await request(app)
-        .get('/posts/selectPost')
-        .send(`pid=${pid}`)
+        .get(`/posts/selectPost?pid=${pid}`)
         assert.strictEqual(resp2.status, 200)
         assert.deepStrictEqual(resp2.body.message, [])
     }) 

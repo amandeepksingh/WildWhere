@@ -68,12 +68,12 @@ function selectUser(req, res, next) {
      */
     logger.log(`originalURL: ${JSON.stringify(req.originalUrl)} - body: ${JSON.stringify(req.body)} - headers: ${JSON.stringify(req.rawHeaders)}`)
     const columns = ["uid", "email", "username", "bio", "pfpLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
-    var condits = {}
-    for(const col of columns) {
-        if(req.body[col]) {
-            condits[col] = req.body[col]
-        }
-    }
+    var condits = req.query;
+    // for(const col of columns) {
+    //     if(req.body[col]) {
+    //         condits[col] = req.body[col]
+    //     }
+    // }
 
     const conditString = Object.keys(condits).map((col, i) => `${col} = $${i + 1}`).join(" AND ")
     const query = Object.keys(condits).length === 0 ? "SELECT * FROM users"
