@@ -19,7 +19,7 @@ class MapScreen extends StatefulWidget {
   State<MapScreen> createState() => _MapState();
 }
 
-class _MapState extends State<MapScreen> with SingleTickerProviderStateMixin{
+class _MapState extends State<MapScreen> with TickerProviderStateMixin{
   MapboxMapController?
       _controller; // Controller to manage Mapbox map interaction.
   Symbol? selectedSymbol; // Holds the currently selected map symbol, if any.
@@ -31,21 +31,49 @@ class _MapState extends State<MapScreen> with SingleTickerProviderStateMixin{
       currentPostData; // Data for the currently selected symbol.
   Future<Position>? position;
 
-  late AnimationController animationController;
-  late Animation<double> opacityAnimation;
-  var reportOverlayControl = OverlayPortalController();
+  late AnimationController reportanimationController;
+  late Animation<double> reportopacityAnimation;
+  late AnimationController infoBoxAnimationController;
+  late Animation<double> infoBoxOpacityAnimation;
+  late Animation<Offset> infoBoxPositionAnimation;
   
+  var reportOverlayControl = OverlayPortalController();
 
   @override
   void initState() {
     super.initState();
-    animationController = AnimationController(
+    
+    reportanimationController = AnimationController(
         duration: const Duration(milliseconds: 150),
         vsync: this,
       );
-      opacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(parent: animationController, curve: Curves.easeIn)
+    reportopacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(parent: reportanimationController, curve: Curves.easeIn)
       );
+    
+    infoBoxAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 220),
+      reverseDuration: const Duration(milliseconds: 160),
+      vsync: this,
+    );
+
+    infoBoxOpacityAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: infoBoxAnimationController,
+      curve: Curves.easeOut,
+      reverseCurve: Curves.easeInCubic,
+    ));
+
+    infoBoxPositionAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.12),  // Start slightly below the final position
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: infoBoxAnimationController,
+      curve: Curves.fastEaseInToSlowEaseOut,
+      reverseCurve: Curves.easeInCubic,
+    ));
     
   }
 
@@ -53,7 +81,8 @@ class _MapState extends State<MapScreen> with SingleTickerProviderStateMixin{
   void dispose() {
     _controller
         ?.dispose(); // Clean up the controller when the widget is removed from the widget tree.
-    animationController.dispose();
+    reportanimationController.dispose();
+    infoBoxAnimationController.dispose();
     super.dispose();
   }
 
@@ -98,7 +127,7 @@ class _MapState extends State<MapScreen> with SingleTickerProviderStateMixin{
       SymbolOptions(
         geometry: LatLng(latitude, longitude),
         iconImage: "assetImage",
-        iconSize: 0.95,
+        iconSize: 1,
       ),
     )
         .then((symbol) {
@@ -114,14 +143,22 @@ class _MapState extends State<MapScreen> with SingleTickerProviderStateMixin{
     _loadMarkers(); // Reload markers from database
   }
 
-  void _onSymbolTapped(Symbol symbol) {
-    // Handles user taps on map symbols (markers).
-    setState(() {
-      selectedSymbol = symbol;
-      _updateSymbolPosition();
-      // Fetch detailed information from the map using symbol ID
-      currentPostData = symbolDataMap[symbol.id];
-    });
+  void _onSymbolTapped(Symbol symbol) async {
+      if (selectedSymbol != null && selectedSymbol!.id == symbol.id) {
+        // If the same symbol is tapped again, reverse the animation to hide the info box.
+        await infoBoxAnimationController.reverse();
+        setState(() {
+            selectedSymbol = null;
+            currentPostData = null;
+        });
+    } else {
+        setState(() {
+            selectedSymbol = symbol;
+            currentPostData = symbolDataMap[symbol.id];
+            _updateSymbolPosition();
+        });
+        infoBoxAnimationController.forward(from: 0.0);  // Start the animation from the beginning
+    }
   }
 
   void _onCameraMove() {
@@ -167,11 +204,14 @@ class _MapState extends State<MapScreen> with SingleTickerProviderStateMixin{
                 target: LatLng(42.381030, -72.529010),
                 zoom: 12,
               ),
-              onMapClick: (point, latLng) {
-                setState(() {
-                  selectedSymbol = null;
-                  symbolWidgetPosition = null;
-                });
+              onMapClick: (point, latLng) async{
+                if(selectedSymbol != null){
+                  await infoBoxAnimationController.reverse();
+                  setState(() {
+                    selectedSymbol = null;
+                    symbolWidgetPosition = null;
+                  });
+                }
               },
             ),
             if (symbolWidgetPosition != null)
@@ -222,8 +262,8 @@ class _MapState extends State<MapScreen> with SingleTickerProviderStateMixin{
           onPressed: () {
             setState(() {
               reportOverlayControl.toggle();
-              animationController.reset();
-              animationController.forward();
+              reportanimationController.reset();
+              reportanimationController.forward();
             });
           },
           elevation: 10,
@@ -232,11 +272,11 @@ class _MapState extends State<MapScreen> with SingleTickerProviderStateMixin{
             controller: reportOverlayControl,
             overlayChildBuilder: (BuildContext context) {
               return FadeTransition(
-              opacity: opacityAnimation,
+              opacity: reportopacityAnimation,
               child: ReportPage(
                   onPostCreated: () async{
                     refreshMarkers();
-                    await animationController.reverse();
+                    await reportanimationController.reverse();
                     reportOverlayControl.toggle();
                   },
                   controller: reportOverlayControl
@@ -310,51 +350,65 @@ class _MapState extends State<MapScreen> with SingleTickerProviderStateMixin{
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    return Container(
-      width: screenWidth * 0.7,
-      height: screenHeight * 0.155,
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: const [
-            BoxShadow(color: Colors.black26, offset: Offset(0, 2))
-          ]),
-      child: Row(
-        children: [
-          // Image Container
-          Expanded(
-            flex: 1, // takes 1/2 of the space
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10.0),
-              child: Image.network(
-                  data['imgLink'] ??
-                      'https://via.placeholder.com/150', // Placeholder if no imgLink is available
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                // Fallback for when the image fails to load
-                return const Icon(Icons.image_not_supported);
-              }),
-            ),
-          ),
+    return AnimatedBuilder(
+      animation: infoBoxAnimationController, 
+      builder: (context, child){
+        if (infoBoxAnimationController.isDismissed) {
+                return SizedBox.shrink();  // This ensures that widget collapses when the animation is dismissed
+            }
+          return SlideTransition(
+          position: infoBoxPositionAnimation,
+          child: FadeTransition(
+            opacity: infoBoxOpacityAnimation,
+                child: Container(
+              width: screenWidth * 0.7,
+              height: screenHeight * 0.155,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: const [
+                    BoxShadow(color: Colors.black26, offset: Offset(0, 2))
+                  ]),
+              child: Row(
+                children: [
+                  // Image Container
+                  Expanded(
+                    flex: 1, // takes 1/2 of the space
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: Image.network(
+                          data['imgLink'] ??
+                              'https://via.placeholder.com/150', // Placeholder if no imgLink is available
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                        // Fallback for when the image fails to load
+                        return const Icon(Icons.image_not_supported);
+                      }),
+                    ),
+                  ),
 
-          // Text Container
-          Expanded(
-            flex: 1, // takes 1/2 of the space
-            child: Container(
-              padding: EdgeInsets.only(left: 10),
-              alignment: Alignment.centerLeft,
-              child: Text(
-                infoText,
-                style: TextStyle(fontSize: 12), //adjust text styling here
-                overflow: TextOverflow
-                    .ellipsis, // Prevents overflow by using ellipsis
-                maxLines: 7,
+                  // Text Container
+                  Expanded(
+                    flex: 1, // takes 1/2 of the space
+                    child: Container(
+                      padding: EdgeInsets.only(left: 10),
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        infoText,
+                        style: TextStyle(fontSize: 12), //adjust text styling here
+                        overflow: TextOverflow
+                            .ellipsis, // Prevents overflow by using ellipsis
+                        maxLines: 7,
+                      ),
+                    ),
+                  )
+                ],
               ),
-            ),
-          )
-        ],
-      ),
+            )
+          ),
+        );
+      }
     );
   }
 }
