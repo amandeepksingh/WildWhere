@@ -1,9 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:wildwhere/database.dart';
 import 'package:wildwhere/mapscreen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:wildwhere/edit_profile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -16,44 +15,27 @@ class _ProfilePageState extends State<Profile> {
   String? username;
   String? pronouns;
   String? bio;
-  String? email = FirebaseAuth.instance.currentUser?.email;
-  XFile? image;
+  String? email;
+  File? image;
+  late SharedPreferences prefs;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      Database db = Database();
-      var currentUser =
-          await db.getCurrentUser(FirebaseAuth.instance.currentUser!.uid);
-      if (mounted) {
-        // Check if the widget is still in the tree
-        setState(() {
-          username = currentUser['username'] ?? '';
-          bio = currentUser['bio'] ?? '';
-        });
-      }
-    });
+    loadProfileData();
   }
 
-  void updateUsername(String newUsername) {
-    setState(() => username = newUsername);
-  }
-
-  void updatePronouns(String newPronouns) {
-    setState(() => pronouns = newPronouns);
-  }
-
-  void updateBio(String newBio) {
-    setState(() => bio = newBio);
-  }
-
-  void updateEmail(String newEmail) {
-    setState(() => email = newEmail);
-  }
-
-  void updateImage(XFile newImage) {
+  void updateImage(File newImage) {
     setState(() => image = newImage);
+  }
+
+  void loadProfileData() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      username = prefs.getString('username');
+      bio = prefs.getString('bio');
+      email = prefs.getString('email');
+    });
   }
 
   @override
@@ -63,10 +45,9 @@ class _ProfilePageState extends State<Profile> {
       appBar: AppBar(
         title: Text('$username'),
         leading: BackButton(onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const MapScreen()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const MapScreen()));
         }),
-        backgroundColor: const Color.fromARGB(255, 212, 246, 172),
       ),
       //creates the View Settings and Edit Profile buttons
       body: SingleChildScrollView(
@@ -93,8 +74,7 @@ class _ProfilePageState extends State<Profile> {
                             shape: BoxShape.circle,
                           ),
                           child: Image.asset(
-                              image?.path ??
-                                  'assets/images/defaultUserProfileImg.jpeg',
+                              image?.path ?? 'assets/images/defaultpp.png',
                               fit: BoxFit.cover)),
                     ],
                   ),
@@ -119,23 +99,22 @@ class _ProfilePageState extends State<Profile> {
                 ],
               ),
             ),
-            const SizedBox(height: 10), // Add spacing above the buttons
+            const SizedBox(height: 18), // Add spacing above the buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
+                  onPressed: () async {
+                    // Await the Navigator.push and check the result.
+                    bool? result = await Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => EditProfile(
-                                onUpdateUsername: updateUsername,
-                                onUpdatePronouns: updatePronouns,
-                                onUpdateBio: updateBio,
-                                onUpdateEmail: updateEmail,
-                                onUpdateImage: updateImage,
-                              )),
+                          builder: (context) => EditProfile(prefs: prefs)),
                     );
+                    // If 'result' is true, reload the profile data.
+                    if (result == true) {
+                      loadProfileData();
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 92, 110, 71),
@@ -150,8 +129,11 @@ class _ProfilePageState extends State<Profile> {
             ),
             const SizedBox(height: 12.5),
             //line dividing the user image/bio and the user's posts
-            const Divider(
-              color: Colors.black,
+            Divider(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white // Color for dark theme
+                  : const Color.fromARGB(
+                      255, 126, 126, 126), // Color for light theme
               thickness: 0.25,
             ),
             const SizedBox(height: 10),
@@ -163,7 +145,7 @@ class _ProfilePageState extends State<Profile> {
             const Text(
               "No Posts Yet",
               style: TextStyle(
-                  fontSize: 18, color: Color.fromARGB(255, 137, 137, 137)),
+                  fontSize: 18, color: Color.fromARGB(255, 176, 175, 175)),
             ),
           ],
         ),

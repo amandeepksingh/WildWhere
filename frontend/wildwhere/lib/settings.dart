@@ -19,39 +19,36 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(
         title: const Text('Settings'),
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 212, 246, 172),
       ),
-      body: Container(
-        child: ListView(
-          children: [
-            buttonHelper('Color Blind View', colorBlindToggle, (value) {
-              setState(() {
-                colorBlindToggle = value;
-              });
-            }, 'A view of the app that is accessible for those with color blindness'),
-            buttonHelper('Larger Text View', largeTextToggle, (value) {
-              setState(() {
-                largeTextToggle = value;
-              });
-            }, 'Increases text size on all pages'),
-            buttonHelper('Receive Notifications', notificationToggle, (value) {
-              setState(() {
-                notificationToggle = value;
-              });
-            }, 'Get notified when an animal is sighted near you'),
-            Visibility(
-              visible: notificationToggle,
-              child: SliderHelper(
-                value: sliderValue,
-                onChanged: (newValue) {
-                  setState(() {
-                    sliderValue = newValue;
-                  });
-                },
-              ),
+      body: ListView(
+        children: [
+          buttonHelper('Color Blind View', colorBlindToggle, (value) {
+            setState(() {
+              colorBlindToggle = value;
+            });
+          }, 'A view of the app that is accessible for those with color blindness'),
+          buttonHelper('Larger Text View', largeTextToggle, (value) {
+            setState(() {
+              largeTextToggle = value;
+            });
+          }, 'Increases text size on all pages'),
+          buttonHelper('Receive Notifications', notificationToggle, (value) {
+            setState(() {
+              notificationToggle = value;
+            });
+          }, 'Get notified when an animal is sighted near you'),
+          Visibility(
+            visible: notificationToggle,
+            child: SliderHelper(
+              value: sliderValue,
+              onChanged: (newValue) {
+                setState(() {
+                  sliderValue = newValue;
+                });
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

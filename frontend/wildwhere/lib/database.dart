@@ -1,13 +1,11 @@
 import 'dart:convert';
-import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wildwhere/post.dart';
 import 'package:wildwhere/user.dart';
 
 class Database {
-  String endpoint =
-      'http://ec2-3-144-183-123.us-east-2.compute.amazonaws.com:80';
+  String endpoint = 'http://ec2-3-23-98-233.us-east-2.compute.amazonaws.com:80';
   final http.Client client;
 
   Database({http.Client? client}) : client = client ?? http.Client();
@@ -98,7 +96,6 @@ class Database {
       },
       body: jsonBody,
     );
-
     return response;
   }
 
@@ -127,7 +124,6 @@ class Database {
   Future<http.Response> createUser(User user) async {
     var url = Uri.parse('$endpoint/users/createUser');
     var jsonData = jsonEncode(user);
-    print(jsonData);
     var response = await client.post(
       url,
       headers: <String, String>{
@@ -150,7 +146,7 @@ class Database {
       "uid": uid,
       if (email != null) "email": email,
       if (username != null) "username": username,
-      if (bio != null) "bio": bio,
+      "bio": bio,
       if (imgLink != null) "imgLink": imgLink,
       if (superUser != null) "superUser": superUser,
     };
@@ -177,18 +173,38 @@ class Database {
     }
   }
 
-  void uploadProfilePic(XFile file, String uid) async {
-    String picEndpoint = '$endpoint/images/userProfilePic/upload';
-    String fileName = file.path.split('/').last;
-    FormData data = FormData.fromMap({
-      "file": await MultipartFile.fromFile(file.path, filename: fileName),
-      "uid": uid
-    });
-    Dio dio = Dio();
-    dio.post(picEndpoint, data: data).then((response) {
-      var jsonResponse = jsonDecode(response.toString());
-      print(jsonResponse);
-    }).catchError((error) => print(error));
-    ;
+  Future<String?> uploadProfilePic(String fileName, String uid) async {
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('$endpoint/images/userProfilePic/upload'));
+    request.fields[''] = 'value';
+    request.files.add(await http.MultipartFile.fromPath('picture', fileName));
+    var res = await request.send();
+    return res.reasonPhrase;
+  }
+
+  Future<bool> uniqueUsername(String username) async {
+    var url = Uri.parse('$endpoint/users/selectUser?username=$username');
+    
+    var response = await client.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    var data = jsonDecode(response.body);
+    return data['message'][0] == '';
+  }
+
+  void initializePrefs(String userId) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var user = await getCurrentUser(userId);
+      prefs.setString('username', user['username'] ?? '');
+      prefs.setString('bio', user['bio'] ?? '');
+      prefs.setString('email', user['email'] ?? '');
+      prefs.setString('imgLink', user['imageLink'] ?? '');
+    } catch (e) {
+      throw Exception("Error initializing user data: $e");
+    }
   }
 }

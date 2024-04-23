@@ -1,12 +1,14 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:wildwhere/mapscreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:wildwhere/edit_profile.dart';
-import 'package:wildwhere/user_controller.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wildwhere/database.dart';
+import 'package:wildwhere/mapscreen.dart';
+import 'package:wildwhere/edit_profile.dart';
+import 'package:wildwhere/profile.dart';
 import 'package:wildwhere/user.dart' as app_user;
+import 'package:wildwhere/user_controller.dart';
 
 class GoogleSignInButton extends StatefulWidget {
   const GoogleSignInButton({super.key});
@@ -17,14 +19,15 @@ class GoogleSignInButton extends StatefulWidget {
 
 class GoogleSignInButtonState extends State<GoogleSignInButton> {
   //declare variables for possible new user
-  late String uid;
+  String? uid;
   String? email;
   String? username;
   String? bio;
   bool? superUser;
   String? imgLink;
-
-  //sets the layout of the screen: background picture and buttosn
+  Database db = Database();
+  late SharedPreferences prefs;
+  //sets the layout of the screen: background picture and buttons
   @override
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
@@ -47,52 +50,48 @@ class GoogleSignInButtonState extends State<GoogleSignInButton> {
     );
   }
 
-  //handles google signin and creating a new user if needed
+  //handles google signin and creating a new user object/prefs if needed
   void handleSignIn() async {
     try {
-      final user = await UserController.loginWithGoogle();
-      if (user != null && mounted) {
-        Database db = Database();
-        var userData = FirebaseAuth.instance.currentUser;
-        http.Response response = await db.getUserByUID(uid: userData!.uid);
-        var data = jsonDecode(response.body);
-        if (data['message'].isEmpty) {
-          //new user
-          app_user.User newUser = app_user.User(
-            uid: userData.uid,
-            email: userData.email,
-            username: username,
-            bio: bio,
-            superUser: superUser,
-            imgLink: imgLink,
-          );
-          http.Response response = await db.createUser(newUser);
-          var data = jsonDecode(response.body);
-          print(data);
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) =>
-                  const EditProfile())); //print return message for developer purposes
-        } else {
-          //returning user
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) =>
-                  const MapScreen())); //push to mapscreen if returning user
-        }
-      }
-      //error handling for google sign in
-    } on FirebaseAuthException catch (error) {
-      print(error.message);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(
-        error.message ?? "Something went wrong",
-      )));
-    } catch (error) {
-      print(error);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(
-        error.toString(),
-      )));
+      await UserController.loginWithGoogle();
+    } catch (e) {
+      throw Exception("Error signing in: $e");
+    }
+    var userData = FirebaseAuth.instance.currentUser;
+    http.Response response = await db.getUserByUID(uid: userData!.uid);
+    var data = jsonDecode(response.body);
+    //check if user exists
+    if (data['message'].isEmpty) {
+      app_user.User newUser = app_user.User(
+        uid: userData.uid,
+        email: userData.email,
+        username: username,
+        bio: bio,
+        superUser: superUser,
+        imgLink: imgLink,
+      );
+      db.createUser(newUser);
+      createUserPrefs(userData);
+      Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => const Profile()))
+          .then((_) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    EditProfile(prefs: prefs, firstTimeSignin: true)));
+      });
+      //returning user
+    } else {
+      db.initializePrefs(userData.uid);
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const MapScreen()));
     }
   }
-}
 
+  void createUserPrefs(var userData) async {
+    prefs = await SharedPreferences.getInstance();
+    prefs.setString('uid', userData.uid);
+    prefs.setString('email', userData.email);
+  }
+}

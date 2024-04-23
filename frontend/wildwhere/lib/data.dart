@@ -12,7 +12,8 @@ class Data extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: const Center(
+      body: 
+      const Center(
         child: Text('Coming soon!'),
       )
     );

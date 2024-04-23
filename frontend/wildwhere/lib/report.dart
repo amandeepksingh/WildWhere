@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -11,14 +13,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class ReportPage extends StatefulWidget {
   final Function? onPostCreated; // Callback function to update the map
-  const ReportPage({Key? key, this.onPostCreated}) : super(key: key);
+  final OverlayPortalController controller;
+  const ReportPage({super.key, this.onPostCreated, required this.controller});
 
   @override
   State<ReportPage> createState() => _ReportPageState();
 }
 
 class _ReportPageState extends State<ReportPage> {
-
   final _imagePicker = ImagePicker();
   String? uid = FirebaseAuth.instance.currentUser?.uid;
   XFile? selectedImage;
@@ -69,6 +71,7 @@ class _ReportPageState extends State<ReportPage> {
         widget.onPostCreated!(); // Update the map
         print(
             "Post created with ID: ${responseData['pid']}"); //Print created pid for development purposes
+        widget.controller.toggle();
       } else {
         throw Exception('Failed to create post');
       }
@@ -85,80 +88,90 @@ class _ReportPageState extends State<ReportPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: Container(
-            margin: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-            width: MediaQuery.of(context).size.width * 0.85,
-            height: MediaQuery.of(context).size.height * 0.65,
-            decoration: BoxDecoration(
-              border: Border.all(
-                width: 3,
-                color: Colors.black,
-              ),
-            ),
-            child: Scaffold(
-                appBar: AppBar(
-                  automaticallyImplyLeading: false,
-                  title: const Text('Sighting Report'),
-                ),
-                body: Column(
-                  children: [
-                    if (showError) // Conditionally display the error message
-                      const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text(
-                          'Please fill out all selections.',
-                          style: TextStyle(
-                            color: Colors.red,
-                            backgroundColor: Colors.white,
+    return Stack(children: [
+      const ModalBarrier(
+        dismissible:
+            false, // Set to true if you want to allow dismissal by tapping outside the overlay
+      ),
+      BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+          child: Center(
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.85,
+                      height: MediaQuery.of(context).size.height * 0.63,
+                      child: Scaffold(
+                          appBar: AppBar(
+                            leading: CloseButton(
+                              onPressed: () {
+                                widget.controller.toggle();
+                              },
+                              
+                            ),
+                            title: const Text('Sighting Report'),
                           ),
-                        ),
-                      ),
-                    const Row(
-                      children: [
-                        Icon(Icons.image, size: 70),
-                        Text("Select an image to upload",
-                            style: TextStyle(fontSize: 20)),
-                      ],
-                    ),
-                    const SizedBox(height: 15),
-                    Row(
-                      children: [
-                        const SizedBox(width: 10),
-                        IntrinsicWidth(
-                            child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            OutlinedButton(
-                                onPressed: getImageFromGallery,
-                                child: const Text("Upload from library")),
-                            OutlinedButton(
-                                onPressed: getImageFromCamera,
-                                child: const Text("Take a photo")),
-                          ],
-                        ))
-                      ],
-                    ),
-                    const SizedBox(height: 40),
-                    IntrinsicWidth(
-                        child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        animalTypeButton(),
-                        animalQuantityButton(),
-                        animalActivityButton()
-                      ],
-                    )),
-                    Expanded(
-                        child: Align(
-                            alignment: const FractionalOffset(.5, .9),
-                            child: ElevatedButton(
-                                onPressed: () {
-                                  submitOnPressed();
-                                },
-                                child: const Text('Submit'))))
-                  ],
-                ))));
+                          body: Column(
+                            children: [
+                              if (showError) // Conditionally display the error message
+                                const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Text(
+                                    'Please fill out all selections.',
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      backgroundColor: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              const Row(
+                                children: [
+                                  Icon(Icons.image, size: 70),
+                                  Text("Select an image to upload",
+                                      style: TextStyle(fontSize: 20)),
+                                ],
+                              ),
+                              const SizedBox(height: 15),
+                              Row(
+                                children: [
+                                  const SizedBox(width: 10),
+                                  IntrinsicWidth(
+                                      child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      OutlinedButton(
+                                          onPressed: getImageFromGallery,
+                                          child: const Text(
+                                              "Upload from library")),
+                                      OutlinedButton(
+                                          onPressed: getImageFromCamera,
+                                          child: const Text("Take a photo")),
+                                    ],
+                                  ))
+                                ],
+                              ),
+                              const SizedBox(height: 40),
+                              IntrinsicWidth(
+                                  child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  animalTypeButton(),
+                                  animalQuantityButton(),
+                                  animalActivityButton()
+                                ],
+                              )),
+                              Expanded(
+                                  child: Align(
+                                      alignment: const FractionalOffset(.5, .9),
+                                      child: ElevatedButton(
+                                          onPressed: () {
+                                            submitOnPressed();
+                                          },
+                                          child: const Text('Submit'))))
+                            ],
+                          ))))))
+    ]);
   }
 
   Future getImageFromGallery() async {

@@ -19,11 +19,15 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapState extends State<MapScreen> {
-  MapboxMapController? _controller; // Controller to manage Mapbox map interaction.
+  MapboxMapController?
+      _controller; // Controller to manage Mapbox map interaction.
   Symbol? selectedSymbol; // Holds the currently selected map symbol, if any.
-  Offset? symbolWidgetPosition;  // Stores the position of the pop-up info box relative to the map view.
-  Map<String, dynamic> symbolDataMap = {}; // Maps each symbol's ID to its data for quick retrieval.
-  Map<String, dynamic>? currentPostData; // Data for the currently selected symbol.
+  Offset?
+      symbolWidgetPosition; // Stores the position of the pop-up info box relative to the map view.
+  Map<String, dynamic> symbolDataMap =
+      {}; // Maps each symbol's ID to its data for quick retrieval.
+  Map<String, dynamic>?
+      currentPostData; // Data for the currently selected symbol.
   Future<Position>? position;
 
   @override
@@ -33,28 +37,33 @@ class _MapState extends State<MapScreen> {
 
   @override
   void dispose() {
-    _controller?.dispose(); // Clean up the controller when the widget is removed from the widget tree.
+    _controller
+        ?.dispose(); // Clean up the controller when the widget is removed from the widget tree.
     super.dispose();
   }
 
-  void _onMapCreated(MapboxMapController controller) { // Callback function when the map is created and ready.
+  void _onMapCreated(MapboxMapController controller) {
+    // Callback function when the map is created and ready.
     _controller = controller;
     controller.onSymbolTapped.add(_onSymbolTapped);
     controller.addListener(_onCameraMove);
     addImageFromAsset("assetImage", "assets/images/markericon.png");
   }
 
-  void _onStyleLoaded() async {  // Called when map style is fully loaded; we typically use this to add markers dynamically.
+  void _onStyleLoaded() async {
+    // Called when map style is fully loaded; we typically use this to add markers dynamically.
     _loadMarkers();
   }
 
-  Future<void> addImageFromAsset(String name, String assetName) async { // Helper function to add a custom image asset to be used as a map marker icon.
+  Future<void> addImageFromAsset(String name, String assetName) async {
+    // Helper function to add a custom image asset to be used as a map marker icon.
     final ByteData bytes = await rootBundle.load(assetName);
     final Uint8List list = bytes.buffer.asUint8List();
     await _controller?.addImage(name, list);
   }
 
-  void _loadMarkers() async { // Load markers from a data source and add them to the map.
+  void _loadMarkers() async {
+    // Load markers from a data source and add them to the map.
     try {
       List<Post> posts = await Database().getAllPosts();
       for (Post post in posts) {
@@ -67,7 +76,8 @@ class _MapState extends State<MapScreen> {
     }
   }
 
-  void _addMarker(String id, double latitude, double longitude, {Post? post}) { // Adds a single marker to the map.
+  void _addMarker(String id, double latitude, double longitude, {Post? post}) {
+    // Adds a single marker to the map.
     _controller
         ?.addSymbol(
       SymbolOptions(
@@ -89,7 +99,8 @@ class _MapState extends State<MapScreen> {
     _loadMarkers(); // Reload markers from database
   }
 
-  void _onSymbolTapped(Symbol symbol) { // Handles user taps on map symbols (markers).
+  void _onSymbolTapped(Symbol symbol) {
+    // Handles user taps on map symbols (markers).
     setState(() {
       selectedSymbol = symbol;
       _updateSymbolPosition();
@@ -98,13 +109,15 @@ class _MapState extends State<MapScreen> {
     });
   }
 
-  void _onCameraMove() { // Refresh symbol position on camera (map view) move.
+  void _onCameraMove() {
+    // Refresh symbol position on camera (map view) move.
     if (_controller != null && selectedSymbol != null) {
       _updateSymbolPosition();
     }
   }
 
-  void _updateSymbolPosition() async { // Update the position of the information box relative to the selected symbol.
+  void _updateSymbolPosition() async {
+    // Update the position of the information box relative to the selected symbol.
     if (selectedSymbol == null || _controller == null) return;
     var screenLocation =
         await _controller!.toScreenLocation(selectedSymbol!.options.geometry!);
@@ -121,7 +134,7 @@ class _MapState extends State<MapScreen> {
     return Stack(children: <Widget>[
       Scaffold(
         appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 212, 246, 172),
+          backgroundColor: const Color.fromARGB(255, 92, 110, 71),
           automaticallyImplyLeading: false,
           elevation: 2,
           title: const Text('Sightings'),
@@ -145,6 +158,7 @@ class _MapState extends State<MapScreen> {
               accessToken:
                   "pk.eyJ1IjoibWJlcmV6dW5zIiwiYSI6ImNsdjA1MTk0djFlcDIybG14bHNtem1xeGEifQ.Xcg2SVacZ2TjY0zcKVKTig",
               myLocationEnabled: true,
+              attributionButtonPosition: AttributionButtonPosition.TopLeft,
               myLocationRenderMode: MyLocationRenderMode.NORMAL,
               onMapCreated: _onMapCreated,
               onStyleLoadedCallback: _onStyleLoaded,
@@ -173,11 +187,12 @@ class _MapState extends State<MapScreen> {
           onPressed: reportOverlayControl.toggle,
           elevation: 10,
           shape: const CircleBorder(),
-          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
           child: OverlayPortal(
             controller: reportOverlayControl,
             overlayChildBuilder: (BuildContext context) {
-              return ReportPage(onPostCreated: refreshMarkers);
+              return ReportPage(
+                  onPostCreated: refreshMarkers,
+                  controller: reportOverlayControl);
             },
             child: const Icon(Icons.add_location_alt_outlined),
           ),
@@ -191,18 +206,16 @@ class _MapState extends State<MapScreen> {
             FloatingActionButton(
               onPressed: () => currentLocation(_controller),
               shape: const CircleBorder(),
-              elevation: 2,
-              backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+              elevation: 10,
               child: const Icon(Icons.my_location),
             ),
             const SizedBox(height: 10),
             FloatingActionButton(
               onPressed: _navigateToPostsPage,
               shape: const CircleBorder(),
-              elevation: 2,
-              backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+              elevation: 10,
               child: const Icon(Icons.list),
-              )
+            )
             /*FloatingActionButton(
               onPressed: prefOverlayControl.toggle,
               shape: const CircleBorder(),
@@ -231,7 +244,8 @@ class _MapState extends State<MapScreen> {
     refreshMarkers();
   }
 
-  Widget _buildInfoBox() { // Generates informational box widget for currently selected marker.
+  Widget _buildInfoBox() {
+    // Generates informational box widget for currently selected marker.
     if (selectedSymbol == null || currentPostData == null) {
       return const SizedBox
           .shrink(); // Return an empty container if no symbol is selected
@@ -245,51 +259,53 @@ class _MapState extends State<MapScreen> {
 
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    
+
     return Container(
-    width: screenWidth * 0.7,
-    height: screenHeight * 0.155,
-    padding: const EdgeInsets.all(10),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(10),
-      boxShadow: const [BoxShadow(color: Colors.black26, offset: Offset(0, 2))]
-    ),
-    child: Row(
-      children: [
-        // Image Container
-        Expanded(
-        flex: 1,  // takes 1/2 of the space
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(10.0), 
-          child: Image.network(
-            data['imgLink'] ?? 'https://via.placeholder.com/150',  // Placeholder if no imgLink is available
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              // Fallback for when the image fails to load
-              return Icon(Icons.image_not_supported);
-            }
-          ),
-        ),
-      ),
-        
-        // Text Container
-        Expanded(
-          flex: 1,  // takes 1/2 of the space
-          child: Container(
-            padding: EdgeInsets.only(left: 10), 
-            alignment: Alignment.centerLeft,  
-            child: Text(
-              infoText,
-              style: TextStyle(fontSize: 12),  //adjust text styling here
-              overflow: TextOverflow.ellipsis,  // Prevents overflow by using ellipsis
-              maxLines: 7,  
+      width: screenWidth * 0.7,
+      height: screenHeight * 0.155,
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: const [
+            BoxShadow(color: Colors.black26, offset: Offset(0, 2))
+          ]),
+      child: Row(
+        children: [
+          // Image Container
+          Expanded(
+            flex: 1, // takes 1/2 of the space
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10.0),
+              child: Image.network(
+                  data['imgLink'] ??
+                      'https://via.placeholder.com/150', // Placeholder if no imgLink is available
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                // Fallback for when the image fails to load
+                return const Icon(Icons.image_not_supported);
+              }),
             ),
           ),
-        )
-      ],
-    ),
-  );
+
+          // Text Container
+          Expanded(
+            flex: 1, // takes 1/2 of the space
+            child: Container(
+              padding: EdgeInsets.only(left: 10),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                infoText,
+                style: TextStyle(fontSize: 12), //adjust text styling here
+                overflow: TextOverflow
+                    .ellipsis, // Prevents overflow by using ellipsis
+                maxLines: 7,
+              ),
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
 
@@ -297,7 +313,7 @@ class _MapState extends State<MapScreen> {
 void onSelected(BuildContext context, int item) {
   switch (item) {
     case 0:
-       Navigator.push(
+      Navigator.push(
           context, MaterialPageRoute(builder: (context) => const Profile()));
       break;
 

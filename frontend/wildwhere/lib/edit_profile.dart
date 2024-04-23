@@ -2,24 +2,20 @@ import 'dart:io';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wildwhere/profile.dart';
-import 'package:wildwhere/user.dart' as app_user;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:wildwhere/database.dart';
 
 class EditProfile extends StatefulWidget {
-  final Function(String)? onUpdateUsername;
-  final Function(String)? onUpdatePronouns;
-  final Function(String)? onUpdateBio;
-  final Function(String)? onUpdateEmail;
-  final Function(XFile)? onUpdateImage;
+  final SharedPreferences prefs;
+  final bool? firstTimeSignin;
+  final Function(File)? onUpdateImage;
 
   const EditProfile(
       {super.key,
-      this.onUpdateUsername,
-      this.onUpdatePronouns,
-      this.onUpdateBio,
-      this.onUpdateEmail,
+      required this.prefs,
+      this.firstTimeSignin,
       this.onUpdateImage});
 
   @override
@@ -31,26 +27,18 @@ class EditProfileState extends State<EditProfile> {
   final TextEditingController _pronounsController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  XFile? selectedProfileImage;
-  final picker = ImagePicker();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  app_user.User? user;
+  final picker = ImagePicker();
+  File? selectedProfileImage;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      // Get the current user
-      Database db = Database();
-      var currentUser =
-          await db.getCurrentUser(FirebaseAuth.instance.currentUser!.uid);
-      setState(() {
-        // Set the values obtained from the user to the form fields if they are not null
-        _usernameController.text = currentUser['username'] ?? '';
-        _emailController.text = currentUser['email'] ?? '';
-        _bioController.text = currentUser['bio'] ?? '';
-        //_pronounsController.text = currentUser['pronouns'] ?? '';
-      });
+    setState(() {
+      _usernameController.text = widget.prefs.getString('username') ?? '';
+      _emailController.text = widget.prefs.getString('email') ?? '';
+      _bioController.text = widget.prefs.getString('bio') ?? '';
+      //_pronounsController.text = widger.prefs.getString('pronouns') ?? ''
     });
   }
 
@@ -59,22 +47,23 @@ class EditProfileState extends State<EditProfile> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Profile'),
-        backgroundColor: const Color.fromARGB(255, 212, 246, 172),
-        leading: BackButton(onPressed: () {
-          final NavigatorState? navigator = Navigator.maybeOf(context);
-          if (navigator!.canPop()) {
-            Navigator.pop(context);
-          } else {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const Profile()));
-          }
-        }),
+        leading: widget.firstTimeSignin == null
+            ? BackButton(onPressed: () {
+                final NavigatorState? navigator = Navigator.maybeOf(context);
+                if (navigator!.canPop()) {
+                  Navigator.pop(context);
+                } else {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const Profile()));
+                }
+              })
+            : null,
       ),
       body: SingleChildScrollView(
           child: Center(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Padding(
-            padding: const EdgeInsets.all(30.0),
+            padding: const EdgeInsets.all(25.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -98,9 +87,9 @@ class EditProfileState extends State<EditProfile> {
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                         ),
-                        child: Image.asset(
-                            'assets/images/defaultUserProfileImg.jpeg'),
+                        child: Image.asset('assets/images/defaultpp.png'),
                       ),
+                const SizedBox(width: 15),
                 const Text("Edit Profile Image",
                     style: TextStyle(fontSize: 20)),
               ],
@@ -109,7 +98,7 @@ class EditProfileState extends State<EditProfile> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              OutlinedButton(
+              ElevatedButton(
                 onPressed: getImageFromGallery,
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(
@@ -121,7 +110,7 @@ class EditProfileState extends State<EditProfile> {
                   style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
                 ),
               ),
-              OutlinedButton(
+              ElevatedButton(
                   onPressed: getImageFromCamera,
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
@@ -135,8 +124,10 @@ class EditProfileState extends State<EditProfile> {
             ],
           ),
           const SizedBox(height: 10),
-          const Divider(
-            color: Colors.black,
+          Divider(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white // Color for dark theme
+                : Colors.black, // Color for light theme
             thickness: 0.25,
           ),
           Padding(
@@ -211,7 +202,7 @@ class EditProfileState extends State<EditProfile> {
           await ImageCropper().cropImage(sourcePath: selectedImage.path);
       if (croppedImage != null) {
         setState(() {
-          selectedProfileImage = XFile(croppedImage.path);
+          selectedProfileImage = File(croppedImage.path);
         });
         if (widget.onUpdateImage != null) {
           widget.onUpdateImage!(selectedProfileImage!);
@@ -227,7 +218,7 @@ class EditProfileState extends State<EditProfile> {
           await ImageCropper().cropImage(sourcePath: newImage.path);
       if (croppedImage != null) {
         setState(() {
-          selectedProfileImage = XFile(croppedImage.path);
+          selectedProfileImage = File(croppedImage.path);
         });
         if (widget.onUpdateImage != null) {
           widget.onUpdateImage!(selectedProfileImage!);
@@ -238,36 +229,25 @@ class EditProfileState extends State<EditProfile> {
 
   void handleSave() async {
     if (_formKey.currentState!.validate()) {
-      // Only call the function if it is not null
-      widget.onUpdateUsername?.call(_usernameController.text);
-      widget.onUpdatePronouns?.call(_pronounsController.text);
-      widget.onUpdateBio?.call(_bioController.text);
-      widget.onUpdateEmail?.call(_emailController.text);
       Database db = Database();
-      var response = await db.updateUserByUID(
+      await db.updateUserByUID(
         uid: FirebaseAuth.instance.currentUser!.uid,
         email: _emailController.text,
         username: _usernameController.text,
         bio: _bioController.text,
         //pronouns: _pronounsController.text
       );
-      print(response);
-
+      widget.prefs.setString('username', _usernameController.text);
+      widget.prefs.setString('email', _emailController.text);
+      widget.prefs.setString('bio', _bioController.text);
+      //widget.prefs.setString('pronouns', _pronounsController.text);
       // For the image, check both if the callback and the selected image are not null
       if (selectedProfileImage != null && widget.onUpdateImage != null) {
         widget.onUpdateImage!(selectedProfileImage!);
-        db.uploadProfilePic(
-            selectedProfileImage!, FirebaseAuth.instance.currentUser!.uid);
+        await db.uploadProfilePic(
+            selectedProfileImage!.path, FirebaseAuth.instance.currentUser!.uid);
       }
-
-      final NavigatorState? navigator = Navigator.maybeOf(context);
-
-      if (navigator!.canPop()) {
-        Navigator.pop(context);
-      } else {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const Profile()));
-      }
+      Navigator.pop(context, true);
     }
   }
 

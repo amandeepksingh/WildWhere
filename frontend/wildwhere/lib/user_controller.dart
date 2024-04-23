@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class UserController {
-
   static User? user = FirebaseAuth.instance.currentUser;
 
   static void init() {
@@ -22,9 +21,8 @@ class UserController {
     );
 
     final userCredential = await FirebaseAuth.instance.signInWithCredential(
-      credential, 
+      credential,
     );
     return userCredential.user;
-
   }
-} 
+}
