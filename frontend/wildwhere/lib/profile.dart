@@ -44,10 +44,6 @@ class _ProfilePageState extends State<Profile> {
       //creates the top bar format of the user's profile
       appBar: AppBar(
         title: Text('$username'),
-        leading: BackButton(onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const MapScreen()));
-        }),
       ),
       //creates the View Settings and Edit Profile buttons
       body: SingleChildScrollView(
