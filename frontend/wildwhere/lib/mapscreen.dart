@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:wildwhere/data.dart';
 import 'package:wildwhere/profile.dart';
 import 'package:wildwhere/database.dart';
@@ -18,7 +19,7 @@ class MapScreen extends StatefulWidget {
   State<MapScreen> createState() => _MapState();
 }
 
-class _MapState extends State<MapScreen> {
+class _MapState extends State<MapScreen> with SingleTickerProviderStateMixin{
   MapboxMapController?
       _controller; // Controller to manage Mapbox map interaction.
   Symbol? selectedSymbol; // Holds the currently selected map symbol, if any.
@@ -30,15 +31,29 @@ class _MapState extends State<MapScreen> {
       currentPostData; // Data for the currently selected symbol.
   Future<Position>? position;
 
+  late AnimationController animationController;
+  late Animation<double> opacityAnimation;
+  var reportOverlayControl = OverlayPortalController();
+  
+
   @override
   void initState() {
     super.initState();
+    animationController = AnimationController(
+        duration: const Duration(milliseconds: 150),
+        vsync: this,
+      );
+      opacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(parent: animationController, curve: Curves.easeIn)
+      );
+    
   }
 
   @override
   void dispose() {
     _controller
         ?.dispose(); // Clean up the controller when the widget is removed from the widget tree.
+    animationController.dispose();
     super.dispose();
   }
 
@@ -129,7 +144,7 @@ class _MapState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var reportOverlayControl = OverlayPortalController();
+    //var reportOverlayControl = OverlayPortalController();
     //var prefOverlayControl = OverlayPortalController();
     return Stack(children: <Widget>[
       Scaffold(
@@ -159,6 +174,8 @@ class _MapState extends State<MapScreen> {
                   "pk.eyJ1IjoibWJlcmV6dW5zIiwiYSI6ImNsdjA1MTk0djFlcDIybG14bHNtem1xeGEifQ.Xcg2SVacZ2TjY0zcKVKTig",
               myLocationEnabled: true,
               attributionButtonPosition: AttributionButtonPosition.TopLeft,
+              compassEnabled: false,
+              tiltGesturesEnabled: false,
               myLocationRenderMode: MyLocationRenderMode.NORMAL,
               onMapCreated: _onMapCreated,
               onStyleLoadedCallback: _onStyleLoaded,
@@ -176,28 +193,42 @@ class _MapState extends State<MapScreen> {
             ),
             if (symbolWidgetPosition != null)
               Positioned(
-                left: symbolWidgetPosition!.dx,
-                top: symbolWidgetPosition!.dy,
+                left: symbolWidgetPosition!.dx - 25,
+                top: symbolWidgetPosition!.dy - 25,
                 child: _buildInfoBox(),
               ),
           ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton.large(
-          onPressed: reportOverlayControl.toggle,
+          onPressed: () {
+            setState(() {
+              reportOverlayControl.toggle();
+              animationController.reset();
+              animationController.forward();
+            });
+          },
           elevation: 10,
           shape: const CircleBorder(),
           child: OverlayPortal(
             controller: reportOverlayControl,
             overlayChildBuilder: (BuildContext context) {
-              return ReportPage(
-                  onPostCreated: refreshMarkers,
-                  controller: reportOverlayControl);
+              return FadeTransition(
+              opacity: opacityAnimation,
+              child: ReportPage(
+                  onPostCreated: () async{
+                    refreshMarkers();
+                    await animationController.reverse();
+                    reportOverlayControl.toggle();
+                  },
+                  controller: reportOverlayControl
+                )
+              );
             },
-            child: const Icon(Icons.add_location_alt_outlined),
-          ),
+          child: const Icon(Icons.add_location_alt_outlined),
         ),
       ),
+    ),
       Positioned(
         bottom: 30,
         right: 20,
@@ -243,7 +274,6 @@ class _MapState extends State<MapScreen> {
     );
     refreshMarkers();
   }
-
   Widget _buildInfoBox() {
     // Generates informational box widget for currently selected marker.
     if (selectedSymbol == null || currentPostData == null) {

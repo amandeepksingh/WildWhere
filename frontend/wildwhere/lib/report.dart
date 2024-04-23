@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -71,7 +70,6 @@ class _ReportPageState extends State<ReportPage> {
         widget.onPostCreated!(); // Update the map
         print(
             "Post created with ID: ${responseData['pid']}"); //Print created pid for development purposes
-        widget.controller.toggle();
       } else {
         throw Exception('Failed to create post');
       }
