@@ -148,23 +148,6 @@ class _MapState extends State<MapScreen> with SingleTickerProviderStateMixin{
     //var prefOverlayControl = OverlayPortalController();
     return Stack(children: <Widget>[
       Scaffold(
-        appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 92, 110, 71),
-          automaticallyImplyLeading: false,
-          elevation: 2,
-          title: const Text('Sightings'),
-          actions: [
-            PopupMenuButton(
-              onSelected: (item) => onSelected(context, item),
-              itemBuilder: (context) => [
-                const PopupMenuItem(value: 0, child: Text('Profile')),
-                const PopupMenuItem(value: 1, child: Text('Settings')),
-                const PopupMenuItem(value: 2, child: Text('Data & Statistics')),
-              ],
-              icon: const Icon(Icons.reorder),
-            ),
-          ],
-        ),
         body: Stack(
           children: [
             MapboxMap(
@@ -173,7 +156,7 @@ class _MapState extends State<MapScreen> with SingleTickerProviderStateMixin{
               accessToken:
                   "pk.eyJ1IjoibWJlcmV6dW5zIiwiYSI6ImNsdjA1MTk0djFlcDIybG14bHNtem1xeGEifQ.Xcg2SVacZ2TjY0zcKVKTig",
               myLocationEnabled: true,
-              attributionButtonPosition: AttributionButtonPosition.TopLeft,
+              attributionButtonPosition: AttributionButtonPosition.BottomLeft,
               compassEnabled: false,
               tiltGesturesEnabled: false,
               myLocationRenderMode: MyLocationRenderMode.NORMAL,
@@ -197,10 +180,45 @@ class _MapState extends State<MapScreen> with SingleTickerProviderStateMixin{
                 top: symbolWidgetPosition!.dy - 25,
                 child: _buildInfoBox(),
               ),
+            Positioned(
+              right: 10,
+              top: 67,
+              child: SizedBox(
+                height: 65,
+                width: 65,
+                child: PopupMenuButton<int>(
+                  elevation: 10,
+                  offset: const Offset(-5, 63),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                  ),
+                  color: Colors.white,
+                  popUpAnimationStyle: AnimationStyle(
+                    curve: Curves.easeInOut,
+                    duration: const Duration( milliseconds: 330)
+                    ),
+                  onSelected: (item) => onSelected(context, item),
+                  child: ClipOval(
+                    child: Image.asset(
+                      'assets/images/profile.png',
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(value: 0, child: Text('Profile'),),
+                    const PopupMenuItem(value: 1, child: Text('Settings')),
+                    const PopupMenuItem(value: 2, child: Text('Data & Statistics')),
+                  ],
+                ),
+              ),
+            )
           ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton.large(
+          backgroundColor: Colors.white,
           onPressed: () {
             setState(() {
               reportOverlayControl.toggle();
@@ -235,6 +253,7 @@ class _MapState extends State<MapScreen> with SingleTickerProviderStateMixin{
         child: Column(
           children: <Widget>[
             FloatingActionButton(
+              backgroundColor: Colors.white,
               onPressed: () => currentLocation(_controller),
               shape: const CircleBorder(),
               elevation: 10,
@@ -242,6 +261,7 @@ class _MapState extends State<MapScreen> with SingleTickerProviderStateMixin{
             ),
             const SizedBox(height: 10),
             FloatingActionButton(
+              backgroundColor: Colors.white,
               onPressed: _navigateToPostsPage,
               shape: const CircleBorder(),
               elevation: 10,

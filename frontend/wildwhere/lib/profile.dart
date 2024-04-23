@@ -74,7 +74,7 @@ class _ProfilePageState extends State<Profile> {
                             shape: BoxShape.circle,
                           ),
                           child: Image.asset(
-                              image?.path ?? 'assets/images/defaultpp.png',
+                              image?.path ?? 'assets/images/defaultUserProfileImg.jpeg',
                               fit: BoxFit.cover)),
                     ],
                   ),
