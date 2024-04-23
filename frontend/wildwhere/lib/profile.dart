@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:wildwhere/mapscreen.dart';
 import 'package:wildwhere/edit_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

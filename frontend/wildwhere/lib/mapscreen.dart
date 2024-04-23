@@ -246,9 +246,30 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin{
                     ),
                   ),
                   itemBuilder: (context) => [
-                    const PopupMenuItem(value: 0, child: Text('Profile'),),
-                    const PopupMenuItem(value: 1, child: Text('Settings')),
-                    const PopupMenuItem(value: 2, child: Text('Data & Statistics')),
+                    const PopupMenuItem(
+                      value: 0, 
+                      child: ListTile(
+                        horizontalTitleGap: 12.0,
+                        leading: Icon(Icons.person, size: 28),
+                        title: Text('Profile',style: TextStyle(fontSize: 14)),
+                      )
+                    ),
+                    const PopupMenuItem(
+                      value: 1, 
+                      child: ListTile(
+                        horizontalTitleGap: 12.0,
+                        leading: Icon(Icons.settings, size: 28),
+                        title: Text('Settings',style: TextStyle(fontSize: 14)),
+                      )
+                    ),
+                    const PopupMenuItem(
+                      value: 2, 
+                      child: ListTile(
+                        horizontalTitleGap: 12.0,
+                        leading: Icon(Icons.insert_chart_outlined_rounded, size: 28),
+                        title: Text('Data and Stats', style: TextStyle(fontSize: 14)),
+                      )
+                    ),
                   ],
                 ),
               ),
@@ -341,10 +362,10 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin{
     }
 
     Map<String, dynamic> data = currentPostData!;
-    String infoText = "PID: ${data['pid']}\n"
+    /*String infoText = "PID: ${data['pid']}\n"
         "Animal: ${data['animalName']}\n"
         "Activity: ${data['activity']}\n"
-        "Quantity: ${data['quantity']}\n";
+        "Quantity: ${data['quantity']}\n";*/
 
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
