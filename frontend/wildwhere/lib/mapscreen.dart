@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:wildwhere/data.dart';
 import 'package:wildwhere/profile.dart';
 import 'package:wildwhere/database.dart';
@@ -127,7 +126,7 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin{
       SymbolOptions(
         geometry: LatLng(latitude, longitude),
         iconImage: "assetImage",
-        iconSize: 1,
+        iconSize: 1.05,
       ),
     )
         .then((symbol) {
@@ -368,7 +367,12 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin{
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: const [
-                    BoxShadow(color: Colors.black26, offset: Offset(0, 2))
+                    BoxShadow(
+                      color: Colors.black26, 
+                      offset: Offset(0, 3),
+                      blurRadius: 3.0,
+                      spreadRadius: 0.1,
+                    )
                   ]),
               child: Row(
                 children: [
@@ -392,14 +396,29 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin{
                   Expanded(
                     flex: 1, // takes 1/2 of the space
                     child: Container(
-                      padding: EdgeInsets.only(left: 10),
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        infoText,
-                        style: TextStyle(fontSize: 12), //adjust text styling here
-                        overflow: TextOverflow
-                            .ellipsis, // Prevents overflow by using ellipsis
-                        maxLines: 7,
+                      padding: const EdgeInsets.only(left: 10),
+                      alignment: Alignment.topLeft,
+                      child: RichText(
+                        text:  TextSpan(
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 13,
+                            overflow: TextOverflow.ellipsis,
+                            fontFamily: 'CupertinoSystemText',
+                            letterSpacing: -0.45,
+                            height: 1.3,
+                          ),
+                          children: <TextSpan>[
+                            const TextSpan(text: 'PID: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                            TextSpan(text: "${data['pid']}\n"),
+                            const TextSpan(text: 'Animal: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                            TextSpan(text: "${data['animalName']}\n"),
+                            const TextSpan(text: 'Activity: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                            TextSpan(text: "${data['activity']}\n"),
+                            const TextSpan(text: 'Quantity: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                            TextSpan(text: "${data['quantity']}\n"),
+                          ]
+                        ),
                       ),
                     ),
                   )
