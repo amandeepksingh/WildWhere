@@ -5,34 +5,15 @@ const logger = require('./logger');
 require('dotenv').config({path: "../.env"});
 
 //creates DB connection
-let pool;
-if(process.env.location == "local") {
-	console.log(`[Users] using local pool`);
-     pool = new Pool({
-        user: process.env.dbUser,
-        host: process.env.dbHost,
-        database: process.env.dbName,
-        password: process.env.dbPass,
-        port: process.env.dbPort,
-        // ssl: {
-        // 	rejectUnauthorized:false
-        // } //used only on EC2
-    });    
-} else {
-	console.log(`[Users] using server pool`);
-     pool = new Pool({
-        user: process.env.dbUser,
-        host: process.env.dbHost,
-        database: process.env.dbName,
-        password: process.env.dbPass,
-        port: process.env.dbPort,
-        ssl: {
-        	rejectUnauthorized:false
-        } //used only on EC2
-    });
-}
-
-
+var poolParams = {
+    user: process.env.dbUser,
+    host: process.env.dbHost,
+    database: process.env.dbName,
+    password: process.env.dbPass,
+    port: process.env.dbPort,
+};
+if(process.env.location !== "local") poolParams.ssl = {rejectUnauthorized: false}; //for server pool
+const pool = new Pool(poolParams);
 
 //creates users and routes methods and endpoints to functions
 const users = express();
@@ -66,32 +47,33 @@ function selectUser(req, res, next) {
      *      colorBlindrating int
      *  }
      */
-    logger.log(`originalURL: ${JSON.stringify(req.originalUrl)} - body: ${JSON.stringify(req.body)} - headers: ${JSON.stringify(req.rawHeaders)}`)
-    const columns = ["uid", "email", "username", "bio", "pfpLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
-    var condits = req.query;
-    // for(const col of columns) {
-    //     if(req.body[col]) {
-    //         condits[col] = req.body[col]
-    //     }
-    // }
+    var responseStatus, responseJson
+    logger.logRequest(req)
 
-    const conditString = Object.keys(condits).map((col, i) => `${col} = $${i + 1}`).join(" AND ")
-    const query = Object.keys(condits).length === 0 ? "SELECT * FROM users"
+    //parse req.query into db query
+    const rawConditions = req.query;
+    const conditionsAsString = Object.keys(rawConditions).map((col, i) => `${col} = $${i + 1}`).join(" AND ")
+    const query = Object.keys(rawConditions).length === 0 ? "SELECT * FROM users"
         : {
-            text: `SELECT * FROM users WHERE ${conditString}`,
-            values: Object.values(condits)
+            text: `SELECT * FROM users WHERE ${conditionsAsString}`,
+            values: Object.values(rawConditions)
         }
+    logger.logQuery(query)
 
-    logger.log(`query: ${JSON.stringify(query)}`)
+    //send db query and return response
     return pool.query(query, (error, result) => {
         if (error) {
-            return res.status(400).json({
-                "message": error.message
-            }) //propogate errors from DB up
+            logger.logDBerr(error);
+            responseStatus = 400
+            responseJson = {message: error.message}
+            logger.logResponse(responseStatus, responseJson)
+            return res.status(responseStatus).json(responseJson)
         }
-        return res.status(200).json({
-            message: result.rows
-        }) //expected return
+        logger.logDBsucc(result);
+        responseStatus = 200
+        responseJson = {message: result.rows}
+        logger.logResponse(responseStatus, responseJson)
+        return res.status(200).json({message: result.rows})
     })
 }
 
@@ -114,39 +96,49 @@ function createUser(req, res, next) {
      *      error message
      *  uid string (on success)
      */
-    logger.log(`originalURL: ${JSON.stringify(req.originalUrl)} - body: ${JSON.stringify(req.body)} - headers: ${JSON.stringify(req.rawHeaders)}`)
-    const columns = ["uid", "email", "username", "bio", "pfpLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
-    var dict = {}
-    for(const col of columns) {
-        if(req.body[col]) {
-            dict[col] = req.body[col]
-        }
-    }
-
-    if(dict['uid'] === undefined) {
-        return res.status(400).json({message: "uid is required"})
-    }
-
-    const fields = Object.keys(dict).join(', ')
-    const placeholders = Object.keys(dict).map((_, i) => `$${i + 1}`).join(', ')
-    const query = 
-        Object.keys(dict).length === 0 ? "INSERT INTO users VALUES(DEFAULT)"
-        : {
-            text: `INSERT INTO users(${fields}) VALUES(${placeholders})`,
-            values: Object.values(dict)
-        }
+    var responseStatus, responseJson
+    logger.logRequest(req)
     
-    logger.log(`query: ${JSON.stringify(query)}`)
+    //parse valid elements of req.body into params array
+    const columns = ["uid", "email", "username", "bio", "pfpLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
+    var params = {}
+    for(const col of columns) {
+        if(req.body[col] !== undefined) {
+            params[col] = req.body[col]
+        }
+    }
+    //check that params array contains required uid
+    if(params.uid === undefined) {
+        logger.logInvalidInput("uid is required")
+        responseStatus = 400
+        responseJson = {message: "uid is required"}
+        logger.logResponse(responseStatus, responseJson)
+        return res.status(responseStatus).json(responseJson)
+    }
+    //parse params array into db query
+    const paramsAsString = Object.keys(params).join(', ')
+    const placeholders = Object.keys(params).map((_, i) => `$${i + 1}`).join(', ')
+    const query = Object.keys(params).length === 0 ? "INSERT INTO users VALUES(DEFAULT)"
+        : {
+            text: `INSERT INTO users(${paramsAsString}) VALUES(${placeholders})`,
+            values: Object.values(params)
+        }
+    logger.logQuery(query)
+    
+    // send db query and return response
     return pool.query(query, (error, result) => {
         if (error) {
-            return res.status(400).json({
-                "message": error.message
-            })
+            logger.logDBfail(error)
+            responseStatus = 400
+            responseJson = {message: error.message}
+            logger.logResponse(responseStatus, responseJson)
+            return res.status(responseStatus).json(responseJson)
         }
-        return res.status(200).json({
-            message: "user created",
-            uid: dict['uid']
-        })
+        logger.logDBsucc(result)
+        responseStatus = 200
+        responseJson = {message: "user created", uid: params.uid}
+        logger.logResponse(responseStatus, responseJson)
+        return res.status(responseStatus).json(responseJson)
     })
 }
 
@@ -168,41 +160,56 @@ function updateUserByUID(req, res, next) {
      *      OR
      *      error message
      */
-    logger.log(`originalURL: ${JSON.stringify(req.originalUrl)} - body: ${JSON.stringify(req.body)} - headers: ${JSON.stringify(req.rawHeaders)}`)
-    if (req.body.uid === undefined) {
-        return res.status(400).json({
-            "message": "missing uid"
-        }) //handles misformatted input
-    }
+    var responseStatus, responseJson
+    logger.logRequest(req)
 
-    const columns = ["email", "username", "bio", "imgLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
-    const updates = {}
+    //parse valid elements of req.body into columns array
+    const columns = ["email", "username", "bio", "pfpLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
+    var params = {}
     for(const col of columns) {
-        if(req.body[col]) {
-            updates[col] = req.body[col]
+        if(req.body[col] !== undefined) {
+            params[col] = req.body[col]
         }
     }
-
-    const len = Object.keys(updates).length
-    if(len > 0) {
-        const updateString = Object.keys(updates).map((col, i) => `${col} = $${i + 1}`).join(", ")
-        const query = {
-            text: `UPDATE users SET ${updateString} WHERE uid = $${len + 1}`,
-            values: Object.values(updates).concat([ req.body.uid ])
+    //check that req contains required uid
+    if(req.body.uid === undefined) {
+        responseStatus = 400
+        responseJson = {message: "uid is required"}
+        logger.logInvalidInput(responseJson.message)
+        logger.logResponse(responseStatus, responseJson)
+        return res.status(responseStatus).json(responseJson)
+    }
+    //check that there is at least one update
+    if (Object.keys(params).length == 0) {
+        logger.logInvalidInput("at least one update is required")
+        responseStatus = 400
+        responseJson = {message: "at least one update is required"}
+        logger.logResponse(responseStatus, responseJson)
+        return res.status(responseStatus).json(responseJson)
+    }
+    //parse columns array into db query
+    const paramsAsString = Object.keys(params).map((col, i) => `${col} = $${i + 1}`).join(", ")
+    const query = {
+        text: `UPDATE users SET ${paramsAsString} WHERE uid = $${Object.keys(params).length + 1}`,
+        values: Object.values(params).concat([ req.body.uid ])
+    }
+    logger.logQuery(query)
+    
+    //send db query and return response
+    return pool.query(query, (error, result) => {
+        if (error) {
+            logger.logDBfail(error)
+            responseStatus = 400
+            responseJson = {message: error.message}
+            logger.logResponse(responseStatus, responseJson)
+            return res.status(responseStatus).json(responseJson)
         }
-
-        logger.log(`query: ${JSON.stringify(query)}`)
-        return pool.query(query, (error, result) => {
-            if (error) {
-                return res.status(400).json({
-                    "message": error.message
-                })
-            }
-            return res.status(200).json({
-                message: `user with uid ${req.body.uid} updated`
-            })
-        })
-    }    
+        logger.logDBsucc(result)
+        responseStatus = 200
+        responseJson = {message: `user with uid ${req.body.uid} updated`}
+        logger.logResponse(responseStatus, responseJson)
+        return res.status(responseStatus).json(responseJson)
+    })
 }
 
 function deleteUserByUID(req, res, next) {
@@ -215,26 +222,40 @@ function deleteUserByUID(req, res, next) {
      *      OR
      *      error message
      */
-    logger.log(`originalURL: ${JSON.stringify(req.originalUrl)} - body: ${JSON.stringify(req.body)} - headers: ${JSON.stringify(req.rawHeaders)}`)
-    if (req.body.uid === undefined) {
-        return res.status(400).json({
-            "message": "missing uid"
-        }) //handles misformatted input
+    var responseStatus, responseJson
+    logger.logRequest(req)
+
+    //check that req contains required uid
+    if(req.body.uid === undefined) {
+        responseStatus = 400
+        responseJson = {message: "uid is required"}
+        logger.logInvalidInput(responseJson.message)
+        logger.logResponse(responseStatus, responseJson)
+        return res.status(responseStatus).json(responseJson)
     }
-    
-    logger.log(`query: DELETE FROM users WHERE uid = $1 - vals: ${[req.body.uid]}`)
-    return pool.query("DELETE FROM users WHERE uid = $1", [req.body.uid], (error, result) => {
+    //create db query
+    const query = {
+        text: "DELETE FROM users WHERE uid = $1",
+        values: [req.body.uid]
+    }
+    logger.logQuery(query)
+
+    //send query to db and return response
+    return pool.query(query, (error, result) => {
         if (error) {
-            return res.status(400).json({
-                "message": error.message
-            })
+            logger.logDBfail(error)
+            responseStatus = 400
+            responseJson = {message: error.message}
+            logger.logResponse(responseStatus, responseJson)
+            return res.status(responseStatus).json(responseJson)
         }
-        return res.status(200).json({
-            message: `user with uid ${req.body.uid} deleted if existed`
-        })
+        logger.logDBsucc(result)
+        responseStatus = 200
+        responseJson = {message: `user with uid ${req.body.uid} deleted if existed`}
+        logger.logResponse(responseStatus, responseJson)
+        return res.status(responseStatus).json(responseJson)
     })
 }
-
 
 //exports users to app
 module.exports = users;

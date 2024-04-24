@@ -7,16 +7,18 @@ require('dotenv').config();
 
 //run tests with "npm test"
 
-const pool = new Pool({
+//creates DB connection
+var poolParams = {
     user: process.env.dbUser,
     host: process.env.dbHost,
     database: process.env.dbName,
     password: process.env.dbPass,
     port: process.env.dbPort,
-	// ssl: {
-	// 	rejectUnauthorized:process.env.rejectUnauthorized
-	// } //used only on EC2
-});
+};
+if(process.env.location !== "local") poolParams.ssl = {rejectUnauthorized: false}; //for server pool
+const pool = new Pool(poolParams);
+
+//teardown command
 async function teardown() { //TODO before each run. Using before() or after() seems to cause async issues
     await pool.query("DELETE FROM users;")
     await pool.query("DELETE FROM posts;")
@@ -151,15 +153,22 @@ describe("selecting users", () => {
 })
 
 describe("creating users", () => {
-   it("USER: test create", async () => {
+    it("USER: test create", async () => {
         await teardown()
         const resp = await request(app)
         .post('/users/createUser')
         .send('uid=ffd             ')
         assert.strictEqual(resp.status, 200)
         assert.strictEqual(resp.body.message, `user created`)
-   })
-   it("USER: test create with all params", async () => {
+    })
+    it("USER: test create without uid", async () => {
+        await teardown()
+        const resp = await request(app)
+        .post('/users/createUser')
+        assert.strictEqual(resp.status, 400)
+        assert.strictEqual(resp.body.message, `uid is required`)
+    })
+    it("USER: test create with all params", async () => {
         await teardown()
         testInput = {
             uid: '345',
@@ -246,6 +255,73 @@ describe("updating users", () => {
             ]
         ) 
     })
+    it("USER: update user, set field to empty string", async () => {
+        await teardown()
+        const email = "jj@umass.edu"
+        const resp1 = await request(app)
+        .post('/users/createUser')
+        .send('uid=ffd')
+        .send('email=john@umass.edu')
+        assert.strictEqual(resp1.status, 200)
+        assert.strictEqual(resp1.body.message, `user created`)
+        const uid = resp1.body.uid
+
+        const empty = "";
+        const resp2 = await request(app)
+        .put('/users/updateUserByUID')
+        .send(`uid=${uid}`)
+        .send(`email=${empty}`)
+        assert.strictEqual(resp2.status, 200)
+        assert.strictEqual(resp2.body.message, `user with uid ${uid} updated`)
+
+        const resp3 = await request(app)
+        .get(`/users/selectUser?uid=${uid}`)
+        assert.strictEqual(resp3.status, 200)
+        assert.deepStrictEqual(resp3.body.message, 
+            [
+                {
+                    "uid": uid,
+                    "email": "",
+                    "username": null,
+                    "bio": null,
+                    "imglink": null,
+                    "superuser": null,
+                    "locationperm": null,
+                    "notificationperm": null,
+                    "colorblindrating": null
+                }
+            ]
+        ) 
+    })
+    it("USER: update user without updates", async () => {
+        await teardown()
+        const resp1 = await request(app)
+        .post('/users/createUser')
+        .send('uid=ffd')
+        .send('email=john@umass.edu')
+        assert.strictEqual(resp1.status, 200)
+        assert.strictEqual(resp1.body.message, `user created`)
+        const uid = resp1.body.uid
+
+        const resp2 = await request(app)
+        .put('/users/updateUserByUID')
+        .send(`uid=${uid}`)
+        assert.strictEqual(resp2.status, 400)
+        assert.strictEqual(resp2.body.message, `at least one update is required`)
+    })
+    it("USER: update user without uid", async () => {
+        await teardown()
+        const resp1 = await request(app)
+        .post('/users/createUser')
+        .send('uid=ffd')
+        assert.strictEqual(resp1.status, 200)
+        assert.strictEqual(resp1.body.message, `user created`)
+
+        const resp2 = await request(app)
+        .put('/users/updateUserByUID')
+        assert.strictEqual(resp2.status, 400)
+        assert.strictEqual(resp2.body.message, `uid is required`)
+    })
 })
 
 describe("deleting users", () => {
@@ -277,5 +353,12 @@ describe("deleting users", () => {
         .send(`uid=5`)
         assert.strictEqual(resp2.status, 200)
         assert.strictEqual(resp2.body.message, `user with uid 5 deleted if existed`)
+    }) 
+    it("USER: delete user by ID without uid", async () => {
+        await teardown()
+        const resp2 = await request(app)
+        .delete('/users/deleteUserByUID')
+        assert.strictEqual(resp2.status, 400)
+        assert.strictEqual(resp2.body.message, `uid is required`)
     }) 
 })

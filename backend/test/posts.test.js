@@ -7,21 +7,21 @@ require('dotenv').config();
 
 //run tests with "npm test"
 
-const pool = new Pool({
+//create db connection
+var poolParams = {
     user: process.env.dbUser,
     host: process.env.dbHost,
     database: process.env.dbName,
     password: process.env.dbPass,
     port: process.env.dbPort,
-	// ssl: {
-	// 	rejectUnauthorized:process.env.rejectUnauthorized
-	// } //used only on EC2
-});
-async function teardown() { //TODO before each run. Using before() or after() seems to cause async issues
+};
+if(process.env.location !== "local") poolParams.ssl = {rejectUnauthorized: false}; //for server pool
+const pool = new Pool(poolParams);
+
+//clear db
+async function teardown() {
     await pool.query("DELETE FROM users;")
     await pool.query("DELETE FROM posts;")
-    //await pool.query("SELECT setval('posts_pid_seq', 1, true);")
-    //await pool.query("SELECT setval('users_uid_seq', 1, true);")
 }
 
 describe("selecting posts", () => {
@@ -53,7 +53,7 @@ describe("selecting posts", () => {
             assert.strictEqual(resp.status, 200)
             assert.deepStrictEqual(resp.body.message, [])
         })
-            it("POST: test select with few constraints", async () => {
+        it("POST: test select with few constraints", async () => {
             await teardown()
             
             const create_user = await request(app)
@@ -69,8 +69,7 @@ describe("selecting posts", () => {
             const pid = create_post.body.pid
 
             const resp = await request(app)
-            .get(`/posts/selectPost?uid=${uid}`) //send body parameters
-            .send('coordinate=(0.0, 0.0)')
+            .get(`/posts/selectPost?uid=${uid}&coordinate=(0.0, 0.0)`) //send body parameters
             assert.strictEqual(resp.status, 200)
             assert.deepStrictEqual(resp.body.message, [
                 {
@@ -84,6 +83,26 @@ describe("selecting posts", () => {
                     "quantity": null
                 }
             ])
+        })
+        it("POST: test select with radius but no coord", async () => {
+            await teardown()
+            
+            const create_user = await request(app)
+            .post('/users/createUser')
+            .send('uid=ffd')
+            const uid = create_user.body.uid
+
+            const create_post = await request(app)
+            .post('/posts/createPost')
+            .send(`uid=${uid}`)
+            .send('coordinate=(0.0, 0.0)')
+            assert.strictEqual(create_post.body.message, "post created")
+            const pid = create_post.body.pid
+
+            const resp = await request(app)
+            .get(`/posts/selectPost?uid=${uid}&radius=5`) //send body parameters
+            assert.strictEqual(resp.status, 400)
+            assert.strictEqual(resp.body.message, "non-null search radius entered with null coordinates")
         })
         it("POST: test select with ALL constraints", async () => {
             await teardown()
@@ -104,10 +123,7 @@ describe("selecting posts", () => {
             const pid = create_post.body.pid
 
             const resp = await request(app)
-            .get(`/posts/selectPost?pid=${pid}&uid=${uid}`)
-            //T(HOUR + 5) ... + .000Z at the end
-            .send('datetime=1997-12-17 07:37:16-08')
-            .send('coordinate=(2.5, 7.9)')
+            .get(`/posts/selectPost?pid=${pid}&uid=${uid}&datetime=1997-12-17 07:37:16-08&coordinate=(2.5, 7.9)&activity=running&quantity=8`)
             assert.strictEqual(resp.status,200)
             assert.deepStrictEqual(resp.body.message, [
                 {
@@ -431,24 +447,24 @@ describe("creating posts", () => {
     .post('/posts/createPost')
     .send('coordinate=(0.5, 0.5)')
     assert.strictEqual(resp.status, 400)
-    assert.strictEqual(resp.body.message, "missing uid")
-})
+    assert.strictEqual(resp.body.message, "uid is required")
+    })
 
-it("POST: test create without coordinates", async () => {
-    await teardown()
+    it("POST: test create without coordinates", async () => {
+        await teardown()
 
-    const create_user = await request(app)
-    .post('/users/createUser')
-    .send('uid=ffd             ')
-    const uid = create_user.body.uid
+        const create_user = await request(app)
+        .post('/users/createUser')
+        .send('uid=ffd             ')
+        const uid = create_user.body.uid
 
-    const resp = await request(app)
-    .post('/posts/createPost')
-    .send(`uid=${uid}`)
-    assert.strictEqual(resp.status, 400)
-    assert.strictEqual(resp.body.message, "missing coordinates")
-})
-//missing coordinates
+        const resp = await request(app)
+        .post('/posts/createPost')
+        .send(`uid=${uid}`)
+        assert.strictEqual(resp.status, 400)
+        assert.strictEqual(resp.body.message, "coordinate is required")
+    })
+    //missing coordinates
    it("POST: test create with only pid and uid and coordinates", async () => {
         await teardown()
 
@@ -479,6 +495,8 @@ it("POST: test create without coordinates", async () => {
         .send(`imgLink=test_link`)
         .send(`datetime=1999-01-08 04:05:06`)
         .send(`coordinate=(2.6, 7.5)`)
+        .send(`quantity=2`)
+        .send(`activity=running`)
         assert.strictEqual(resp.body.message, `post created`)
         assert.strictEqual(resp.status, 200)
    })
@@ -542,6 +560,93 @@ describe("updating posts", () => {
             ]
         ) 
     })
+    
+    it("POST: update post with empty imgLink", async () => {//test with coordinate and datetime later on
+        await teardown()
+
+        const create_user = await request(app)
+        .post('/users/createUser')
+        .send('uid=ffd             ')
+        const uid = create_user.body.uid
+
+        const create_post = await request(app)
+        .post('/posts/createPost')
+        .send(`uid=${uid}`)
+        .send('coordinate=(0.0,0.0)')
+        assert.strictEqual(create_post.status, 200)
+        assert.strictEqual(create_post.body.message, `post created`)
+        const pid = create_post.body.pid
+        
+        const empty = ""
+        const resp1 = await request(app)
+        .put('/posts/updatePostByPID')
+        .send(`pid=${pid}`)
+        .send(`imgLink=${empty}`)
+        assert.strictEqual(resp1.status, 200)
+        assert.strictEqual(resp1.body.message, `post with pid ${pid} updated`)
+
+        const resp2 = await request(app)
+        .get(`/posts/selectPost?pid=${pid}`)
+        assert.strictEqual(resp2.status, 200)
+        assert.deepStrictEqual(resp2.body.message, 
+            [
+                {
+                    "pid": pid,
+                    "uid": uid,
+                    "imglink": "",
+                    "datetime": null,
+                    "coordinate": {"x":0.0, "y":0.0},
+                    "activity": null,
+                    "animalname": null,
+                    "quantity": null
+                }
+            ]
+        ) 
+    })
+    it("POST: update post without pid", async () => {
+        await teardown()
+
+        const create_user = await request(app)
+        .post('/users/createUser')
+        .send('uid=ffd             ')
+        const uid = create_user.body.uid
+
+        const create_post = await request(app)
+        .post('/posts/createPost')
+        .send(`uid=${uid}`)
+        .send('coordinate=(0.0,0.0)')
+        assert.strictEqual(create_post.status, 200)
+        assert.strictEqual(create_post.body.message, `post created`)
+        const pid = create_post.body.pid
+        
+        const resp1 = await request(app)
+        .put('/posts/updatePostByPID')
+        .send('imgLink=test_link')
+        assert.strictEqual(resp1.status, 400)
+        assert.strictEqual(resp1.body.message, `pid is required`)
+    })
+    it("POST: update post without updates", async () => {
+        await teardown()
+
+        const create_user = await request(app)
+        .post('/users/createUser')
+        .send('uid=ffd             ')
+        const uid = create_user.body.uid
+
+        const create_post = await request(app)
+        .post('/posts/createPost')
+        .send(`uid=${uid}`)
+        .send('coordinate=(0.0,0.0)')
+        assert.strictEqual(create_post.status, 200)
+        assert.strictEqual(create_post.body.message, `post created`)
+        const pid = create_post.body.pid
+        
+        const resp1 = await request(app)
+        .put('/posts/updatePostByPID')
+        .send(`pid=${pid}`)
+        assert.strictEqual(resp1.status, 400)
+        assert.strictEqual(resp1.body.message, `at least one update is required`)
+    })
 })
 
 describe("deleting posts", () => {
@@ -581,5 +686,12 @@ describe("deleting posts", () => {
         .send('pid=0123456701234567')
         assert.strictEqual(resp.status, 200)
         assert.strictEqual(resp.body.message, `post with pid 0123456701234567 deleted if existed`)
+    }) 
+    it("POST: delete post by without id", async () => {
+        await teardown()
+        const resp = await request(app)
+        .delete('/posts/deletePostByPID')
+        assert.strictEqual(resp.status, 400)
+        assert.strictEqual(resp.body.message, `pid is required`)
     }) 
 })

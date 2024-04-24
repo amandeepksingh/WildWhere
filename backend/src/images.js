@@ -11,33 +11,16 @@ const logger = require('./logger');
 require('dotenv').config({path: "../.env"});
 
 //creates DB connection
-let pool;
-if(process.env.location == "local") {
-	console.log(`[Images] using local pool`);
-     pool = new Pool({
-        user: process.env.dbUser,
-        host: process.env.dbHost,
-        database: process.env.dbName,
-        password: process.env.dbPass,
-        port: process.env.dbPort,
-        // ssl: {
-        // 	rejectUnauthorized:false
-        // } //used only on EC2
-    });    
-} else {
-	console.log(`[Images] using server pool`);
-     pool = new Pool({
-        user: process.env.dbUser,
-        host: process.env.dbHost,
-        database: process.env.dbName,
-        password: process.env.dbPass,
-        port: process.env.dbPort,
-        ssl: {
-        	rejectUnauthorized:false
-        } //used only on EC2
-    });
-}
-
+var pool;
+var poolObj = {
+    user: process.env.dbUser,
+    host: process.env.dbHost,
+    database: process.env.dbName,
+    password: process.env.dbPass,
+    port: process.env.dbPort,
+};
+if(process.env.location !== "local") poolObj.ssl = {rejectUnauthorized: false}; //for server pool
+pool = new Pool(poolObj);
 
 //configure storage point for files
 const imageStore = multer.diskStorage({
@@ -120,7 +103,8 @@ class s3Helpers {
          */
         const params = {
             Bucket: process.env.accessPoint,
-            Key: `${path}/${fileName}${extension}`
+            Key: `${path}/${fileName}${extension}`,
+            Expires: 604800
         }
         return AWSPreSigner.getSignedUrl(s3Client, new AWSs3Module.GetObjectCommand(params))
     }
@@ -167,7 +151,7 @@ class imgFuncs {
          *          OR
          *      error message
          */
-        logger.log(`originalURL: ${JSON.stringify(req.originalUrl)} - body: ${JSON.stringify(req.body)} - headers: ${JSON.stringify(req.rawHeaders)}`)
+        logger.logRequest(req)
 
         //parse params
         var id
@@ -216,10 +200,13 @@ class imgFuncs {
         const url = await s3Helpers.s3GetSignedURL(type, idVal, extension)
     
         //put url into db
-        const query = `UPDATE ${type} SET imglink = $1 WHERE ${id} = $2`
-        const vals = [url, idVal]
-        logger.log(`query: ${query}, vals: ${vals}`)
-        return pool.query(query, vals, (error, _) => {
+        const query = {
+            text: `UPDATE ${type} SET imglink = $1 WHERE ${id} = $2`,
+            values: [url, idVal]
+        }
+        logger.logQuery(query)
+
+        return pool.query(query, (error, _) => {
             if (error) {
                 return res.status(400).json({
                     "message": error.message
@@ -239,7 +226,7 @@ class imgFuncs {
          *          OR
          *      error
          */
-        logger.log(`originalURL: ${JSON.stringify(req.originalUrl)} - body: ${JSON.stringify(req.body)} - headers: ${JSON.stringify(req.rawHeaders)}`)
+        logger.logRequest(req)
 
         //parse params
         var id
@@ -266,10 +253,13 @@ class imgFuncs {
         await imgFuncs.clearS3(type, idVal)
 
         //clear db entry
-        const query = `UPDATE ${type} SET imglink = NULL WHERE ${id} = $1`
-        const vals = [idVal]
-        logger.log(`query: ${query}, vals: ${vals}`)
-        return pool.query(query, vals, (error, _) => {
+        const query = {
+            text: `UPDATE ${type} SET imglink = NULL WHERE ${id} = $1`,
+            values: [idVal]
+        }
+        logger.logQuery(query)
+
+        return pool.query(query, (error, _) => {
             if (error) {
                 return res.status(400).json({message: error.message})
             }
