@@ -176,12 +176,12 @@ class Database {
   Future<String?> uploadProfilePic(String fileName, String uid) async {
     var request = http.MultipartRequest(
         'POST', Uri.parse('$endpoint/images/userProfilePic/upload'));
-    request.fields[''] = 'value';
-    request.files.add(await http.MultipartFile.fromPath('picture', fileName));
+    request.fields['uid'] = uid;
+    request.files.add(await http.MultipartFile.fromPath('img', fileName));
     var res = await request.send();
     return res.reasonPhrase;
   }
-
+  
   Future<bool> uniqueUsername(String username) async {
     var url = Uri.parse('$endpoint/users/selectUser?username=$username');
     
