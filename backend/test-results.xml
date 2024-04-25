@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="0.709" tests="43" failures="34">
+  <testsuite name="" timestamp="2024-04-25T05:14:16" tests="43" time="0.708" failures="34">
+    <testcase name="HELP: test help method" time="0.001" classname="">
+    </testcase>
+    <testcase name="HELP: check every endpoint&apos;s other methods" time="0.152" classname="">
+    </testcase>
+    <testcase name="HELP: check every other endpoint" time="0.046" classname="">
+    </testcase>
+    <testcase name="IMAGES: test user normal functionality" time="0.051" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/images.test.js:24:10)
+    at async Context.<anonymous> (test/images.test.js:33:9)]]></failure>
+    </testcase>
+    <testcase name="IMAGES: test user profile picture upload missing uid" time="0.022" classname="">
+    </testcase>
+    <testcase name="IMAGES: test user upload missing img" time="0.006" classname="">
+    </testcase>
+    <testcase name="IMAGES: test post normal functionality" time="0.012" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/images.test.js:24:10)
+    at async Context.<anonymous> (test/images.test.js:73:9)]]></failure>
+    </testcase>
+    <testcase name="IMAGES: test post profile picture upload missing uid" time="0.009" classname="">
+    </testcase>
+    <testcase name="IMAGES: test post upload missing img" time="0.008" classname="">
+    </testcase>
+    <testcase name="IMAGES: test user delete normal" time="0.012" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/images.test.js:24:10)
+    at async Context.<anonymous> (test/images.test.js:118:9)]]></failure>
+    </testcase>
+    <testcase name="IMAGES: test user delete missing uid" time="0.014" classname="">
+    </testcase>
+    <testcase name="IMAGES: test post delete normal" time="0.013" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/images.test.js:24:10)
+    at async Context.<anonymous> (test/images.test.js:152:9)]]></failure>
+    </testcase>
+    <testcase name="IMAGES: test post delete missing pid" time="0.009" classname="">
+    </testcase>
+    <testcase name="POST: test select with empty" time="0.016" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/posts.test.js:21:5)
+    at async Context.<anonymous> (test/posts.test.js:30:13)]]></failure>
+    </testcase>
+    <testcase name="POST: test select with too strict constraints" time="0.013" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/posts.test.js:21:5)
+    at async Context.<anonymous> (test/posts.test.js:37:13)]]></failure>
+    </testcase>
+    <testcase name="POST: test select with few constraints" time="0.012" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/posts.test.js:21:5)
+    at async Context.<anonymous> (test/posts.test.js:57:13)]]></failure>
+    </testcase>
+    <testcase name="POST: test select with ALL constraints" time="0.014" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/posts.test.js:21:5)
+    at async Context.<anonymous> (test/posts.test.js:89:13)]]></failure>
+    </testcase>
+    <testcase name="POST: test select with multiple posts" time="0.015" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/posts.test.js:21:5)
+    at async Context.<anonymous> (test/posts.test.js:126:13)]]></failure>
+    </testcase>
+    <testcase name="POST: null radius" time="0.014" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/posts.test.js:21:5)
+    at async Context.<anonymous> (test/posts.test.js:172:13)]]></failure>
+    </testcase>
+    <testcase name="POST: zero radius" time="0.013" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/posts.test.js:21:5)
+    at async Context.<anonymous> (test/posts.test.js:207:13)]]></failure>
+    </testcase>
+    <testcase name="POST: non-zero radius" time="0.013" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/posts.test.js:21:5)
+    at async Context.<anonymous> (test/posts.test.js:242:13)]]></failure>
+    </testcase>
+    <testcase name="POST: after a time" time="0.011" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/posts.test.js:21:5)
+    at async Context.<anonymous> (test/posts.test.js:309:13)]]></failure>
+    </testcase>
+    <testcase name="POST: before a time" time="0.012" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/posts.test.js:21:5)
+    at async Context.<anonymous> (test/posts.test.js:346:13)]]></failure>
+    </testcase>
+    <testcase name="POST: between a time" time="0.011" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/posts.test.js:21:5)
+    at async Context.<anonymous> (test/posts.test.js:383:13)]]></failure>
+    </testcase>
+    <testcase name="POST: test create without uid" time="0.009" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/posts.test.js:21:5)
+    at async Context.<anonymous> (test/posts.test.js:429:5)]]></failure>
+    </testcase>
+    <testcase name="POST: test create without coordinates" time="0.009" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/posts.test.js:21:5)
+    at async Context.<anonymous> (test/posts.test.js:438:5)]]></failure>
+    </testcase>
+    <testcase name="POST: test create with only pid and uid and coordinates" time="0.009" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/posts.test.js:21:5)
+    at async Context.<anonymous> (test/posts.test.js:453:9)]]></failure>
+    </testcase>
+    <testcase name="POST: test create post with all params" time="0.009" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/posts.test.js:21:5)
+    at async Context.<anonymous> (test/posts.test.js:469:9)]]></failure>
+    </testcase>
+    <testcase name="POST: test create with some but not all params" time="0.009" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/posts.test.js:21:5)
+    at async Context.<anonymous> (test/posts.test.js:486:5)]]></failure>
+    </testcase>
+    <testcase name="POST: update post with imgLink" time="0.009" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/posts.test.js:21:5)
+    at async Context.<anonymous> (test/posts.test.js:505:9)]]></failure>
+    </testcase>
+    <testcase name="POST: delete post by PID" time="0.010" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/posts.test.js:21:5)
+    at async Context.<anonymous> (test/posts.test.js:549:9)]]></failure>
+    </testcase>
+    <testcase name="POST: delete post by ID where ID not listed" time="0.009" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/posts.test.js:21:5)
+    at async Context.<anonymous> (test/posts.test.js:578:9)]]></failure>
+    </testcase>
+    <testcase name="USER: test select with empty" time="0.008" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/users.test.js:21:5)
+    at async Context.<anonymous> (test/users.test.js:28:9)]]></failure>
+    </testcase>
+    <testcase name="USER: test select with too strict constraints" time="0.009" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/users.test.js:21:5)
+    at async Context.<anonymous> (test/users.test.js:35:9)]]></failure>
+    </testcase>
+    <testcase name="USER: test select with few constraints" time="0.009" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/users.test.js:21:5)
+    at async Context.<anonymous> (test/users.test.js:49:9)]]></failure>
+    </testcase>
+    <testcase name="USER: test select with ALL constraints" time="0.008" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/users.test.js:21:5)
+    at async Context.<anonymous> (test/users.test.js:75:9)]]></failure>
+    </testcase>
+    <testcase name="USER: test select with many users" time="0.010" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/users.test.js:21:5)
+    at async Context.<anonymous> (test/users.test.js:105:9)]]></failure>
+    </testcase>
+    <testcase name="USER: test create" time="0.008" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/users.test.js:21:5)
+    at async Context.<anonymous> (test/users.test.js:155:9)]]></failure>
+    </testcase>
+    <testcase name="USER: test create with all params" time="0.008" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/users.test.js:21:5)
+    at async Context.<anonymous> (test/users.test.js:163:9)]]></failure>
+    </testcase>
+    <testcase name="USER: test create with some but not all params" time="0.009" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/users.test.js:21:5)
+    at async Context.<anonymous> (test/users.test.js:190:5)]]></failure>
+    </testcase>
+    <testcase name="USER: update user with email" time="0.009" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/users.test.js:21:5)
+    at async Context.<anonymous> (test/users.test.js:213:9)]]></failure>
+    </testcase>
+    <testcase name="USER: delete user by ID" time="0.010" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/users.test.js:21:5)
+    at async Context.<anonymous> (test/users.test.js:253:9)]]></failure>
+    </testcase>
+    <testcase name="USER: delete user by ID where ID not listed" time="0.012" classname="">
+      <failure message="role &quot;andrewli&quot; does not exist" type="error"><![CDATA[error: role "andrewli" does not exist
+    at /Users/owen/Documents/Github/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/users.test.js:21:5)
+    at async Context.<anonymous> (test/users.test.js:274:9)]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>
