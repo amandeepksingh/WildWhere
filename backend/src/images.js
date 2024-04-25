@@ -67,7 +67,11 @@ class s3Helpers {
             Body: fsAsync.createReadStream(localStream),
             ContentType: `image/${extension.substring(1)}`
         }
-        return s3Client.send(new AWSs3Module.PutObjectCommand(params))
+        logger.logS3Req("PUT OBJECT", params)
+        return s3Client.send(new AWSs3Module.PutObjectCommand(params)).then(resp => {
+            logger.logS3PutResp(resp.$metadata.httpStatusCode)
+            return resp.$metadata.httpStatusCode
+        })
     }
     
     static s3ListFiles(path) {
@@ -83,12 +87,16 @@ class s3Helpers {
             Bucket: process.env.accessPoint,
             Prefix: path
         }
+        logger.logS3Req("LIST OBJECTS", params)
         return s3Client.send(new AWSs3Module.ListObjectsV2Command(params)).then(data => {
             if (data.Contents === undefined) {
                 return []
             } else {
                 return data.Contents.map(object => object.Key)
             }
+        }).then(contents => {
+            logger.logS3Contents(path, contents)
+            return contents
         })
     }
     
@@ -106,21 +114,28 @@ class s3Helpers {
             Key: `${path}/${fileName}${extension}`,
             Expires: 604800
         }
-        return AWSPreSigner.getSignedUrl(s3Client, new AWSs3Module.GetObjectCommand(params))
+        logger.logS3Req("GET SIGNED URL", params)
+        return AWSPreSigner.getSignedUrl(s3Client, new AWSs3Module.GetObjectCommand(params)).then(url => {        
+            logger.logS3URL(url)
+            return url
+        })
     }
     
     static s3DeleteFile(fileName) {
         /**
          * deletes file from S3
          * @param:
-         *      path string
          *      fileName string
          */
         const params = {
             Bucket: process.env.accessPoint,
             Key: fileName
         }
-        return s3Client.send(new AWSs3Module.DeleteObjectCommand(params))
+        logger.logS3Req("DELETE OBJECT", params)
+        return s3Client.send(new AWSs3Module.DeleteObjectCommand(params)).then(resp => {
+            logger.logS3Delete(resp.$metadata.httpStatusCode)
+            return resp.$metadata.httpStatusCode
+        })
     }
 }
 
@@ -137,7 +152,13 @@ class imgFuncs {
                 fileName = file
             }
         }
-        if (fileName !== undefined) await s3Helpers.s3DeleteFile(fileName)
+        if (fileName !== undefined) {
+            logger.logAlreadyInS3(type, id, true)
+            return s3Helpers.s3DeleteFile(fileName)
+        } else {
+            logger.logAlreadyInS3(type, id, false)
+            return 204 //replacing successful delete with successful inaction
+        }
     }
 
     static async upload(type, req, res, next) {
@@ -151,6 +172,7 @@ class imgFuncs {
          *          OR
          *      error message
          */
+        var responseStatus, responseJson
         logger.logRequest(req)
 
         //parse params
@@ -159,42 +181,77 @@ class imgFuncs {
         if (type === "users") {
             id = "uid"
             if (req.body.uid === undefined) {
-                return res.status(400).json({message: `${id} is required`})
+                logger.logInvalidInput(`${id} is required`)
+                responseStatus = 400
+                responseJson = {message: `${id} is required`}
+                logger.logResponse(responseStatus, responseJson)
+                return res.status(responseStatus).json(responseJson)
             } else {
                 idVal = req.body.uid
             }
         } else if (type === "posts") {
             id = "pid"
             if (req.body.pid === undefined) {
-                return res.status(400).json({message: `${id} is required`})
+                logger.logInvalidInput(`${id} is required`)
+                responseStatus = 400
+                responseJson = {message: `${id} is required`}
+                return res.status(responseStatus).json(responseJson)
             } else {
                 idVal = req.body.pid
             }
         } else {
-            return res.status(500).json({message: "internal error"})
+            logger.logInternalError("reached image upload for neither user nor post")
+            responseStatus = 500
+            responseJson = {message: "internal error: reached image upload for neither user nor post"}
+            logger.logResponse(responseStatus, responseJson)
+            return res.status(responseStatus).json(responseJson)
         }
         if (req.files === undefined || req.files['img'] === undefined) {
-            return res.status(400).json({message: 'img must be specified'});
+            logger.logInvalidInput(`img must be specified`)
+            responseStatus = 400
+            responseJson = {message: `img must be specified`}
+            return res.status(responseStatus).json(responseJson)
         }
     
+        //obtain file paths
         const recieptPath = "images/"
         const recieptFileName = 'unassigned'
-        var extension
-        await fs.readdir(recieptPath).then(files => {
+        const extension = await fs.readdir(recieptPath).then(files => {
             for (const file of files) {
                 if (file.includes(recieptFileName)) {
-                    extension = path.extname(file)
+                    return path.extname(file)
                 }
             }
+            return undefined
         })
+        if (extension === undefined) {
+            logger.logIntenalError("file to upload not found in image directory")
+            responseStatus = 500
+            responseJson = {message: "internal error: file to upload not found in image directory"}
+            logger.logResponse(responseStatus, responseJson)
+            return res.status(responseStatus).json(responseJson)
+        }
         const localPath =  `${recieptPath}${recieptFileName}${extension}`
         const uploadPath = `${type}/${idVal}${extension}`
+        logger.logImgPathsParsed(localPath, uploadPath)
 
-        //clear s3 and db
-        await imgFuncs.clearS3(type, idVal)
+        //clear s3
+        const deleteResp = await imgFuncs.clearS3(type, idVal)
+        if (deleteResp != 204) {
+            logger.logInternalError('error on delete from s3')
+            responseStatus = 500
+            responseJson = 'error on delete from s3'
+            return res.status(responseStatus).json(responseJson)
+        }
         
         //upload to S3
-        await s3Helpers.s3Put(localPath, uploadPath, extension) //cannot produce error
+        const putResp = await s3Helpers.s3Put(localPath, uploadPath, extension)
+        if (putResp != 200) {
+            logger.logInternalError('error on put to s3')
+            responseStatus = 500
+            responseJson = 'error on put to s3'
+            return res.status(responseStatus).json(responseJson)
+        }
     
         //get s3 signed url
         const url = await s3Helpers.s3GetSignedURL(type, idVal, extension)
@@ -206,13 +263,19 @@ class imgFuncs {
         }
         logger.logQuery(query)
 
-        return pool.query(query, (error, _) => {
+        return pool.query(query, (error, result) => {
             if (error) {
-                return res.status(400).json({
-                    "message": error.message
-                })
+                logger.logDBfail(error)
+                responseStatus = 400
+                responseJson = {message: error.message}
+                logger.logResponse(responseStatus, responseJson)
+                return res.status(responseStatus).json(responseJson)
             }
-            return res.status(200).json({message: url});
+            logger.logDBsucc(result)
+            responseStatus = 200
+            responseJson = {message: url}
+            logger.logResponse(responseStatus, responseJson)
+            return res.status(responseStatus).json(responseJson)
         })
     }
 
@@ -226,6 +289,7 @@ class imgFuncs {
          *          OR
          *      error
          */
+        var responseStatus, responseJson
         logger.logRequest(req)
 
         //parse params
@@ -234,36 +298,61 @@ class imgFuncs {
         if (type === "users") {
             id = "uid"
             if (req.body.uid === undefined) {
-                return res.status(400).json({message: `${id} is required`})
+                logger.logInvalidInput(`${id} is required`)
+                responseStatus = 400
+                responseJson = {message: `${id} is required`}
+                logger.logResponse(responseStatus, responseJson)
+                return res.status(responseStatus).json(responseJson)
             } else {
                 idVal = req.body.uid
             }
         } else if (type === "posts") {
             id = "pid"
             if (req.body.pid === undefined) {
-                return res.status(400).json({message: `${id} is required`})
+                logger.logInvalidInput(`${id} is required`)
+                responseStatus = 400
+                responseJson = {message: `${id} is required`}
+                return res.status(responseStatus).json(responseJson)
             } else {
                 idVal = req.body.pid
             }
         } else {
-            return res.status(500).json({message: "internal error"})
+            logger.logInternalError("reached image upload for neither user nor post")
+            responseStatus = 500
+            responseJson = {message: "internal error: reached image upload for neither user nor post"}
+            logger.logResponse(responseStatus, responseJson)
+            return res.status(responseStatus).json(responseJson)
         }
 
         //clear s3
-        await imgFuncs.clearS3(type, idVal)
+        const deleteResp = await imgFuncs.clearS3(type, idVal)
+        if (deleteResp != 204) {
+            logger.logInternalError('error on delete from s3')
+            responseStatus = 500
+            responseJson = 'error on delete from s3'
+            return res.status(responseStatus).json(responseJson)
+        }
 
-        //clear db entry
+        //form db query
         const query = {
             text: `UPDATE ${type} SET imglink = NULL WHERE ${id} = $1`,
             values: [idVal]
         }
         logger.logQuery(query)
 
-        return pool.query(query, (error, _) => {
+        return pool.query(query, (error, result) => {
             if (error) {
-                return res.status(400).json({message: error.message})
+                logger.logDBfail(error)
+                responseStatus = 400
+                responseJson = {message: error.message}
+                logger.logResponse(responseStatus, responseJson)
+                return res.status(responseStatus).json(responseJson)
             }
-            res.status(200).json({message: "image delete successful"})
+            logger.logDBsucc(result)
+            responseStatus = 200
+            responseJson = {message: 'image delete successful'}
+            logger.logResponse(responseStatus, responseJson)
+            return res.status(responseStatus).json(responseJson)
         })
     }
 }
