@@ -18,6 +18,10 @@ pipeline {
                 sh 'rm -r .git'
                 sh 'rm -r backend/test'
                 sh 'ls -l -a'
+                sh 'rm .idea'
+                sh 'rm .vscode'
+                sh 'rm Schema.png'
+
                 //sh 'rm -r test'
             }
         }
@@ -41,6 +45,9 @@ pipeline {
                sh 'echo "Testing..."'
                sh 'echo "test sees" & ls -l -a'
                sh 'echo deploying to test server'
+               dir('backend/server_testing') {
+                    sh 'echo ls -la'
+               }
                 withCredentials([sshUserPrivateKey(credentialsId: 'ww-dev-cred', keyFileVariable: 'SSH_D_KEY')]) {
                     withCredentials([file(credentialsId: 'serverenv', variable: 'EnvFile')]) {
                         script {

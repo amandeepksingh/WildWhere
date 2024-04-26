@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node src/server.js",
-    "test": "npx mocha --reporter mocha-junit-reporter --reporter-options mochaFile=test-results.xml --reporter-options jenkinsMode=true --serial --exit ",
+    "test": "npx mocha --reporter mocha-junit-reporter --reporter-options mochaFile=server_testing/test-results.xml --reporter-options jenkinsMode=true --serial --exit ",
     "coverage": "npx nyc mocha",
     "serve": "forever start src/server.js"
   },
