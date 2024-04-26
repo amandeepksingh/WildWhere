@@ -106,7 +106,7 @@ pipeline {
 
                                 def res = sh(script:'node read-results.js', returnStatus: true)
                                 
-                                if(res) {
+                                if(res == 0 ) {
                                     sh 'echo passed'
                                 } else {
                                     sh 'echo failed'
