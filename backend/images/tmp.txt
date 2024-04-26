@@ -1,0 +1,1 @@
+It seems that this folder has to exist for images to work. So I need to add a dummy file to keep it there

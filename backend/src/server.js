@@ -8,8 +8,8 @@ if(process.env.location == "local") {
 	console.log(`[server] Detected that you are running locally`);
 } else {
 	console.log(`[server] Detected that you are running on a server`);
-	//write pid to a file
 
+	//write pid to a file
 	const pidnum = `${process.pid}`;
 	fs.writeFile("pid.txt", pidnum, (err) => {
 	if(err) {
@@ -25,9 +25,7 @@ if(process.env.location == "local") {
 const server = express();
 server.use(app);
 
-
-
 //Server listens
-server.listen(process.env.ec2port, () =>{ //server listens to calls
+server.listen(process.env.ec2port, () => {
  	console.log(`[server] wildwhere server running on port ${process.env.ec2port}`);
 });

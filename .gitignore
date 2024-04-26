@@ -1,5 +1,5 @@
 node_modules
 requests.log
-/general.log
+general.log
 .env
 .DS_Store

@@ -1,14 +1,15 @@
 const fs = require('fs').promises;
+const { error } = require('console');
 const logger = require('./logger');
 
-function getHelpTxt() {
+function getHelpTxt(url, body, headers) {
     /**
      *   @param:
      *       none
      *   @returns:
      *       helpTxt 
      */
-    // logger.log(`originalURL: ${JSON.stringify(req.originalUrl)} - body: ${JSON.stringify(req.body)} - headers: ${JSON.stringify(req.rawHeaders)}`)
+    logger.logBadEndpoint(url, body, headers)
     return fs.readFile('supportedEndsAndMeths.txt', { encoding: 'utf8' });
 }
 

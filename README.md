@@ -158,7 +158,8 @@ The request will return a response that has a status code and a message, which c
 
 #### User Description
 
-_selecting users_: Used to select all users matching input JSON body and return an array of each of those users' attributes.
+_selecting users_: Used to select all users matching input JSON body and return an array of each of those users' attributes.  
+Requests accepted by URL-encoded query
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :---: |  :------------------: | :---------------: |
 | _ec2Host/users/selectUser_ | _get_ | _JSON body of following_ | _optional or required_ | _200_ | _array of JSON bodies of following_ |
@@ -173,7 +174,8 @@ _selecting users_: Used to select all users matching input JSON body and return 
 ||| notificationPerm boolean | optional || notificationPerm boolean
 ||| colorBlindRating int | optional || colorBlindRating int
 
-_creating users_: Used to create user with attributes matching the input JSON body.
+_creating users_: Used to create user with attributes matching the input JSON body.  
+Requests accepted by JSON-body encoded request
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :-------------: | :------------------: | :---------------: |
 | _ec2Host/users/createUser_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string |
@@ -188,7 +190,8 @@ _creating users_: Used to create user with attributes matching the input JSON bo
 ||| notificationPerm boolean | optional || 
 ||| colorBlindRating int | optional || 
 
-_updating users_: Used to update user with given UID so the match the input JSON body.
+_updating users_: Used to update user with given UID so the match the input JSON body.  
+Requests accepted by JSON-body encoded request
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :-------------: | :------------------: | :---------------: |
 | _ec2Host/users/updateUserByUID_ | _put_ | _JSON body of following_ | _optional or required_ | _200_ | string |
@@ -203,7 +206,8 @@ _updating users_: Used to update user with given UID so the match the input JSON
 ||| notificationPerm boolean | optional || 
 ||| colorBlindRating int | optional || 
 
-_deleting users_: Used to delete user with given UID.
+_deleting users_: Used to delete user with given UID.  
+Requests accepted by JSON-body encoded request
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
 | _ec2Host/users/deleteUserByUID_ | _delete_ | _JSON body of following_ | _optional or required_ | _200_ | string
@@ -216,7 +220,8 @@ _deleting users_: Used to delete user with given UID.
 
 #### Post Description
 
-_selecting posts_: Used to select all posts matching input JSON body and return an array of each of those posts' attributes.
+_selecting posts_: Used to select all posts matching input JSON body and return an array of each of those posts' attributes.  
+Requests accepted by URL-encoded query
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :---: |  :------------------: | :---------------: |
 | _ec2Host/posts/selectPost_ | _get_ | _JSON body of following_ | _optional or required_ | _200_ | _array of JSON bodies of following_ |
@@ -233,7 +238,8 @@ _selecting posts_: Used to select all posts matching input JSON body and return 
 ||| activity string | optional || activity string
 
 
-_creating posts_: Used to create post with attributes matching the input JSON body.
+_creating posts_: Used to create post with attributes matching the input JSON body.  
+Requests accepted by JSON-body encoded request
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :-------------: | :------------------: | :---------------: |
 | _ec2Host/posts/createPost_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string |
@@ -247,7 +253,8 @@ _creating posts_: Used to create post with attributes matching the input JSON bo
 ||| quantity int | optional ||
 ||| activity string | optional ||
 
-_updating posts_: Used to update post with given PID so the match the input JSON body.
+_updating posts_: Used to update post with given PID so the match the input JSON body.  
+Requests accepted by JSON-body encoded request
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :-------------: | :------------------: | :---------------: |
 | _ec2Host/posts/updatePostByPID_ | _put_ | _JSON body of following_ | _optional or required_ | _200_ | string |
@@ -261,7 +268,8 @@ _updating posts_: Used to update post with given PID so the match the input JSON
 ||| quantity int | optional ||
 ||| activity string | optional ||
 
-_deleting posts_: Used to delete post with given PID.
+_deleting posts_: Used to delete post with given PID.  
+Requests accepted by JSON-body encoded request
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
 | _ec2Host/posts/deletePostByPID_ | _delete_ | _JSON body of following_ | _optional or required_ | _200_ | string
@@ -274,7 +282,8 @@ _deleting posts_: Used to delete post with given PID.
 
 #### User Images
 
-_uploading images_: Used to upload images
+_uploading images_: Used to upload images  
+Requests accepted by form-data encoded request
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
 | _ec2Host/images/userProfilePic/upload_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string
@@ -284,7 +293,8 @@ _uploading images_: Used to upload images
 ||| ||| error message
 
 
-_deleting images_: Used to delete image (signed URLs become invalid)
+_deleting images_: Used to delete image (signed URLs become invalid)  
+Requests accepted by JSON-body encoded request
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
 | _ec2Host/images/userProfilePic/delete_ | _delete_ | _JSON body of following_ | _optional or required_ | _200_ | string
@@ -295,7 +305,8 @@ _deleting images_: Used to delete image (signed URLs become invalid)
 
 #### Post Images
 
-_uploading images_: Used to upload images
+_uploading images_: Used to upload images  
+Requests accepted by form-data encoded request
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
 | _ec2Host/images/postPic/upload_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string
@@ -305,7 +316,8 @@ _uploading images_: Used to upload images
 ||| ||| error message
 
 
-_deleting images_: Used to delete image (signed URLs become invalid)
+_deleting images_: Used to delete image (signed URLs become invalid)  
+Requests accepted by JSON-body encoded request
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
 | _ec2Host/images/postPic/delete_ | _delete_ | _JSON body of following_ | _optional or required_ | _200_ | string

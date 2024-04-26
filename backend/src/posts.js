@@ -6,16 +6,15 @@ require('dotenv').config({path: "../.env"});
 const randomstring = require('randomstring');
 
 //creates DB connection
-var pool;
-var poolObj = {
+var poolParams = {
     user: process.env.dbUser,
     host: process.env.dbHost,
     database: process.env.dbName,
     password: process.env.dbPass,
     port: process.env.dbPort,
 };
-if(process.env.location !== "local") poolObj.ssl = {rejectUnauthorized: false}; //for server pool
-pool = new Pool(poolObj);
+if(process.env.location !== "local") poolParams.ssl = {rejectUnauthorized: false}; //for server pool
+const pool = new Pool(poolParams);
 
 
 //creates posts and routes methods and endpoints to functions
@@ -51,74 +50,82 @@ function selectPost(req, res, next) {
      *      activity string
      *  }
      */
-    logger.log(`originalURL: ${JSON.stringify(req.originalUrl)} - body: ${JSON.stringify(req.body)} - headers: ${JSON.stringify(req.rawHeaders)}`)
-    var condits = []
+    var responseStatus, responseJson
+    logger.logRequest(req)
+
+    //parse req query into params and values
+    var rawConditions = []
     var values = []
     var i = 1
-
-    if (req.query.pid) {
-        condits.push(`pid = $${i++}`)
+    if (req.query.pid !== undefined) {
+        rawConditions.push(`pid = $${i++}`)
         values.push(req.query.pid)
     }
-    if (req.query.uid) {
-        condits.push(`uid = $${i++}`)
+    if (req.query.uid !== undefined) {
+        rawConditions.push(`uid = $${i++}`)
         values.push(req.query.uid)
     }
-
-    if (req.query.coordinate) {
+    if (req.query.coordinate !== undefined) {
         radius = req.query.radius ? req.query.radius : 0 //if a COORDINATE exists without a radius, assume radius of 0, filters for posts with this coordinates
-        //RADIUS in MILES
-        condits.push(`coordinate<@>$${i++}::point <= abs($${i++})`)
+        rawConditions.push(`coordinate<@>$${i++}::point <= abs($${i++})`)
         values.push(req.query.coordinate)
         values.push(radius)
-        //condits.push(`length('coordinate :: POINT, point(${req.body.coordinate}) :: POINT' :: PATH) <= abs(${radius})`)
-        //condits.push(`\|((coordinate[0] - ${req.body.coordinate}[0]) ^ 2 + (coordinate[1] - ${req.body.coordinate}[1]) ^ 2)  <= abs(${radius})`) 
-        //condits.push(`(@-@ path '(coordinate, ${req.body.coordinate})') <= abs(${radius})`)
-    } else if (req.query.radius) return res.status(400).json({"message": "non-null search radius entered with null coordinates"}); //if radius is entered into SELECT, then there must be a COORDINATE
-    
-    if (req.query.imgLink) {
-        condits.push(`imgLink = $${i++}`)
-        values.push(req.query.imgLink)
+    } else if (req.query.radius !== undefined) { //note that req.query.coordinate === undefined
+        logger.logInvalidInput("non-null search radius entered with null coordinates")
+        responseStatus = 400
+        responseJson = {message: "non-null search radius entered with null coordinates"}
+        logger.logResponse(responseStatus, responseJson)
+        return res.status(responseStatus).json(responseJson); 
     }
-
-    //FRONT END CAN IMPLEMENT INTERVAL FUCTIONALITY IF THEY WISH TO
-    if (req.query.starttime) {
-        condits.push(`TO_TIMESTAMP($${i++}, 'YYYY/MM/DD/HH24:MI:ss') <= datetime`)
+    if (req.query.starttime !== undefined) {
+        rawConditions.push(`TO_TIMESTAMP($${i++}, 'YYYY/MM/DD/HH24:MI:ss') <= datetime`)
         values.push(req.query.starttime)
+    } else if (req.query.startTime !== undefined) {
+        rawConditions.push(`TO_TIMESTAMP($${i++}, 'YYYY/MM/DD/HH24:MI:ss') <= datetime`)
+        values.push(req.query.startTime)
     }
-    if (req.query.endtime) {
-        condits.push(`datetime <= TO_TIMESTAMP($${i++}, 'YYYY/MM/DD/HH24:MI:ss')`)
+    if (req.query.endtime !== undefined) {
+        rawConditions.push(`datetime <= TO_TIMESTAMP($${i++}, 'YYYY/MM/DD/HH24:MI:ss')`)
         values.push(req.query.endtime)
+    } else if (req.query.endTime !== undefined) {
+        rawConditions.push(`datetime <= TO_TIMESTAMP($${i++}, 'YYYY/MM/DD/HH24:MI:ss')`)
+        values.push(req.query.endTime)
     }
-    if (req.query.animalName) {
-        condits.push(`animalName = $${i++}`)
+    if (req.query.animalname !== undefined) {
+        rawConditions.push(`animalname = $${i++}`)
+        values.push(req.query.animalname)
+    } else if (req.query.animalName) {
+        rawConditions.push(`animalname = $${i++}`)
         values.push(req.query.animalName)
     }
-    if (req.query.quantity) {
-        condits.push(`quantity = $${i++}`)
+    if (req.query.quantity !== undefined) {
+        rawConditions.push(`quantity = $${i++}`)
         values.push(req.query.quantity)
     }
-    if (req.query.activity) {
-        condits.push(`activity = $${i++}`)
+    if (req.query.activity !== undefined) {
+        rawConditions.push(`activity = $${i++}`)
         values.push(req.query.activity)
     }
+    const conditionsAsString = rawConditions.join(' AND ')
+    const query = rawConditions.length === 0 ? "SELECT * FROM posts" : {
+        text: `SELECT * FROM posts WHERE ${conditionsAsString}`,
+        values: values
+    }
+    logger.logQuery(query)
 
-    const query = condits.length === 0 ? "SELECT * FROM posts" : {
-            text: `SELECT * FROM posts WHERE ${condits.join(' AND ')}`,
-            values: values
-        }
-
-    logger.log(`query: ${JSON.stringify(query)}`);
     return pool.query(query, (error, result) => {
         if (error) {
-            return res.status(400).json({
-                "message": error.message
-            }); //propogate errors from DB up
+            logger.logDBerr(error);
+            responseStatus = 400
+            responseJson = {message: error.message}
+            logger.logResponse(responseStatus, responseJson)
+            return res.status(responseStatus).json(responseJson)
         }
-        
-        return res.status(200).json({
-            message: result.rows
-        }); //expected return
+        logger.logDBsucc(result);
+        responseStatus = 200
+        responseJson = {message: result.rows}
+        logger.logResponse(responseStatus, responseJson)
+        return res.status(200).json({message: result.rows})
     })
 }
 
@@ -139,40 +146,74 @@ function createPost(req, res, next) {
      *      error message
      *  pid string (on success)
     */
-    logger.log(`originalURL: ${JSON.stringify(req.originalUrl)} - body: ${JSON.stringify(req.body)} - headers: ${JSON.stringify(req.rawHeaders)}`)
-    var dict = {}
-    //NO PID (randomly generated)
-    if (req.body.uid) dict['uid'] = req.body.uid
-    else return res.status(400).json({"message": "missing uid"}) //handles misformatted input
-    if (req.body.imgLink) dict['imgLink'] = req.body.imgLink //s3 later on
-    if (req.body.datetime) dict['datetime'] = req.body.datetime //check postgres
-    if (req.body.coordinate) dict['coordinate'] = req.body.coordinate // postgres: string with format '(x, y)' where x, y are floats
-    else return res.status(400).json({"message": "missing coordinates"})
-    if (req.body.animalName) dict['animalName'] = req.body.animalName
-    if (req.body.quantity) dict['quantity'] = req.body.quantity
-    if (req.body.activity) dict['activity'] = req.body.activity
-
-    const pid = randomstring.generate(16)
-    dict['pid'] = pid
-
-    const fields = Object.keys(dict).join(', ')
-    const placeholders = Object.keys(dict).map((_, i) => `$${i + 1}`).join(', ')
-    const query = {
-        text: `INSERT INTO posts(${fields}) VALUES(${placeholders})`,
-        values: Object.values(dict)
+    logger.logRequest(req)
+    
+    //parse valid elements of req.body into params array
+    const params = []
+    params['pid'] = randomstring.generate(16)
+    if (req.body.uid !== undefined) {
+        params['uid'] = req.body.uid
+    } else {
+        logger.logInvalidInput("uid is required")
+        responseStatus = 400
+        responseJson = {message: "uid is required"}
+        logger.logResponse(responseStatus, responseJson)
+        return res.status(responseStatus).json(responseJson)
+    }
+    if (req.body.imgLink !== undefined) {
+        params['imgLink'] = req.body.imgLink
+    } else if (req.body.imglink !== undefined) {
+        params['imgLink'] = req.body.imglink
+    }
+    if (req.body.datetime !== undefined) {
+        params['datetime'] = req.body.datetime
+    } else if (req.body.dateTime !== undefined) {
+        params['datetime'] = req.body.dateTime
+    }
+    if (req.body.coordinate !== undefined) {
+        params['coordinate'] = req.body.coordinate
+    } else {
+        logger.logInvalidInput("coordinate is required")
+        responseStatus = 400
+        responseJson = {message: "coordinate is required"}
+        logger.logResponse(responseStatus, responseJson)
+        return res.status(responseStatus).json(responseJson)
+    }
+    if (req.body.animalName !== undefined) {
+        params['animalName'] = req.body.animalName
+    } else if (req.body.animalname !== undefined) {
+        params['animalName'] = req.body.animalname
+    }
+    if (req.body.quantity !== undefined) {
+        params['quantity'] = req.body.quantity
+    }
+    if (req.body.activity !== undefined) {
+        params['activity'] = req.body.activity
     }
 
-    logger.log(`query: ${JSON.stringify(query)}`)
+    //parse params array into db query
+    const paramsAsString = Object.keys(params).join(', ')
+    const placeholders = Object.keys(params).map((_, i) => `$${i + 1}`).join(', ')
+    const query = {
+        text: `INSERT INTO posts(${paramsAsString}) VALUES(${placeholders})`,
+        values: Object.values(params)
+    }
+    logger.logQuery(query)
+
+    // send db query and return response
     return pool.query(query, (error, result) => {
         if (error) {
-            return res.status(400).json({
-                "message": error.message
-            })
+            logger.logDBfail(error)
+            responseStatus = 400
+            responseJson = {message: error.message}
+            logger.logResponse(responseStatus, responseJson)
+            return res.status(responseStatus).json(responseJson)
         }
-        return res.status(200).json({
-            message: "post created",
-            pid: pid
-        })
+        logger.logDBsucc(result)
+        responseStatus = 200
+        responseJson = {message: "post created", pid: params['pid']}
+        logger.logResponse(responseStatus, responseJson)
+        return res.status(responseStatus).json(responseJson)
     })
 }
 
@@ -193,42 +234,58 @@ function updatePostByPID(req, res, next) {
      *      OR
      *      error message
      */
-    logger.log(`originalURL: ${JSON.stringify(req.originalUrl)} - body: ${JSON.stringify(req.body)} - headers: ${JSON.stringify(req.rawHeaders)}`)
-    if (req.body.pid === undefined) {
-        return res.status(400).json({
-            "message": "missing pid"
-        }) //handles misformatted input
-    }
+    var responseStatus, responseJson
+    logger.logRequest(req)
 
-    const updates = {}
-    if (req.body.uid) updates["uid"] = req.body.uid
-    if (req.body.imgLink) updates["imgLink"] = req.body.imgLink
-    if (req.body.datetime) updates["datetime"] = req.body.datetime //check postgres format
-    if (req.body.coordinate) updates["coordinate"] = req.body.coordinate //check postgres format
-    if (req.body.animalName) updates['animalName'] = req.body.animalName
-    if (req.body.quantity) updates['quantity'] = req.body.quantity
-    if (req.body.activity) updates['activity'] = req.body.activity
-
-    const len = Object.keys(updates).length
-    if(len > 0) {
-        const updateString = Object.keys(updates).map((col, i) => `${col} = $${i + 1}`).join(", ")
-        const query = {
-            text: `UPDATE posts SET ${updateString} WHERE pid = $${len + 1}`,
-            values: Object.values(updates).concat([ req.body.pid ])
+    //parse valid elements of req.body into columns array
+    const columns = ["uid", "imgLink", "datetime", "coordinate", "animalName", "quantity", "activity"]
+    var params = {}
+    for(const col of columns) {
+        if(req.body[col] !== undefined) {
+            params[col] = req.body[col]
+        } else if (req.body[col.toLowerCase()] !== undefined) {
+            params[col] = req.body[col.toLowerCase()]
         }
-        
-    logger.log(`query: ${JSON.stringify(query)}`)
-        return pool.query(query, (error, result) => {
-            if (error) {
-                return res.status(400).json({
-                    "message": error.message
-                })
-            }
-            return res.status(200).json({
-                message: `post with pid ${req.body.pid} updated`
-            })
-        })
     }
+    //check that req contains required pid
+    if(req.body.pid === undefined) {
+        responseStatus = 400
+        responseJson = {message: "pid is required"}
+        logger.logInvalidInput(responseJson.message)
+        logger.logResponse(responseStatus, responseJson)
+        return res.status(responseStatus).json(responseJson)
+    }
+    //check that there is at least one update
+    if (Object.keys(params).length == 0) {
+        logger.logInvalidInput("at least one update is required")
+        responseStatus = 400
+        responseJson = {message: "at least one update is required"}
+        logger.logResponse(responseStatus, responseJson)
+        return res.status(responseStatus).json(responseJson)
+    }
+    //parse columns array into db query
+    const paramsAsString = Object.keys(params).map((col, i) => `${col} = $${i + 1}`).join(", ")
+    const query = {
+        text: `UPDATE posts SET ${paramsAsString} WHERE pid = $${Object.keys(params).length + 1}`,
+        values: Object.values(params).concat([ req.body.pid ])
+    }
+    logger.logQuery(query)
+
+    //send db query and return response
+    return pool.query(query, (error, result) => {
+        if (error) {
+            logger.logDBfail(error)
+            responseStatus = 400
+            responseJson = {message: error.message}
+            logger.logResponse(responseStatus, responseJson)
+            return res.status(responseStatus).json(responseJson)
+        }
+        logger.logDBsucc(result)
+        responseStatus = 200
+        responseJson = {message: `post with pid ${req.body.pid} updated`}
+        logger.logResponse(responseStatus, responseJson)
+        return res.status(responseStatus).json(responseJson)
+    })
 }
 
 function deletePostByPID(req, res, next) {
@@ -241,23 +298,38 @@ function deletePostByPID(req, res, next) {
      *           OR
      *           error message
      */
-    logger.log(`originalURL: ${JSON.stringify(req.originalUrl)} - body: ${JSON.stringify(req.body)} - headers: ${JSON.stringify(req.rawHeaders)}`)
-    if (req.body.pid === undefined) {
-        return res.status(400).json({
-            "message": "missing pid"
-        }) //handles misformatted input
-    }
+    var responseStatus, responseJson
+    logger.logRequest(req)
 
-    logger.log(`query: DELETE FROM posts WHERE pid = $1 - vals: ${[req.body.pid]}`)
-    return pool.query("DELETE FROM posts WHERE pid = $1", [req.body.pid], (error, result) => {
+    //check that req contains required pid
+    if(req.body.pid === undefined) {
+        responseStatus = 400
+        responseJson = {message: "pid is required"}
+        logger.logInvalidInput(responseJson.message)
+        logger.logResponse(responseStatus, responseJson)
+        return res.status(responseStatus).json(responseJson)
+    }
+    //create db query
+    const query = {
+        text: "DELETE FROM posts WHERE pid = $1",
+        values: [req.body.pid]
+    }
+    logger.logQuery(query)
+
+    //send query to db and return response
+    return pool.query(query, (error, result) => {
         if (error) {
-            return res.status(400).json({
-                "message": error.message
-            })
+            logger.logDBfail(error)
+            responseStatus = 400
+            responseJson = {message: error.message}
+            logger.logResponse(responseStatus, responseJson)
+            return res.status(responseStatus).json(responseJson)
         }
-        return res.status(200).json({
-            message: `post with pid ${req.body.pid} deleted if existed`
-        })
+        logger.logDBsucc(result)
+        responseStatus = 200
+        responseJson = {message: `post with pid ${req.body.pid} deleted if existed`}
+        logger.logResponse(responseStatus, responseJson)
+        return res.status(responseStatus).json(responseJson)
     })
 }
 
