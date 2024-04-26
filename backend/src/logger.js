@@ -42,7 +42,7 @@ class logger {
         logger.log(errorCodes.INFO, `QUERY: query=${JSON.stringify(query)}`)
     }
     static logDBfail(error) {
-        logger.log(errorCodes.FATAL, `DB FAILURE: error=${JSON.stringify(error.message)}`)
+        logger.log(errorCodes.ERROR, `DB FAILURE: error=${JSON.stringify(error.message)}`)
     }
     static logDBsucc(result) {
         logger.log(errorCodes.INFO, `DB SUCCESS: rowCount=${JSON.stringify(result.rowCount)}, rows=${JSON.stringify(result.rows)}`)

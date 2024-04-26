@@ -61,11 +61,11 @@ function selectPost(req, res, next) {
         rawConditions.push(`pid = $${i++}`)
         values.push(req.query.pid)
     }
-    if (req.query.uid != undefined) {
+    if (req.query.uid !== undefined) {
         rawConditions.push(`uid = $${i++}`)
         values.push(req.query.uid)
     }
-    if (req.query.coordinate != undefined) {
+    if (req.query.coordinate !== undefined) {
         radius = req.query.radius ? req.query.radius : 0 //if a COORDINATE exists without a radius, assume radius of 0, filters for posts with this coordinates
         rawConditions.push(`coordinate<@>$${i++}::point <= abs($${i++})`)
         values.push(req.query.coordinate)
@@ -80,13 +80,22 @@ function selectPost(req, res, next) {
     if (req.query.starttime !== undefined) {
         rawConditions.push(`TO_TIMESTAMP($${i++}, 'YYYY/MM/DD/HH24:MI:ss') <= datetime`)
         values.push(req.query.starttime)
+    } else if (req.query.startTime !== undefined) {
+        rawConditions.push(`TO_TIMESTAMP($${i++}, 'YYYY/MM/DD/HH24:MI:ss') <= datetime`)
+        values.push(req.query.startTime)
     }
     if (req.query.endtime !== undefined) {
         rawConditions.push(`datetime <= TO_TIMESTAMP($${i++}, 'YYYY/MM/DD/HH24:MI:ss')`)
         values.push(req.query.endtime)
+    } else if (req.query.endTime !== undefined) {
+        rawConditions.push(`datetime <= TO_TIMESTAMP($${i++}, 'YYYY/MM/DD/HH24:MI:ss')`)
+        values.push(req.query.endTime)
     }
-    if (req.query.animalName !== undefined) {
-        rawConditions.push(`animalName = $${i++}`)
+    if (req.query.animalname !== undefined) {
+        rawConditions.push(`animalname = $${i++}`)
+        values.push(req.query.animalname)
+    } else if (req.query.animalName) {
+        rawConditions.push(`animalname = $${i++}`)
         values.push(req.query.animalName)
     }
     if (req.query.quantity !== undefined) {
@@ -153,9 +162,13 @@ function createPost(req, res, next) {
     }
     if (req.body.imgLink !== undefined) {
         params['imgLink'] = req.body.imgLink
+    } else if (req.body.imglink !== undefined) {
+        params['imgLink'] = req.body.imglink
     }
     if (req.body.datetime !== undefined) {
         params['datetime'] = req.body.datetime
+    } else if (req.body.dateTime !== undefined) {
+        params['datetime'] = req.body.dateTime
     }
     if (req.body.coordinate !== undefined) {
         params['coordinate'] = req.body.coordinate
@@ -168,6 +181,8 @@ function createPost(req, res, next) {
     }
     if (req.body.animalName !== undefined) {
         params['animalName'] = req.body.animalName
+    } else if (req.body.animalname !== undefined) {
+        params['animalName'] = req.body.animalname
     }
     if (req.body.quantity !== undefined) {
         params['quantity'] = req.body.quantity
@@ -175,6 +190,7 @@ function createPost(req, res, next) {
     if (req.body.activity !== undefined) {
         params['activity'] = req.body.activity
     }
+
     //parse params array into db query
     const paramsAsString = Object.keys(params).join(', ')
     const placeholders = Object.keys(params).map((_, i) => `$${i + 1}`).join(', ')
@@ -227,6 +243,8 @@ function updatePostByPID(req, res, next) {
     for(const col of columns) {
         if(req.body[col] !== undefined) {
             params[col] = req.body[col]
+        } else if (req.body[col.toLowerCase()] !== undefined) {
+            params[col] = req.body[col.toLowerCase()]
         }
     }
     //check that req contains required pid

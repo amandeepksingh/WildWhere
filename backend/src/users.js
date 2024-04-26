@@ -53,7 +53,7 @@ function selectUser(req, res, next) {
     //parse req.query into db query
     const rawConditions = req.query;
     const conditionsAsString = Object.keys(rawConditions).map((col, i) => `${col} = $${i + 1}`).join(" AND ")
-    const query = Object.keys(rawConditions).length === 0 ? "SELECT * FROM users"
+    const query = Object.keys(rawConditions).length === 0 ? "SELECT * FROM users" //if user sends query with extra fields, it's caught by DB and propogates up
         : {
             text: `SELECT * FROM users WHERE ${conditionsAsString}`,
             values: Object.values(rawConditions)
@@ -100,11 +100,13 @@ function createUser(req, res, next) {
     logger.logRequest(req)
     
     //parse valid elements of req.body into params array
-    const columns = ["uid", "email", "username", "bio", "pfpLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
+    const columns = ["uid", "email", "username", "bio", "pfpLink", "superUser", "imglink", "locationPerm", "notificationPerm", "colorBlindRating"]
     var params = {}
     for(const col of columns) {
         if(req.body[col] !== undefined) {
             params[col] = req.body[col]
+        } else if (req.body[col.toLowerCase()] !== undefined) {
+            params[col] = req.body[col.toLowerCase()]
         }
     }
     //check that params array contains required uid
@@ -164,11 +166,13 @@ function updateUserByUID(req, res, next) {
     logger.logRequest(req)
 
     //parse valid elements of req.body into columns array
-    const columns = ["email", "username", "bio", "pfpLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
+    const columns = ["email", "username", "bio", "imgLink", "superUser", "locationPerm", "notificationPerm", "colorBlindRating"]
     var params = {}
     for(const col of columns) {
         if(req.body[col] !== undefined) {
             params[col] = req.body[col]
+        } else if (req.body[col.toLowerCase()] !== undefined) {
+            params[col] = req.body[col.toLowerCase()]
         }
     }
     //check that req contains required uid
