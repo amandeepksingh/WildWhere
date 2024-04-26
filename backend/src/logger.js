@@ -40,12 +40,6 @@ class logger {
     }
     static logQuery(query) {
         logger.log(errorCodes.INFO, `DB QUERY: query=${JSON.stringify(query)}`)
-        var parsedQuery = query.text
-        var i = 1
-        for (const val of query.values) {
-            parsedQuery = parsedQuery.replace(`$${i++}`, `'${val}'`)
-        }
-        logger.log(errorCodes.INFO, `PARSED QUERY: query=${parsedQuery}`)
     }
     static logDBfail(error) {
         logger.log(errorCodes.ERROR, `DB FAILURE: error=${JSON.stringify(error.message)}`)
