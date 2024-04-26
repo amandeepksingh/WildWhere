@@ -252,7 +252,9 @@ class imgFuncs {
             responseJson = 'error on put to s3'
             return res.status(responseStatus).json(responseJson)
         }
-    
+
+        await fs.unlink(localPath);
+        
         //get s3 signed url
         const url = await s3Helpers.s3GetSignedURL(type, idVal, extension)
     
