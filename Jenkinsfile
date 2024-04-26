@@ -6,6 +6,9 @@ pipeline {
      environment{
                 WW_PROD = credentials('ww-prod-cred');
      }
+    tools {
+        nodejs '22.0.0'
+    }
     stages {
         stage('filter') {
             steps{
@@ -43,9 +46,7 @@ pipeline {
                sh 'echo "Testing..."'
                sh 'echo "test sees" & ls -l -a'
                sh 'echo deploying to test server'
-               dir('backend/server_testing') {
-                    sh 'ls -la'
-               }
+               
                 withCredentials([sshUserPrivateKey(credentialsId: 'ww-dev-cred', keyFileVariable: 'SSH_D_KEY')]) {
                     withCredentials([file(credentialsId: 'serverenv', variable: 'EnvFile')]) {
                         script {
@@ -98,6 +99,13 @@ pipeline {
 
                             }
                         } 
+                    }
+                }
+                dir('backend/server_testing') {
+                    sh 'ls -la'
+                    script {
+                        def res = sh(script:'node read-results.js', returnStatus: true)
+
                     }
                 }
             }
