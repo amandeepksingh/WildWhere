@@ -99,17 +99,24 @@ pipeline {
 
                             }
                         } 
+                        dir('backend/server_testing') {
+                            sh 'ls -la'
+                            sh 'npm install fast-xml-parser'
+                            script {
+
+                                def res = sh(script:'node read-results.js', returnStatus: true)
+                                
+                                if(res) {
+                                    sh 'echo passed'
+                                } else {
+                                    sh 'echo failed'
+                                }
+                                
+                            }
+                        }
                     }
                 }
-                dir('backend/server_testing') {
-                    sh 'ls -la'
-                    sh 'npm install fast-xml-parser'
-                    script {
-
-                        def res = sh(script:'node read-results.js', returnStatus: true)
-
-                    }
-                }
+               
             }
         }
         stage('Deploy') {
