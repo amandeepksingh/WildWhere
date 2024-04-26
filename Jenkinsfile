@@ -58,6 +58,7 @@ pipeline {
 
                             }
                             
+                            //move this if we want to make it reinstate
                             try {
                                 def cm =  "  ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com 'rm -r WWBUILD'"
                                 def result = sh(script: cm, returnStatus: true)
@@ -69,7 +70,8 @@ pipeline {
                             } catch(Exception e) {
 
                             }
-                        
+
+                            //rename build on creation
                             sh '''
                                 ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com 'mkdir WWBUILD'
                                 scp -o StrictHostKeyChecking=no -i $SSH_D_KEY -r backend ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
@@ -108,6 +110,7 @@ pipeline {
                                 def res = sh(script:'node read-results.js', returnStatus: true)
                                 if(res == 0 ) {
                                     sh 'echo passed'
+                                    //rename the build and delete the old one
                                 } else {
                                     sh 'echo failed'
                                 }
