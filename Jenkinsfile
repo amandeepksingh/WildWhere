@@ -103,7 +103,9 @@ pipeline {
                 }
                 dir('backend/server_testing') {
                     sh 'ls -la'
+                    sh 'npm install --save'
                     script {
+
                         def res = sh(script:'node read-results.js', returnStatus: true)
 
                     }
