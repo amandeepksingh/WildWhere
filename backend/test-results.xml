@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<<<<<<< HEAD
 <testsuites name="Mocha Tests" time="8.278" tests="43" failures="4">
   <testsuite name="" timestamp="2024-04-23T19:25:56" tests="43" time="8.276" failures="4">
     <testcase name="HELP: test help method" time="0.001" classname="">
@@ -62,11 +63,65 @@
     <testcase name="POST: between a time" time="0.007" classname="">
     </testcase>
     <testcase name="POST: test create without uid" time="0.001" classname="">
+=======
+<testsuites name="Mocha Tests" time="3.377" tests="43" failures="4">
+  <testsuite name="" timestamp="2024-04-26T04:37:12" tests="43" time="3.375" failures="4">
+    <testcase name="HELP: test help method" time="0.001" classname="">
+    </testcase>
+    <testcase name="HELP: check every endpoint&apos;s other methods" time="0.168" classname="">
+    </testcase>
+    <testcase name="HELP: check every other endpoint" time="0.053" classname="">
+    </testcase>
+    <testcase name="IMAGES: test user normal functionality" time="0.702" classname="">
+    </testcase>
+    <testcase name="IMAGES: test user profile picture upload missing uid" time="0.012" classname="">
+    </testcase>
+    <testcase name="IMAGES: test user upload missing img" time="0.007" classname="">
+    </testcase>
+    <testcase name="IMAGES: test post normal functionality" time="1.210" classname="">
+    </testcase>
+    <testcase name="IMAGES: test post profile picture upload missing uid" time="0.007" classname="">
+    </testcase>
+    <testcase name="IMAGES: test post upload missing img" time="0.004" classname="">
+    </testcase>
+    <testcase name="IMAGES: test user delete normal" time="0.464" classname="">
+    </testcase>
+    <testcase name="IMAGES: test user delete missing uid" time="0.003" classname="">
+    </testcase>
+    <testcase name="IMAGES: test post delete normal" time="0.366" classname="">
+    </testcase>
+    <testcase name="IMAGES: test post delete missing pid" time="0.001" classname="">
+    </testcase>
+    <testcase name="POST: test select with empty" time="0.039" classname="">
+    </testcase>
+    <testcase name="POST: test select with too strict constraints" time="0.012" classname="">
+    </testcase>
+    <testcase name="POST: test select with few constraints" time="0.013" classname="">
+    </testcase>
+    <testcase name="POST: test select with ALL constraints" time="0.014" classname="">
+    </testcase>
+    <testcase name="POST: test select with multiple posts" time="0.008" classname="">
+    </testcase>
+    <testcase name="POST: null radius" time="0.018" classname="">
+    </testcase>
+    <testcase name="POST: zero radius" time="0.022" classname="">
+    </testcase>
+    <testcase name="POST: non-zero radius" time="0.013" classname="">
+    </testcase>
+    <testcase name="POST: after a time" time="0.028" classname="">
+    </testcase>
+    <testcase name="POST: before a time" time="0.012" classname="">
+    </testcase>
+    <testcase name="POST: between a time" time="0.017" classname="">
+    </testcase>
+    <testcase name="POST: test create without uid" time="0.002" classname="">
+>>>>>>> ae259ad5dcaa96854c5fd13dc4a5f9305460e688
     </testcase>
     <testcase name="POST: test create without coordinates" time="0.003" classname="">
     </testcase>
     <testcase name="POST: test create with only pid and uid and coordinates" time="0.003" classname="">
     </testcase>
+<<<<<<< HEAD
     <testcase name="POST: test create post with all params" time="0.003" classname="">
     </testcase>
     <testcase name="POST: test create with some but not all params" time="0.003" classname="">
@@ -86,16 +141,218 @@
     <testcase name="USER: test select with ALL constraints" time="0.003" classname="">
     </testcase>
     <testcase name="USER: test select with many users" time="0.005" classname="">
+=======
+    <testcase name="POST: test create post with all params" time="0.005" classname="">
+    </testcase>
+    <testcase name="POST: test create with some but not all params" time="0.006" classname="">
+    </testcase>
+    <testcase name="POST: update post with imgLink" time="0.011" classname="">
+    </testcase>
+    <testcase name="POST: delete post by PID" time="0.008" classname="">
+    </testcase>
+    <testcase name="POST: delete post by ID where ID not listed" time="0.004" classname="">
+    </testcase>
+    <testcase name="USER: test select with empty" time="0.046" classname="">
+    </testcase>
+    <testcase name="USER: test select with too strict constraints" time="0.010" classname="">
+      <failure message="Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+[32m+[39m [
+[32m+[39m   {
+[32m+[39m     bio: null,
+[32m+[39m     colorblindrating: null,
+[32m+[39m     email: &apos;jj@umass&apos;,
+[32m+[39m     imglink: null,
+[32m+[39m     locationperm: null,
+[32m+[39m     notificationperm: null,
+[32m+[39m     superuser: null,
+[32m+[39m     uid: &apos;ffd             &apos;,
+[32m+[39m     username: null
+[32m+[39m   }
+[32m+[39m ]
+[31m-[39m []" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+[32m+[39m [
+[32m+[39m   {
+[32m+[39m     bio: null,
+[32m+[39m     colorblindrating: null,
+[32m+[39m     email: 'jj@umass',
+[32m+[39m     imglink: null,
+[32m+[39m     locationperm: null,
+[32m+[39m     notificationperm: null,
+[32m+[39m     superuser: null,
+[32m+[39m     uid: 'ffd             ',
+[32m+[39m     username: null
+[32m+[39m   }
+[32m+[39m ]
+[31m-[39m []
+    at Context.<anonymous> (test/users.test.js:46:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -[
+      -  {
+      -    "bio": [null]
+      -    "colorblindrating": [null]
+      -    "email": "jj@umass"
+      -    "imglink": [null]
+      -    "locationperm": [null]
+      -    "notificationperm": [null]
+      -    "superuser": [null]
+      -    "uid": "ffd             "
+      -    "username": [null]
+      -  }
+      -]
+      +[]
+      ]]></failure>
+    </testcase>
+    <testcase name="USER: test select with few constraints" time="0.010" classname="">
+      <failure message="Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m [34m...[39m Lines skipped
+
+  [
+    {
+[34m...[39m
+      notificationperm: null,
+      superuser: null,
+[32m+[39m     uid: &apos;ffd             &apos;,
+[31m-[39m     uid: &apos;ffd&apos;,
+      username: null
+    }
+  ]" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m [34m...[39m Lines skipped
+
+  [
+    {
+[34m...[39m
+      notificationperm: null,
+      superuser: null,
+[32m+[39m     uid: 'ffd             ',
+[31m-[39m     uid: 'ffd',
+      username: null
+    }
+  ]
+    at Context.<anonymous> (test/users.test.js:61:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+           "imglink": [null]
+           "locationperm": [null]
+           "notificationperm": [null]
+           "superuser": [null]
+      -    "uid": "ffd             "
+      +    "uid": "ffd"
+           "username": [null]
+         }
+       ]
+      ]]></failure>
+    </testcase>
+    <testcase name="USER: test select with ALL constraints" time="0.008" classname="">
+      <failure message="Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m [34m...[39m Lines skipped
+
+  [
+    {
+[34m...[39m
+      notificationperm: true,
+      superuser: true,
+[32m+[39m     uid: &apos;345             &apos;,
+[31m-[39m     uid: &apos;345&apos;,
+      username: &apos;John&apos;
+    }
+  ]" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m [34m...[39m Lines skipped
+
+  [
+    {
+[34m...[39m
+      notificationperm: true,
+      superuser: true,
+[32m+[39m     uid: '345             ',
+[31m-[39m     uid: '345',
+      username: 'John'
+    }
+  ]
+    at Context.<anonymous> (test/users.test.js:91:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+           "imglink": [null]
+           "locationperm": true
+           "notificationperm": true
+           "superuser": true
+      -    "uid": "345             "
+      +    "uid": "345"
+           "username": "John"
+         }
+       ]
+      ]]></failure>
+    </testcase>
+    <testcase name="USER: test select with many users" time="0.009" classname="">
+>>>>>>> ae259ad5dcaa96854c5fd13dc4a5f9305460e688
     </testcase>
     <testcase name="USER: test create" time="0.002" classname="">
     </testcase>
     <testcase name="USER: test create with all params" time="0.002" classname="">
     </testcase>
+<<<<<<< HEAD
     <testcase name="USER: test create with some but not all params" time="0.002" classname="">
     </testcase>
     <testcase name="USER: update user with email" time="0.004" classname="">
     </testcase>
     <testcase name="USER: delete user by ID" time="0.005" classname="">
+=======
+    <testcase name="USER: test create with some but not all params" time="0.003" classname="">
+    </testcase>
+    <testcase name="USER: update user with email" time="0.011" classname="">
+      <failure message="Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m [34m...[39m Lines skipped
+
+  [
+    {
+[34m...[39m
+      notificationperm: null,
+      superuser: null,
+[32m+[39m     uid: &apos;ffd             &apos;,
+[31m-[39m     uid: &apos;ffd&apos;,
+      username: null
+    }
+  ]" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m [34m...[39m Lines skipped
+
+  [
+    {
+[34m...[39m
+      notificationperm: null,
+      superuser: null,
+[32m+[39m     uid: 'ffd             ',
+[31m-[39m     uid: 'ffd',
+      username: null
+    }
+  ]
+    at Context.<anonymous> (test/users.test.js:234:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+           "imglink": [null]
+           "locationperm": [null]
+           "notificationperm": [null]
+           "superuser": [null]
+      -    "uid": "ffd             "
+      +    "uid": "ffd"
+           "username": [null]
+         }
+       ]
+      ]]></failure>
+    </testcase>
+    <testcase name="USER: delete user by ID" time="0.007" classname="">
+>>>>>>> ae259ad5dcaa96854c5fd13dc4a5f9305460e688
     </testcase>
     <testcase name="USER: delete user by ID where ID not listed" time="0.001" classname="">
     </testcase>
