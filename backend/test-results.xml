@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="8.278" tests="43" failures="4">
+  <testsuite name="" timestamp="2024-04-23T19:25:56" tests="43" time="8.276" failures="4">
+    <testcase name="HELP: test help method" time="0.001" classname="">
+    </testcase>
+    <testcase name="HELP: check every endpoint&apos;s other methods" time="0.024" classname="">
+    </testcase>
+    <testcase name="HELP: check every other endpoint" time="0.004" classname="">
+    </testcase>
+    <testcase name="IMAGES: test user normal functionality" time="2.006" classname="">
+      <failure message="Timeout of 2000ms exceeded. For async tests and hooks, ensure &quot;done()&quot; is called; if returning a Promise, ensure it resolves. (/Users/andrewli/Documents/spring2024/320/WildWhere/backend/test/images.test.js)" type="Error"><![CDATA[Error: Timeout of 2000ms exceeded. For async tests and hooks, ensure "done()" is called; if returning a Promise, ensure it resolves. (/Users/andrewli/Documents/spring2024/320/WildWhere/backend/test/images.test.js)
+    at listOnTimeout (node:internal/timers:573:17)
+    at process.processTimers (node:internal/timers:514:7)]]></failure>
+    </testcase>
+    <testcase name="IMAGES: test user profile picture upload missing uid" time="0.010" classname="">
+    </testcase>
+    <testcase name="IMAGES: test user upload missing img" time="0.004" classname="">
+    </testcase>
+    <testcase name="IMAGES: test post normal functionality" time="2.001" classname="">
+      <failure message="Timeout of 2000ms exceeded. For async tests and hooks, ensure &quot;done()&quot; is called; if returning a Promise, ensure it resolves. (/Users/andrewli/Documents/spring2024/320/WildWhere/backend/test/images.test.js)" type="Error"><![CDATA[Error: Timeout of 2000ms exceeded. For async tests and hooks, ensure "done()" is called; if returning a Promise, ensure it resolves. (/Users/andrewli/Documents/spring2024/320/WildWhere/backend/test/images.test.js)
+    at listOnTimeout (node:internal/timers:573:17)
+    at process.processTimers (node:internal/timers:514:7)]]></failure>
+    </testcase>
+    <testcase name="IMAGES: test post profile picture upload missing uid" time="0.008" classname="">
+    </testcase>
+    <testcase name="IMAGES: test post upload missing img" time="0.003" classname="">
+    </testcase>
+    <testcase name="IMAGES: test user delete normal" time="2.001" classname="">
+      <failure message="Timeout of 2000ms exceeded. For async tests and hooks, ensure &quot;done()&quot; is called; if returning a Promise, ensure it resolves. (/Users/andrewli/Documents/spring2024/320/WildWhere/backend/test/images.test.js)" type="Error"><![CDATA[Error: Timeout of 2000ms exceeded. For async tests and hooks, ensure "done()" is called; if returning a Promise, ensure it resolves. (/Users/andrewli/Documents/spring2024/320/WildWhere/backend/test/images.test.js)
+    at listOnTimeout (node:internal/timers:573:17)
+    at process.processTimers (node:internal/timers:514:7)]]></failure>
+    </testcase>
+    <testcase name="IMAGES: test user delete missing uid" time="0.005" classname="">
+    </testcase>
+    <testcase name="IMAGES: test post delete normal" time="2.001" classname="">
+      <failure message="Timeout of 2000ms exceeded. For async tests and hooks, ensure &quot;done()&quot; is called; if returning a Promise, ensure it resolves. (/Users/andrewli/Documents/spring2024/320/WildWhere/backend/test/images.test.js)" type="Error"><![CDATA[Error: Timeout of 2000ms exceeded. For async tests and hooks, ensure "done()" is called; if returning a Promise, ensure it resolves. (/Users/andrewli/Documents/spring2024/320/WildWhere/backend/test/images.test.js)
+    at listOnTimeout (node:internal/timers:573:17)
+    at process.processTimers (node:internal/timers:514:7)]]></failure>
+    </testcase>
+    <testcase name="IMAGES: test post delete missing pid" time="0.005" classname="">
+    </testcase>
+    <testcase name="POST: test select with empty" time="0.028" classname="">
+    </testcase>
+    <testcase name="POST: test select with too strict constraints" time="0.010" classname="">
+    </testcase>
+    <testcase name="POST: test select with few constraints" time="0.009" classname="">
+    </testcase>
+    <testcase name="POST: test select with ALL constraints" time="0.009" classname="">
+    </testcase>
+    <testcase name="POST: test select with multiple posts" time="0.010" classname="">
+    </testcase>
+    <testcase name="POST: null radius" time="0.007" classname="">
+    </testcase>
+    <testcase name="POST: zero radius" time="0.008" classname="">
+    </testcase>
+    <testcase name="POST: non-zero radius" time="0.011" classname="">
+    </testcase>
+    <testcase name="POST: after a time" time="0.021" classname="">
+    </testcase>
+    <testcase name="POST: before a time" time="0.007" classname="">
+    </testcase>
+    <testcase name="POST: between a time" time="0.007" classname="">
+    </testcase>
+    <testcase name="POST: test create without uid" time="0.001" classname="">
+    </testcase>
+    <testcase name="POST: test create without coordinates" time="0.003" classname="">
+    </testcase>
+    <testcase name="POST: test create with only pid and uid and coordinates" time="0.003" classname="">
+    </testcase>
+    <testcase name="POST: test create post with all params" time="0.003" classname="">
+    </testcase>
+    <testcase name="POST: test create with some but not all params" time="0.003" classname="">
+    </testcase>
+    <testcase name="POST: update post with imgLink" time="0.006" classname="">
+    </testcase>
+    <testcase name="POST: delete post by PID" time="0.006" classname="">
+    </testcase>
+    <testcase name="POST: delete post by ID where ID not listed" time="0.001" classname="">
+    </testcase>
+    <testcase name="USER: test select with empty" time="0.010" classname="">
+    </testcase>
+    <testcase name="USER: test select with too strict constraints" time="0.003" classname="">
+    </testcase>
+    <testcase name="USER: test select with few constraints" time="0.004" classname="">
+    </testcase>
+    <testcase name="USER: test select with ALL constraints" time="0.003" classname="">
+    </testcase>
+    <testcase name="USER: test select with many users" time="0.005" classname="">
+    </testcase>
+    <testcase name="USER: test create" time="0.002" classname="">
+    </testcase>
+    <testcase name="USER: test create with all params" time="0.002" classname="">
+    </testcase>
+    <testcase name="USER: test create with some but not all params" time="0.002" classname="">
+    </testcase>
+    <testcase name="USER: update user with email" time="0.004" classname="">
+    </testcase>
+    <testcase name="USER: delete user by ID" time="0.005" classname="">
+    </testcase>
+    <testcase name="USER: delete user by ID where ID not listed" time="0.001" classname="">
+    </testcase>
+  </testsuite>
+</testsuites>
