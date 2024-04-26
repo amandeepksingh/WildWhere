@@ -39,7 +39,13 @@ class logger {
         logger.log(errorCodes.INFO, `REQUEST: url=${JSON.stringify(req.originalUrl)}, query=${JSON.stringify(req.query)}, body=${JSON.stringify(req.body)}, headers=${JSON.stringify(req.rawHeaders)}`)
     }
     static logQuery(query) {
-        logger.log(errorCodes.INFO, `QUERY: query=${JSON.stringify(query)}`)
+        logger.log(errorCodes.INFO, `DB QUERY: query=${JSON.stringify(query)}`)
+        var parsedQuery = query.text
+        var i = 1
+        for (const val of query.values) {
+            parsedQuery = parsedQuery.replace(`$${i++}`, `'${val}'`)
+        }
+        logger.log(errorCodes.INFO, `PARSED QUERY: query=${parsedQuery}`)
     }
     static logDBfail(error) {
         logger.log(errorCodes.ERROR, `DB FAILURE: error=${JSON.stringify(error.message)}`)
