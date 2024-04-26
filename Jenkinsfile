@@ -17,9 +17,7 @@ pipeline {
                 sh 'rm .DS_Store'
                 sh 'rm -r .git'
                 sh 'rm -r backend/test'
-                sh 'ls -l -a'
-                sh 'rm .idea'
-                sh 'rm .vscode'
+                sh 'ls -la'
                 sh 'rm Schema.png'
 
                 //sh 'rm -r test'
