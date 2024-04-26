@@ -44,7 +44,7 @@ pipeline {
                sh 'echo "test sees" & ls -l -a'
                sh 'echo deploying to test server'
                dir('backend/server_testing') {
-                    sh 'echo ls -la'
+                    sh 'ls -la'
                }
                 withCredentials([sshUserPrivateKey(credentialsId: 'ww-dev-cred', keyFileVariable: 'SSH_D_KEY')]) {
                     withCredentials([file(credentialsId: 'serverenv', variable: 'EnvFile')]) {
