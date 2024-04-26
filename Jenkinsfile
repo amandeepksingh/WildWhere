@@ -102,16 +102,15 @@ pipeline {
                         dir('backend/server_testing') {
                             sh 'ls -la'
                             sh 'npm install fast-xml-parser'
+                            sh 'npm install --only=dev'
+                            sh 'npx mocha --reporter mocha-junit-reporter --reporter-options mochaFile=test-results.xml --reporter-options jenkinsMode=true --serial --exit'
                             script {
-
                                 def res = sh(script:'node read-results.js', returnStatus: true)
-                                
                                 if(res == 0 ) {
                                     sh 'echo passed'
                                 } else {
                                     sh 'echo failed'
                                 }
-                                
                             }
                         }
                     }
