@@ -11,16 +11,16 @@ describe("selecting users", () => {
       assert.strictEqual(1,1);
     });
 
-    // it("server ping", async () => {
-    //   const options = {
-    //     method: 'GET', 
-    //   };
-    //   const urlP = '/users/selectUser?uid=1'
-    //   const req = http.request(url + urlP, options, (res) => {
-    //     let data = '';
-    //     assert.strictEqual(res.statusCode, 200);
-    //   });
-    // });
+    it("server ping", async () => {
+      const options = {
+        method: 'GET', 
+      };
+      const urlP = '/users/selectUser?uid=1'
+      const req = http.request(endpoint + urlP, options, (res) => {
+        let data = '';
+        assert.strictEqual(res.statusCode, 200);
+      });
+    });
 
 });
 
