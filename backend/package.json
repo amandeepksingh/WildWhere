@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "chai": "^5.1.0",
+    "http": "^0.0.1-security",
     "mocha": "^10.4.0",
     "mocha-junit-reporter": "^2.2.1",
     "supertest": "^6.3.4"
