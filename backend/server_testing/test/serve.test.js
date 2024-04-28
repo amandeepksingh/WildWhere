@@ -17,6 +17,11 @@ describe("selecting users", () => {
        assert.strictEqual(res.status, 200);
    });
     
+   it("posts ping", async () => {
+    const res = await request('http://ec2-3-23-98-233.us-east-2.compute.amazonaws.com')
+    .get(`/users/selectUser?uid=1`);
+     assert.strictEqual(res.status, 300);
+ });
 
 });
 
