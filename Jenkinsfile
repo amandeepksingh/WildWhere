@@ -58,42 +58,31 @@ pipeline {
 
                             }
                             
-                            //move this if we want to make it reinstate
-                            try {
-                                def cm =  "  ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com 'rm -r WWBUILD'"
-                                def result = sh(script: cm, returnStatus: true)
-
-                                if(result != 0) {
-                                    echo "no need to remove previous build"
-                                } 
-                            
-                            } catch(Exception e) {
-
-                            }
+ 
 
                             //rename build on creation
                             sh '''
-                                ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com 'mkdir WWBUILD'
-                                scp -o StrictHostKeyChecking=no -i $SSH_D_KEY -r backend ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
-                                scp -o StrictHostKeyChecking=no -i $SSH_D_KEY genTables.sql ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
-                                scp -o StrictHostKeyChecking=no -i $SSH_D_KEY \$EnvFile ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD
+                                ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com 'mkdir WWBUILD_PRE'
+                                scp -o StrictHostKeyChecking=no -i $SSH_D_KEY -r backend ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD_PRE
+                                scp -o StrictHostKeyChecking=no -i $SSH_D_KEY genTables.sql ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD_PRE
+                                scp -o StrictHostKeyChecking=no -i $SSH_D_KEY \$EnvFile ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com:/home/ec2-user/WWBUILD_PRE
                                 ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com 'node --version'
-                                ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com 'ls -la WWBUILD'
+                                ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com 'ls -la WWBUILD_PRE'
                             '''
                            
                             sh '''
-                                ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com 'cd WWBUILD && pwd && mv servenv .env'
+                                ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com 'cd WWBUILD_PRE && pwd && mv servenv .env'
 
                             '''
 
                             try {
                                 //timeout(time: 24, unit:'SECONDS') {
                                     sh '''
-                                        ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com 'cd WWBUILD/backend && npm install --save'
+                                        ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com 'cd WWBUILD_PRE/backend && npm install --save'
                                         ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com 'sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json'
                                     '''
                                     sh '''
-                                        ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com 'cd WWBUILD/backend && sudo npm run serve'
+                                        ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com 'cd WWBUILD_PRE/backend && sudo npm run serve'
                                     '''
                               //  }
  
@@ -106,20 +95,69 @@ pipeline {
                             sh 'npm install fast-xml-parser'
                             sh 'npm install --only=dev'
                             sh 'npx mocha --reporter mocha-junit-reporter --reporter-options mochaFile=test-results.xml --reporter-options jenkinsMode=true --serial --exit || true'
-                            sh 'cat test-results.xml'
                             script {
                                 def res = sh(script:'node read-results.js', returnStatus: true)
                                 if(res == 0 ) {
-                                    sh 'echo passed'
-                                    //rename the build and delete the old one
+
+                                    sh '''
+                                        echo passed
+                                    '''
+                                    try {
+                                        def cm =  "  ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com 'rm -r WWBUILD'"
+                                        def result = sh(script: cm, returnStatus: true)
+
+                                        if(result != 0) {
+                                            echo "no need to remove previous build"
+                                        } 
+                                    
+                                    } catch(Exception e) {
+
+                                    }
+                                    sh '''
+                                        mv WWBUILD_PRE WWBUILD
+                                    '''
+
                                 } else {
-                                    sh 'echo failed'
+                                    sh '''echo failed'''
+                                    //kill the previous server
+                                     try {
+                                        sh '''
+                                            ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com 'cd WWBUILD_PRE/backend && pwd && sudo kill -9 "`cat pid.txt`"'
+                                        '''
+                                    } catch(Exception e) {
+
+                                    }
+
+                                    try {
+                                        def cm =  "  ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com 'rm -r WWBUILD_PRE'"
+                                        def result = sh(script: cm, returnStatus: true)
+
+                                        if(result != 0) {
+                                            echo "could not remove pre build"
+                                        } 
+                                    } catch(Exception e) {
+
+                                    }
+
+                                    try {
+                               
+                                        sh '''
+                                            ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com 'cd WWBUILD/backend && npm install --save'
+                                            ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com 'sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json'
+                                        '''
+                                        sh '''
+                                            ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com 'cd WWBUILD/backend && sudo npm run serve'
+                                        '''
+
+            
+                                    } catch(Exception e) {
+
+                                    }
                                 }
                             }
                         }
                     }
                 }
-               
             }
         }
         stage('Deploy') {
@@ -178,6 +216,7 @@ pipeline {
                                     } catch(Exception e) {
 
                                     }
+                                    
                                 } else {
                                     println "we have decided not to go forward with prod build"
                                 }
