@@ -12,15 +12,11 @@ describe("selecting users", () => {
     });
 
     it("server ping", async () => {
-      const options = {
-        method: 'GET', 
-      };
-      const urlP = '/users/selectUser?uid=1'
-      const req = http.request(endpoint + urlP, options, (res) => {
-        let data = '';
-        assert.strictEqual(res.statusCode, 200);
-      });
-    });
+      const res = await request('http://ec2-3-23-98-233.us-east-2.compute.amazonaws.com')
+      .get(`/users/selectUser?uid=1`);
+       assert.strictEqual(res.status, 200);
+   });
+    
 
 });
 
