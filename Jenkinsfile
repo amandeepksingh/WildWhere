@@ -106,6 +106,7 @@ pipeline {
                             sh 'npm install fast-xml-parser'
                             sh 'npm install --only=dev'
                             sh 'npx mocha --reporter mocha-junit-reporter --reporter-options mochaFile=test-results.xml --reporter-options jenkinsMode=true --serial --exit'
+                            sh 'cat test-results.xml'
                             script {
                                 def res = sh(script:'node read-results.js', returnStatus: true)
                                 if(res == 0 ) {
