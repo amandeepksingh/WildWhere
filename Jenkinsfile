@@ -122,6 +122,7 @@ pipeline {
                                 } else {
                                     sh '''echo failed'''
                                     //kill the previous server
+                                    sh 'cat test-results.xml'
                                      try {
                                         sh '''
                                             ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com 'cd WWBUILD_PRE/backend && pwd && sudo kill -9 "`cat pid.txt`"'
