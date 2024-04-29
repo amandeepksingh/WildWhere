@@ -302,7 +302,7 @@ function deletePostByPID(req, res, next) {
     logger.logRequest(req)
 
     //check that req contains required pid
-    if(req.body.pid === undefined) {
+    if(req.query.pid === undefined) {
         responseStatus = 400
         responseJson = {message: "pid is required"}
         logger.logInvalidInput(responseJson.message)
@@ -312,7 +312,7 @@ function deletePostByPID(req, res, next) {
     //create db query
     const query = {
         text: "DELETE FROM posts WHERE pid = $1",
-        values: [req.body.pid]
+        values: [req.query.pid]
     }
     logger.logQuery(query)
 
@@ -327,7 +327,7 @@ function deletePostByPID(req, res, next) {
         }
         logger.logDBsucc(result)
         responseStatus = 200
-        responseJson = {message: `post with pid ${req.body.pid} deleted if existed`}
+        responseJson = {message: `post with pid ${req.query.pid} deleted if existed`}
         logger.logResponse(responseStatus, responseJson)
         return res.status(responseStatus).json(responseJson)
     })

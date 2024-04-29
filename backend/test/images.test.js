@@ -46,7 +46,7 @@ describe("IMAGES: test user image upload", () => {
         assert.strictEqual(url1, url2, 'same url from upload put to database')
 
         //teardown
-        await request(app).delete('/images/userProfilePic/delete').send('uid', uid)
+        await request(app).delete(`/images/userProfilePic/delete?uid=${uid}`)
     });
 
     it("IMAGES: test user profile picture upload missing uid", async () => {
@@ -87,7 +87,7 @@ describe("IMAGES: test user image upload", () => {
         assert.strictEqual(url2, url3, 'check url from s3 matching one in db')
 
         //teardown
-        await request(app).delete('/images/userProfilePic/delete').send('uid', uid)
+        await request(app).delete(`/images/userProfilePic/delete?uid=${uid}`)
     });
 })
 
@@ -111,7 +111,7 @@ describe("IMAGES: test post image upload", () => {
         assert.strictEqual(url1, url2, 'url from post matches url in db')
 
         //teardown
-        await request(app).delete('/images/postPic/delete').send(`pid=${pid}`)
+        await request(app).delete(`/images/postPic/delete?pid=${pid}`)
     });
 
     it("IMAGES: test post profile picture upload missing pid", async () => {
@@ -153,7 +153,7 @@ describe("IMAGES: test post image upload", () => {
         assert.strictEqual(url2, url3, 'check url from s3 matching one in db')
 
         //teardown
-        await request(app).delete('/images/postPic/delete').send('pid', pid)
+        await request(app).delete(`/images/postPic/delete?pid={pid}`)
     });
 
 })
@@ -170,7 +170,7 @@ describe("IMAGES: test user delete image", () => {
         await request(app).post('/images/userProfilePic/upload').field('uid', uid).attach('img', 'test/testImages/test1.jpg')
 
         //delete img
-        const resp1 = await request(app).delete('/images/userProfilePic/delete').send(`uid=${uid}`)
+        const resp1 = await request(app).delete(`/images/userProfilePic/delete?uid=${uid}`)
         assert.strictEqual(resp1.status, 200)
         assert.strictEqual(resp1.body.message, 'image delete successful')
 
@@ -199,7 +199,7 @@ describe("IMAGES: test post delete image", () => {
         await request(app).post('/images/postPic/upload').field('pid', pid).attach('img', 'test/testImages/test1.jpg')
 
         //delete img
-        const resp1 = await request(app).delete('/images/postPic/delete').send(`pid=${pid}`)
+        const resp1 = await request(app).delete(`/images/postPic/delete?pid=${pid}`)
         assert.strictEqual(resp1.status, 200)
         assert.strictEqual(resp1.body.message, 'image delete successful')
 

@@ -638,7 +638,7 @@ describe("deleting posts", () => {
         const resp1 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)')
         const pid = resp1.body.pid
 
-        const resp2 = await request(app).delete('/posts/deletePostByPID').send(`pid=${pid}`)
+        const resp2 = await request(app).delete(`/posts/deletePostByPID?pid=${pid}`)
         assert.strictEqual(resp2.body.message, `post with pid ${pid} deleted if existed`)
         assert.strictEqual(resp2.status, 200)
 
@@ -650,7 +650,7 @@ describe("deleting posts", () => {
     it("POST: delete post by ID where ID not listed", async () => {
         await teardown()
         const pid = '0123456701234567'
-        const resp = await request(app).delete('/posts/deletePostByPID').send(`pid=${pid}`)
+        const resp = await request(app).delete(`/posts/deletePostByPID?pid=${pid}`)
         assert.strictEqual(resp.status, 200)
         assert.strictEqual(resp.body.message, `post with pid ${pid} deleted if existed`)
     })
