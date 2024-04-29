@@ -116,7 +116,7 @@ pipeline {
 
                                     }
                                     sh '''
-                                        mv WWBUILD_PRE WWBUILD
+                                        ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com 'mv WWBUILD_PRE WWBUILD'
                                     '''
 
                                 } else {
