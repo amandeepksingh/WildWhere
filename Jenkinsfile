@@ -53,7 +53,7 @@ pipeline {
                             try {
                                 sh '''
                                     ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com 'cd WWBUILD/backend && pwd && sudo kill -9 "`cat pid.txt`"'
-                                    ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com 'npm install forever -g'
+                                    ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com 'sudo npm install forever -g'
                                     ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com 'forever stopall'
                                 '''
                             } catch(Exception e) {
