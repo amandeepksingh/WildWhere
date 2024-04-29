@@ -20,7 +20,7 @@ describe("sanity check", () => {
    it("posts ping", async () => {
     const res = await request(app)
     .get(`/users/selectUser?uid=1`);
-     assert.strictEqual(res.status, 300);
+     assert.strictEqual(res.status, 200);
  });
 
 });
