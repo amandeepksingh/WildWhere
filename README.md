@@ -207,7 +207,7 @@ Requests accepted by JSON-body encoded request
 ||| colorBlindRating int | optional || 
 
 _deleting users_: Used to delete user with given UID.  
-Requests accepted by JSON-body encoded request
+Requests accepted by URL-encoded query
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
 | _ec2Host/users/deleteUserByUID_ | _delete_ | _JSON body of following_ | _optional or required_ | _200_ | string
@@ -269,7 +269,7 @@ Requests accepted by JSON-body encoded request
 ||| activity string | optional ||
 
 _deleting posts_: Used to delete post with given PID.  
-Requests accepted by JSON-body encoded request
+Requests accepted by URL-encoded query
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
 | _ec2Host/posts/deletePostByPID_ | _delete_ | _JSON body of following_ | _optional or required_ | _200_ | string
@@ -294,7 +294,7 @@ Requests accepted by form-data encoded request
 
 
 _deleting images_: Used to delete image (signed URLs become invalid)  
-Requests accepted by JSON-body encoded request
+Requests accepted by URL-encoded query
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
 | _ec2Host/images/userProfilePic/delete_ | _delete_ | _JSON body of following_ | _optional or required_ | _200_ | string
@@ -317,7 +317,7 @@ Requests accepted by form-data encoded request
 
 
 _deleting images_: Used to delete image (signed URLs become invalid)  
-Requests accepted by JSON-body encoded request
+Requests accepted by URL-encoded query
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
 | _ec2Host/images/postPic/delete_ | _delete_ | _JSON body of following_ | _optional or required_ | _200_ | string

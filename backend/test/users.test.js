@@ -441,7 +441,7 @@ describe("deleting users", () => {
         const uid = 'testUID'
         await request(app).post('/users/createUser').send(`uid=${uid}`)
 
-        const resp1 = await request(app).delete('/users/deleteUserByUID').send(`uid=${uid}`)
+        const resp1 = await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
         assert.strictEqual(resp1.status, 200)
         assert.strictEqual(resp1.body.message, `user with uid ${uid} deleted if existed`)
 
@@ -452,7 +452,7 @@ describe("deleting users", () => {
     it("USER: delete user by ID where ID not listed", async () => {
         await teardown()
         const uid = 'testUID'
-        const resp = await request(app).delete('/users/deleteUserByUID').send(`uid=${uid}`)
+        const resp = await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
         assert.strictEqual(resp.status, 200)
         assert.strictEqual(resp.body.message, `user with uid ${uid} deleted if existed`)
     }) 
