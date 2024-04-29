@@ -230,7 +230,7 @@ function deleteUserByUID(req, res, next) {
     logger.logRequest(req)
 
     //check that req contains required uid
-    if(req.body.uid === undefined) {
+    if(req.query.uid === undefined) {
         responseStatus = 400
         responseJson = {message: "uid is required"}
         logger.logInvalidInput(responseJson.message)
@@ -240,7 +240,7 @@ function deleteUserByUID(req, res, next) {
     //create db query
     const query = {
         text: "DELETE FROM users WHERE uid = $1",
-        values: [req.body.uid]
+        values: [req.query.uid]
     }
     logger.logQuery(query)
 
@@ -255,7 +255,7 @@ function deleteUserByUID(req, res, next) {
         }
         logger.logDBsucc(result)
         responseStatus = 200
-        responseJson = {message: `user with uid ${req.body.uid} deleted if existed`}
+        responseJson = {message: `user with uid ${req.query.uid} deleted if existed`}
         logger.logResponse(responseStatus, responseJson)
         return res.status(responseStatus).json(responseJson)
     })

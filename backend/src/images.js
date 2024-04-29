@@ -299,24 +299,24 @@ class imgFuncs {
         var idVal
         if (type === "users") {
             id = "uid"
-            if (req.body.uid === undefined) {
+            if (req.query.uid === undefined) {
                 logger.logInvalidInput(`${id} is required`)
                 responseStatus = 400
                 responseJson = {message: `${id} is required`}
                 logger.logResponse(responseStatus, responseJson)
                 return res.status(responseStatus).json(responseJson)
             } else {
-                idVal = req.body.uid
+                idVal = req.query.uid
             }
         } else if (type === "posts") {
             id = "pid"
-            if (req.body.pid === undefined) {
+            if (req.query.pid === undefined) {
                 logger.logInvalidInput(`${id} is required`)
                 responseStatus = 400
                 responseJson = {message: `${id} is required`}
                 return res.status(responseStatus).json(responseJson)
             } else {
-                idVal = req.body.pid
+                idVal = req.query.pid
             }
         } else {
             logger.logInternalError("reached image upload for neither user nor post")
