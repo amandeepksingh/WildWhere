@@ -241,14 +241,6 @@ function deletePostByPID(req, res, next) {
      *           OR
      *           error message
      */
-<<<<<<< HEAD
-    logger.log(`originalURL: ${JSON.stringify(req.originalUrl)} - body: ${JSON.stringify(req.body)} - headers: ${JSON.stringify(req.rawHeaders)}`)
-    if (req.body.pid === undefined) {
-        return res.status(400).json({
-            "message": "missing pid"
-        }) //handles misformatted input
-    }
-=======
     var responseStatus, responseJson
     logger.logRequest(req)
 
@@ -266,7 +258,6 @@ function deletePostByPID(req, res, next) {
         values: [req.query.pid]
     }
     logger.logQuery(query)
->>>>>>> 5ac7b6a9f03d12d44934de722102d417c650a2d5
 
     logger.log(`query: DELETE FROM posts WHERE pid = $1 - vals: ${[req.body.pid]}`)
     return pool.query("DELETE FROM posts WHERE pid = $1", [req.body.pid], (error, result) => {
@@ -275,17 +266,11 @@ function deletePostByPID(req, res, next) {
                 "message": error.message
             })
         }
-<<<<<<< HEAD
-        return res.status(200).json({
-            message: `post with pid ${req.body.pid} deleted if existed`
-        })
-=======
         logger.logDBsucc(result)
         responseStatus = 200
         responseJson = {message: `post with pid ${req.query.pid} deleted if existed`}
         logger.logResponse(responseStatus, responseJson)
         return res.status(responseStatus).json(responseJson)
->>>>>>> 5ac7b6a9f03d12d44934de722102d417c650a2d5
     })
 }
 
