@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="6.492" tests="65" failures="0">
+  <testsuite name="" timestamp="2024-04-30T23:40:38" tests="65" time="6.491" failures="0">
+    <testcase name="HELP: test help method" time="0.006" classname="">
+    </testcase>
+    <testcase name="HELP: check every endpoint&apos;s other methods" time="0.258" classname="">
+    </testcase>
+    <testcase name="HELP: check every other endpoint" time="0.068" classname="">
+    </testcase>
+    <testcase name="IMAGES: test user normal functionality" time="1.314" classname="">
+    </testcase>
+    <testcase name="IMAGES: test user profile picture upload missing uid" time="0.045" classname="">
+    </testcase>
+    <testcase name="IMAGES: test user upload missing img" time="0.008" classname="">
+    </testcase>
+    <testcase name="IMAGES: test user override" time="0.849" classname="">
+    </testcase>
+    <testcase name="IMAGES: test post normal functionality" time="0.535" classname="">
+    </testcase>
+    <testcase name="IMAGES: test post profile picture upload missing pid" time="0.013" classname="">
+    </testcase>
+    <testcase name="IMAGES: test post upload missing img" time="0.006" classname="">
+    </testcase>
+    <testcase name="IMAGES: test post override" time="0.815" classname="">
+    </testcase>
+    <testcase name="IMAGES: test user delete normal" time="0.475" classname="">
+    </testcase>
+    <testcase name="IMAGES: test user delete missing uid" time="0.009" classname="">
+    </testcase>
+    <testcase name="IMAGES: test post delete normal" time="0.491" classname="">
+    </testcase>
+    <testcase name="IMAGES: test post delete missing pid" time="0.005" classname="">
+    </testcase>
+    <testcase name="POST: test select with empty" time="0.159" classname="">
+    </testcase>
+    <testcase name="POST: test select with too strict constraints" time="0.024" classname="">
+    </testcase>
+    <testcase name="POST: test select with few constraints" time="0.025" classname="">
+    </testcase>
+    <testcase name="POST: test select with radius but no coord" time="0.007" classname="">
+    </testcase>
+    <testcase name="POST: test select with ALL constraints (minus datetime and radius)" time="0.030" classname="">
+    </testcase>
+    <testcase name="POST: test select with multiple posts" time="0.033" classname="">
+    </testcase>
+    <testcase name="POST: null radius" time="0.031" classname="">
+    </testcase>
+    <testcase name="POST: zero radius" time="0.037" classname="">
+    </testcase>
+    <testcase name="POST: non-zero radius" time="0.080" classname="">
+    </testcase>
+    <testcase name="POST: after a time" time="0.041" classname="">
+    </testcase>
+    <testcase name="POST: before a time" time="0.036" classname="">
+    </testcase>
+    <testcase name="POST: between a time" time="0.037" classname="">
+    </testcase>
+    <testcase name="POST: camel instead of lowercase times" time="0.040" classname="">
+    </testcase>
+    <testcase name="POST: lowercase animalName" time="0.031" classname="">
+    </testcase>
+    <testcase name="POST: test create without uid" time="0.009" classname="">
+    </testcase>
+    <testcase name="POST: test create without coordinates" time="0.015" classname="">
+    </testcase>
+    <testcase name="POST: test create with only uid and coordinates" time="0.016" classname="">
+    </testcase>
+    <testcase name="POST: test create post with all params" time="0.017" classname="">
+    </testcase>
+    <testcase name="POST: test create with some but not all params" time="0.017" classname="">
+    </testcase>
+    <testcase name="POST: update post with imgLink" time="0.051" classname="">
+    </testcase>
+    <testcase name="POST: update post with empty imgLink" time="0.030" classname="">
+    </testcase>
+    <testcase name="POST: update post without pid" time="0.014" classname="">
+    </testcase>
+    <testcase name="POST: update post without updates" time="0.022" classname="">
+    </testcase>
+    <testcase name="POST: update post, update with camelcase" time="0.031" classname="">
+    </testcase>
+    <testcase name="POST: update post, update with lowercase" time="0.035" classname="">
+    </testcase>
+    <testcase name="POST: update post with all" time="0.041" classname="">
+    </testcase>
+    <testcase name="POST: delete post by PID" time="0.035" classname="">
+    </testcase>
+    <testcase name="POST: delete post by ID where ID not listed" time="0.008" classname="">
+    </testcase>
+    <testcase name="POST: delete post by without id" time="0.007" classname="">
+    </testcase>
+    <testcase name="USER: test select with empty" time="0.120" classname="">
+    </testcase>
+    <testcase name="USER: test select with no matching criteria" time="0.016" classname="">
+    </testcase>
+    <testcase name="USER: test select with some constraints" time="0.028" classname="">
+    </testcase>
+    <testcase name="USER: test select with ALL constraints" time="0.067" classname="">
+    </testcase>
+    <testcase name="USER: test select with many users" time="0.029" classname="">
+    </testcase>
+    <testcase name="USER: test create" time="0.009" classname="">
+    </testcase>
+    <testcase name="USER: test create without uid" time="0.007" classname="">
+    </testcase>
+    <testcase name="USER: test create with all params" time="0.017" classname="">
+    </testcase>
+    <testcase name="USER: test create with camel case qualifiers" time="0.015" classname="">
+    </testcase>
+    <testcase name="USER: test create with lower case qualifiers" time="0.018" classname="">
+    </testcase>
+    <testcase name="USER: test create with some but not all params" time="0.018" classname="">
+    </testcase>
+    <testcase name="USER: update user with email" time="0.032" classname="">
+    </testcase>
+    <testcase name="USER: update user, set field to empty string" time="0.044" classname="">
+    </testcase>
+    <testcase name="USER: update user, update all fields" time="0.026" classname="">
+    </testcase>
+    <testcase name="USER: update user, update with camelcase" time="0.037" classname="">
+    </testcase>
+    <testcase name="USER: update user, update with lowercase" time="0.024" classname="">
+    </testcase>
+    <testcase name="USER: update user without updates" time="0.014" classname="">
+    </testcase>
+    <testcase name="USER: update user without uid" time="0.020" classname="">
+    </testcase>
+    <testcase name="USER: delete user by ID" time="0.028" classname="">
+    </testcase>
+    <testcase name="USER: delete user by ID where ID not listed" time="0.009" classname="">
+    </testcase>
+    <testcase name="USER: delete user by ID without uid" time="0.007" classname="">
+    </testcase>
+  </testsuite>
+</testsuites>
