@@ -5,9 +5,9 @@ CREATE EXTENSION IF NOT EXISTS earthdistance;
 CREATE TABLE users (
     uid VARCHAR(50) PRIMARY KEY, 
     email VARCHAR(50),
-    username VARCHAR(50),
-    bio VARCHAR(50),
-    imgLink VARCHAR(5000),
+    username TEXT,
+    bio TEXT,
+    imgLink TEXT,
     superUser BOOLEAN,
     locationPerm BOOLEAN,
     notificationPerm BOOLEAN,
@@ -16,7 +16,7 @@ CREATE TABLE users (
 
 CREATE TABLE posts (
     pid VARCHAR(50) PRIMARY KEY,
-    uid VARCHAR(128) NOT NULL REFERENCES users(uid) ON DELETE CASCADE,
+    uid VARCHAR(50) NOT NULL REFERENCES users(uid) ON DELETE CASCADE,
     imgLink TEXT,
     datetime TIMESTAMP,
     coordinate POINT NOT NULL,
@@ -24,3 +24,9 @@ CREATE TABLE posts (
     quantity INTEGER,
     activity TEXT
 );
+
+CREATE TABLE reports (
+    pid VARCHAR(50) NOT NULL REFERENCES posts(pid) ON DELETE CASCADE,
+    uid VARCHAR(50) NOT NULL REFERENCES users(uid) ON DELETE CASCADE,
+    reason TEXT
+)
