@@ -3,3 +3,4 @@ requests.log
 general.log
 .env
 .DS_Store
+test-result.xml
