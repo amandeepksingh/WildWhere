@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node src/server.js",
-    "test": "npx mocha --reporter mocha-junit-reporter --reporter-options mochaFile=server_testing/test-results.xml --reporter-options jenkinsMode=true --serial --exit ",
+    "test": "npx mocha --serial",
     "coverage": "npx nyc mocha",
     "serve": "forever start src/server.js"
   },
@@ -18,7 +18,7 @@
     "body-parser": "^1.20.2",
     "dotenv": "^16.4.5",
     "express": "^4.18.3",
-    "fast-xml-parser": "^4.3.6",
+    "forever": "^4.0.3",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "nodemon": "^3.1.0",
@@ -28,9 +28,7 @@
   },
   "devDependencies": {
     "chai": "^5.1.0",
-    "http": "^0.0.1-security",
-    "mocha": "^10.4.0",
-    "mocha-junit-reporter": "^2.2.1",
+    "mocha": "^10.3.0",
     "supertest": "^6.3.4"
   }
 }
