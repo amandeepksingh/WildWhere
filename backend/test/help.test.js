@@ -10,7 +10,7 @@ require('dotenv').config();
 describe("HELP: provide documentation on valid endpoint, invalid method", () => {
     it("HELP: test help method", async () => {
         const helpTxt = await getHelpTxt()
-        assert.strictEqual(helpTxt,"This endpoint or method is not supported at this time. Please refer to the following supported endpoints and methods: [GET users/selectUser, POST users/createUser, PUT users/updateUserByUID, DELETE users/deleteUserByUID, GET posts/selectPost, POST posts/createPost, PUT posts/updatePostByPID, DELETE posts/deletePostByPID, POST images/userProfilePic/upload, DELETE images/userProfilePic/delete, POST images/postPic/upload, DELETE images/postPic/delete]")
+        assert.strictEqual(helpTxt,"This endpoint or method is not supported at this time. Please refer to the following supported endpoints and methods: [GET users/selectUser, POST users/createUser, PUT users/updateUserByUID, DELETE users/deleteUserByUID, GET posts/selectPost, POST posts/createPost, PUT posts/updatePostByPID, DELETE posts/deletePostByPID, POST images/userProfilePic/upload, DELETE images/userProfilePic/delete, POST images/postPic/upload, DELETE images/postPic/delete, SELECT reports/selectReport, POST reports/postReport]")
     })
     it("HELP: check every endpoint's other methods", async () => {
         const helpTxt = await getHelpTxt()
