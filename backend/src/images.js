@@ -245,6 +245,7 @@ class imgFuncs {
         }
         
         //upload to S3
+        //testing this
         const putResp = await s3Helpers.s3Put(localPath, uploadPath, extension)
         if (putResp != 200) {
             logger.logInternalError('error on put to s3')
@@ -255,7 +256,7 @@ class imgFuncs {
 
         await fs.unlink(localPath);
         
-        //get s3 signed url
+        //TODO: get s3 signed url - remove this
         const url = await s3Helpers.s3GetSignedURL(type, idVal, extension)
     
         //put url into db

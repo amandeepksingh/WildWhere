@@ -112,7 +112,7 @@ function selectPost(req, res, next) {
         values: values
     }
     logger.logQuery(query)
-
+    // run a s3 request to get the signed URL
     return pool.query(query, (error, result) => {
         if (error) {
             logger.logDBerr(error);
