@@ -111,11 +111,10 @@ class s3Helpers {
          */
         const params = {
             Bucket: process.env.accessPoint,
-            Key: `${path}/${fileName}${extension}`,
-            Expires: 604800
+            Key: `${path}/${fileName}${extension}`
         }
         logger.logS3Req("GET SIGNED URL", params)
-        return AWSPreSigner.getSignedUrl(s3Client, new AWSs3Module.GetObjectCommand(params)).then(url => {        
+        return AWSPreSigner.getSignedUrl(s3Client, new AWSs3Module.GetObjectCommand(params), {expiresIn: 604800}).then(url => {        
             logger.logS3URL(url)
             return url
         })
