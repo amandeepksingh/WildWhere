@@ -6,25 +6,6 @@ const http = require('http');
 // server endpoint
 const app = 'http://ec2-3-23-98-233.us-east-2.compute.amazonaws.com'
 
-describe("sanity check", () => {
-    it("check math", async () => {
-      assert.strictEqual(1,1);
-    });
-
-    it("server ping", async () => {
-      const res = await request(app)
-      .get(`/users/selectUser?uid=1`);
-       assert.strictEqual(res.status, 200);
-   });
-    
-   it("posts ping", async () => {
-    const res = await request(app)
-    .get(`/users/selectUser?uid=1`);
-     assert.strictEqual(res.status, 200);
- });
-
-});
-
 describe("select users and posts", () => {
   it("USER: test select with ALL constraints", async () => {
     await request(app).post('/users/createUser').send(`uid=randomUID1`).send('email=jj@umass').send('username=John').send('bio=Student')
@@ -62,3 +43,4 @@ describe("select users and posts", () => {
   });
 });
 
+//TODO add report tests here as well

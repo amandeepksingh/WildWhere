@@ -326,6 +326,29 @@ Requests accepted by URL-encoded query
 |||||| _or_
 |||||| error message
 
+
+### Reports
+
+_selecting reports_: Used to select reports  
+Requests accepted by URL-encoded query
+| Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
+| :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
+| _ec2Host/images/reports/selectReport_ | _select_ | _JSON body of following_ | _optional or required_ | _200_ | array of JSON bodies of following
+| :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
+||| pid string | optional || pid string
+||| uid string | optional || uid string
+||| reason string | optional || reason string
+
+_posting reports_: Used to create reports  
+Requests accepted by JSON-body encoded request
+| Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
+| :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
+| _ec2Host/images/reports/createReport_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string
+| :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
+||| pid string | REQUIRED || "report created successfully"
+||| uid string | REQUIRED || _or_
+||| reason string | REQUIRED || error message
+
 ### Database infrastructure
 
 Our PostgreSQL database is hosted on RDS as a part of the AWS suite. We use an EC2 to interact with it and the tables we use in the database are shown below: ![db schema diagram](Schema.png)
