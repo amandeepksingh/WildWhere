@@ -339,13 +339,13 @@ Requests accepted by URL-encoded query
 ||| uid string | optional || uid string
 ||| reason string | optional || reason string
 
-_posting reports_: Used to post reports  
+_posting reports_: Used to create reports  
 Requests accepted by JSON-body encoded request
 | Endpoint | Method | Input JSON body | Input JSON Param optional/required | response status code | response message |  
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
-| _ec2Host/images/reports/postReport_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string
+| _ec2Host/images/reports/createReport_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string
 | :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
-||| pid string | REQUIRED || "report successful"
+||| pid string | REQUIRED || "report created successfully"
 ||| uid string | REQUIRED || _or_
 ||| reason string | REQUIRED || error message
 
