@@ -1,17 +1,15 @@
 import 'dart:async';
-import 'dart:math' as math;
-import 'dart:ui';
-import 'dart:convert';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:wildwhere/data.dart';
-import 'package:wildwhere/map_preferences.dart';
 import 'package:wildwhere/profile.dart';
+import 'package:wildwhere/database.dart';
 import 'package:wildwhere/report.dart';
 import 'package:wildwhere/settings.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:flutter/services.dart';
+import 'package:wildwhere/postslistpage.dart';
+import 'package:wildwhere/post.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -20,237 +18,439 @@ class MapScreen extends StatefulWidget {
   State<MapScreen> createState() => _MapState();
 }
 
-class _MapState extends State<MapScreen> {
-  late GoogleMapController mapController;
-  final Set<Marker> _markers = {}; //makes set of markers
-  Set<String> _tappedMarkerIds = {};
-  CameraPosition _currentCameraPosition = CameraPosition(
-    target: const LatLng(42.381030, -72.529010),
-    zoom: 12.0,
-  );
+class _MapState extends State<MapScreen> with TickerProviderStateMixin{
+  MapboxMapController?
+      _controller; // Controller to manage Mapbox map interaction.
+  Symbol? selectedSymbol; // Holds the currently selected map symbol, if any.
+  Offset?
+      symbolWidgetPosition; // Stores the position of the pop-up info box relative to the map view.
+  Map<String, dynamic> symbolDataMap =
+      {}; // Maps each symbol's ID to its data for quick retrieval.
+  Map<String, dynamic>?
+      currentPostData; // Data for the currently selected symbol.
+  Future<Position>? position;
 
-  bool _isCameraMoving = false;
-  Future<void> _addMarker(String markerId, LatLng position) async { //method to add marker
-  final icon = await BitmapDescriptor.fromAssetImage(
-    const ImageConfiguration(),
-    'assets/images/markericon.png',
-  );
-
-  setState(() {
-    _markers.add(
-      Marker(
-        markerId: MarkerId(markerId),
-        position: position,
-        onTap: () {
-          _tappedMarkerIds.add(markerId);
-        },
-        icon: icon,
-      ),
-    );
-  });
-}
-
-void _removeMarker(String markerId) { //method to remove marker
-  setState(() {
-    _markers.removeWhere((marker) => marker.markerId.value == markerId);
-    _tappedMarkerIds.remove(markerId);
-  });
-}
-
-
-Future<void> _onMapCreated(GoogleMapController controller) async {
-  mapController = controller;
-}
-
-Future<void> _fetchDataFromDatabase() async {
-    try {
-      var url = Uri.parse(
-        'http://ec2-13-58-233-86.us-east-2.compute.amazonaws.com:80/posts/selectPost?pid=1 ');
-      var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = json.decode(response.body);
-      final double lat = data['message'][0]['coordinate']['y'];
-      final double long = data['message'][0]['coordinate']['x'];
-      LatLng positionFromDB = LatLng(lat, long);
-      _addMarker('Marker from Database', positionFromDB);
-    } else {
-      throw Exception('Error accessing post from database!');
-    } 
-    } catch (e) {
-        throw Exception(e);
-    }
-}
-
-@override
-void initState() {
-  super.initState();
-  _fetchDataFromDatabase();
-  _addMarker('marker1', const LatLng(42.381830, -72.519714));
-  _addMarker('marker2', const LatLng(42.389561, -72.503375));
-}
-
-
-@override
-Widget build(BuildContext context) {
+  late AnimationController reportanimationController;
+  late Animation<double> reportopacityAnimation;
+  late AnimationController infoBoxAnimationController;
+  late Animation<double> infoBoxOpacityAnimation;
+  late Animation<Offset> infoBoxPositionAnimation;
+  
   var reportOverlayControl = OverlayPortalController();
-  var prefOverlayControl = OverlayPortalController();
-  return Stack(children: <Widget>[
-    Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        elevation: 2,
-        title: const Text('Sightings'),
-        actions: [
-          PopupMenuButton(
-            onSelected: (item) => onSelected(context, item),
-            itemBuilder: (context) => [
-              const PopupMenuItem(value: 0, child: Text('Profile')),
-              const PopupMenuItem(value: 1, child: Text('Settings')),
-              const PopupMenuItem(value: 2, child: Text('Data & Statistics')),
-            ],
-            icon: const Icon(Icons.reorder),
-          ),
-        ],
-      ),
-      body: Stack(
-        children: [
-          GoogleMap(
-            onMapCreated: _onMapCreated,
-            initialCameraPosition: _currentCameraPosition,
-            markers: _markers,
-            myLocationEnabled: true,
-            myLocationButtonEnabled: false,
-            zoomGesturesEnabled: true,
-            zoomControlsEnabled: true,
-            padding: const EdgeInsets.fromLTRB(0, 0, 10, 20),
-            onTap: (LatLng position) {
-              setState(() {
-                _tappedMarkerIds.clear();
-              });
-            },
-            onCameraMove: (CameraPosition position) {
-              setState(() {
-                _currentCameraPosition = position;
-                _isCameraMoving = true;
-              });
-            },
-            onCameraIdle: (){
-              setState(() {
-                _isCameraMoving = false;
-              });
-            },
-          ),
-          if(!_isCameraMoving)
-          for (var markerId in _tappedMarkerIds)
-            Builder(
-              builder: (context) {
-                final marker = _markers.firstWhere(
-                  (m) => m.markerId.value == markerId,
-                  orElse: () => throw Exception('Marker not found'),
-                );
-                final markerPosition = marker.position;
-                final markerScreenPosition = _getMarkerScreenPosition(markerPosition);
 
-                return Positioned(
-                  left: markerScreenPosition.dx - 100,
-                  top: markerScreenPosition.dy - 235,
-                  child: Container(
-                  width: 200,
-                  height: 150,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
+  @override
+  void initState() {
+    super.initState();
+    
+    reportanimationController = AnimationController(
+        duration: const Duration(milliseconds: 150),
+        vsync: this,
+      );
+    reportopacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(parent: reportanimationController, curve: Curves.easeIn)
+      );
+    
+    infoBoxAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 220),
+      reverseDuration: const Duration(milliseconds: 160),
+      vsync: this,
+    );
+
+    infoBoxOpacityAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: infoBoxAnimationController,
+      curve: Curves.easeOut,
+      reverseCurve: Curves.easeInCubic,
+    ));
+
+    infoBoxPositionAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.12),  // Start slightly below the final position
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: infoBoxAnimationController,
+      curve: Curves.fastEaseInToSlowEaseOut,
+      reverseCurve: Curves.easeInCubic,
+    ));
+    
+  }
+
+  @override
+  void dispose() {
+    _controller
+        ?.dispose(); // Clean up the controller when the widget is removed from the widget tree.
+    reportanimationController.dispose();
+    infoBoxAnimationController.dispose();
+    super.dispose();
+  }
+
+  void _onMapCreated(MapboxMapController controller) {
+    // Callback function when the map is created and ready.
+    _controller = controller;
+    controller.onSymbolTapped.add(_onSymbolTapped);
+    controller.addListener(_onCameraMove);
+    addImageFromAsset("assetImage", "assets/images/markericon.png");
+  }
+
+  void _onStyleLoaded() async {
+    // Called when map style is fully loaded; we typically use this to add markers dynamically.
+    _loadMarkers();
+  }
+
+  Future<void> addImageFromAsset(String name, String assetName) async {
+    // Helper function to add a custom image asset to be used as a map marker icon.
+    final ByteData bytes = await rootBundle.load(assetName);
+    final Uint8List list = bytes.buffer.asUint8List();
+    await _controller?.addImage(name, list);
+  }
+
+  void _loadMarkers() async {
+    // Load markers from a data source and add them to the map.
+    try {
+      List<Post> posts = await Database().getAllPosts();
+      for (Post post in posts) {
+        _addMarker(post.pid!, post.coordinate['y'] as double,
+            post.coordinate['x'] as double,
+            post: post);
+      }
+    } catch (e) {
+      print("Failed to load posts: $e");
+    }
+  }
+
+  void _addMarker(String id, double latitude, double longitude, {Post? post}) {
+    // Adds a single marker to the map.
+    _controller
+        ?.addSymbol(
+      SymbolOptions(
+        geometry: LatLng(latitude, longitude),
+        iconImage: "assetImage",
+        iconSize: 1.05,
+      ),
+    )
+        .then((symbol) {
+      // Storing post data in the map
+      if (post != null) {
+        symbolDataMap[symbol.id] = post.toJson();
+      }
+    });
+  }
+
+  void refreshMarkers() async {
+    await _controller?.clearSymbols(); // Clear all existing markers
+    _loadMarkers(); // Reload markers from database
+  }
+
+  void _onSymbolTapped(Symbol symbol) async {
+      if (selectedSymbol != null && selectedSymbol!.id == symbol.id) {
+        // If the same symbol is tapped again, reverse the animation to hide the info box.
+        await infoBoxAnimationController.reverse();
+        setState(() {
+            selectedSymbol = null;
+            currentPostData = null;
+        });
+    } else {
+        setState(() {
+            selectedSymbol = symbol;
+            currentPostData = symbolDataMap[symbol.id];
+            _updateSymbolPosition();
+        });
+        infoBoxAnimationController.forward(from: 0.0);  // Start the animation from the beginning
+    }
+  }
+
+  void _onCameraMove() {
+    // Refresh symbol position on camera (map view) move.
+    if (_controller != null && selectedSymbol != null) {
+      _updateSymbolPosition();
+    }
+  }
+
+  void _updateSymbolPosition() async {
+    // Update the position of the information box relative to the selected symbol.
+    if (selectedSymbol == null || _controller == null) return;
+    var screenLocation =
+        await _controller!.toScreenLocation(selectedSymbol!.options.geometry!);
+    setState(() {
+      symbolWidgetPosition =
+          Offset(screenLocation.x - 100, screenLocation.y - 125);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    //var reportOverlayControl = OverlayPortalController();
+    //var prefOverlayControl = OverlayPortalController();
+    return Stack(children: <Widget>[
+      Scaffold(
+        body: Stack(
+          children: [
+            MapboxMap(
+              styleString:
+                  "mapbox://styles/mberezuns/clv1ba4fz019m01p61mdggons",
+              accessToken:
+                  "pk.eyJ1IjoibWJlcmV6dW5zIiwiYSI6ImNsdjA1MTk0djFlcDIybG14bHNtem1xeGEifQ.Xcg2SVacZ2TjY0zcKVKTig",
+              myLocationEnabled: true,
+              attributionButtonPosition: AttributionButtonPosition.BottomLeft,
+              compassEnabled: false,
+              tiltGesturesEnabled: false,
+              myLocationRenderMode: MyLocationRenderMode.NORMAL,
+              onMapCreated: _onMapCreated,
+              onStyleLoadedCallback: _onStyleLoaded,
+              trackCameraPosition: true,
+              initialCameraPosition: const CameraPosition(
+                target: LatLng(42.381030, -72.529010),
+                zoom: 12,
+              ),
+              onMapClick: (point, latLng) async{
+                if(selectedSymbol != null){
+                  await infoBoxAnimationController.reverse();
+                  setState(() {
+                    selectedSymbol = null;
+                    symbolWidgetPosition = null;
+                  });
+                }
+              },
+            ),
+            if (symbolWidgetPosition != null)
+              Positioned(
+                left: symbolWidgetPosition!.dx - 25,
+                top: symbolWidgetPosition!.dy - 25,
+                child: _buildInfoBox(),
+              ),
+            Positioned(
+              right: 10,
+              top: 67,
+              child: SizedBox(
+                height: 65,
+                width: 65,
+                child: PopupMenuButton<int>(
+                  elevation: 10,
+                  offset: const Offset(-5, 63),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
                   ),
-                  child: Center(
-                    child: Text(
-                      'Custom Marker: $markerId',
-                      style: const TextStyle(fontSize: 16),
+                  color: Colors.white,
+                  popUpAnimationStyle: AnimationStyle(
+                    curve: Curves.easeInOut,
+                    duration: const Duration( milliseconds: 330)
+                    ),
+                  onSelected: (item) => onSelected(context, item),
+                  child: ClipOval(
+                    child: Image.asset(
+                      'assets/images/profile.png',
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.cover,
                     ),
                   ),
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(
+                      value: 0, 
+                      child: ListTile(
+                        horizontalTitleGap: 12.0,
+                        leading: Icon(Icons.person, size: 28),
+                        title: Text('Profile',style: TextStyle(fontSize: 14)),
+                      )
+                    ),
+                    const PopupMenuItem(
+                      value: 1, 
+                      child: ListTile(
+                        horizontalTitleGap: 12.0,
+                        leading: Icon(Icons.settings, size: 28),
+                        title: Text('Settings',style: TextStyle(fontSize: 14)),
+                      )
+                    ),
+                    const PopupMenuItem(
+                      value: 2, 
+                      child: ListTile(
+                        horizontalTitleGap: 12.0,
+                        leading: Icon(Icons.insert_chart_outlined_rounded, size: 28),
+                        title: Text('Data and Stats', style: TextStyle(fontSize: 14)),
+                      )
+                    ),
+                  ],
                 ),
+              ),
+            )
+          ],
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: FloatingActionButton.large(
+          backgroundColor: Colors.white,
+          onPressed: () {
+            setState(() {
+              reportOverlayControl.toggle();
+              reportanimationController.reset();
+              reportanimationController.forward();
+            });
+          },
+          elevation: 10,
+          shape: const CircleBorder(),
+          child: OverlayPortal(
+            controller: reportOverlayControl,
+            overlayChildBuilder: (BuildContext context) {
+              return FadeTransition(
+              opacity: reportopacityAnimation,
+              child: ReportPage(
+                  onPostCreated: () async{
+                    refreshMarkers();
+                    await reportanimationController.reverse();
+                    reportOverlayControl.toggle();
+                  },
+                  controller: reportOverlayControl
+                )
               );
             },
-          ),
-      ],
-    ),
-    floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-    floatingActionButton: FloatingActionButton.large(
-        onPressed: reportOverlayControl.toggle,
-        elevation: 10,
-        shape: const CircleBorder(),
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        child: OverlayPortal(
-          controller: reportOverlayControl,
-          overlayChildBuilder: (BuildContext context) {
-            return const ReportPage();
-          },
           child: const Icon(Icons.add_location_alt_outlined),
         ),
       ),
     ),
-    Positioned(
-      bottom: 30,
-      right: 20,
-      child: Column(
-        children: <Widget>[
-          FloatingActionButton(
-            onPressed: () => currentLocation(mapController),
-            shape: const CircleBorder(),
-            elevation: 2,
-            backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-            child: const Icon(Icons.my_location),
-          ),
-          const SizedBox(height: 10),
-          FloatingActionButton(
-            onPressed: prefOverlayControl.toggle,
-            shape: const CircleBorder(),
-            elevation: 2,
-            backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-            child: OverlayPortal(
-              controller: prefOverlayControl,
-              overlayChildBuilder: (BuildContext context) {
-                return const MapPreferences();
-              },
-              child: const Icon(Icons.layers_outlined),
+      Positioned(
+        bottom: 30,
+        right: 20,
+        child: Column(
+          children: <Widget>[
+            FloatingActionButton(
+              backgroundColor: Colors.white,
+              onPressed: () => currentLocation(_controller),
+              shape: const CircleBorder(),
+              elevation: 10,
+              child: const Icon(Icons.my_location),
             ),
-          ),
-        ],
+            const SizedBox(height: 10),
+            FloatingActionButton(
+              backgroundColor: Colors.white,
+              onPressed: _navigateToPostsPage,
+              shape: const CircleBorder(),
+              elevation: 10,
+              child: const Icon(Icons.list),
+            )
+            /*FloatingActionButton(
+              onPressed: prefOverlayControl.toggle,
+              shape: const CircleBorder(),
+              elevation: 2,
+              backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+              child: OverlayPortal(
+                controller: prefOverlayControl,
+                overlayChildBuilder: (BuildContext context) {
+                  return const MapPreferences();
+                },
+                child: const Icon(Icons.layers_outlined),
+              ),
+            ),
+            */
+          ],
+        ),
       ),
-    ),
-  ]);
+    ]);
   }
 
-  Offset _getMarkerScreenPosition(LatLng markerPosition) {
-      final width = MediaQuery.of(context).size.width;
-      final height = MediaQuery.of(context).size.height;
-      final centerLatLng = _currentCameraPosition.target;
-      final zoom = _currentCameraPosition.zoom;
-      final scale = math.pow(2, zoom).toDouble();
-      final centerPoint = _latLngToOffset(centerLatLng, scale);
-      final markerPoint = _latLngToOffset(markerPosition, scale);
-      final translateX = (markerPoint.dx - centerPoint.dx) * scale;
-      final translateY = (markerPoint.dy - centerPoint.dy) * scale;
-      return Offset(width / 2 + translateX, height / 2 + translateY);
+  void _navigateToPostsPage() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const PostsListPage()),
+    );
+    refreshMarkers();
   }
+  Widget _buildInfoBox() {
+    // Generates informational box widget for currently selected marker.
+    if (selectedSymbol == null || currentPostData == null) {
+      return const SizedBox
+          .shrink(); // Return an empty container if no symbol is selected
+    }
 
-  Offset _latLngToOffset(LatLng latLng, double scale) {
-      final x = (latLng.longitude + 180) / 360 * scale;
-      final y = (1 - math.log(math.tan(latLng.latitude * math.pi / 180) + 1 / math.cos(latLng.latitude * math.pi / 180)) / math.pi) / 2 * scale;
-      return Offset(x, y);
+    Map<String, dynamic> data = currentPostData!;
+    /*String infoText = "PID: ${data['pid']}\n"
+        "Animal: ${data['animalName']}\n"
+        "Activity: ${data['activity']}\n"
+        "Quantity: ${data['quantity']}\n";*/
+
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    return AnimatedBuilder(
+      animation: infoBoxAnimationController, 
+      builder: (context, child){
+        if (infoBoxAnimationController.isDismissed) {
+                return SizedBox.shrink();  // This ensures that widget collapses when the animation is dismissed
+            }
+          return SlideTransition(
+          position: infoBoxPositionAnimation,
+          child: FadeTransition(
+            opacity: infoBoxOpacityAnimation,
+                child: Container(
+              width: screenWidth * 0.7,
+              height: screenHeight * 0.155,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black26, 
+                      offset: Offset(0, 3),
+                      blurRadius: 3.0,
+                      spreadRadius: 0.1,
+                    )
+                  ]),
+              child: Row(
+                children: [
+                  // Image Container
+                  Expanded(
+                    flex: 1, // takes 1/2 of the space
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: Image.network(
+                          data['imgLink'] ??
+                              'https://via.placeholder.com/150', // Placeholder if no imgLink is available
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                        // Fallback for when the image fails to load
+                        return const Icon(Icons.image_not_supported);
+                      }),
+                    ),
+                  ),
+
+                  // Text Container
+                  Expanded(
+                    flex: 1, // takes 1/2 of the space
+                    child: Container(
+                      padding: const EdgeInsets.only(left: 10),
+                      alignment: Alignment.topLeft,
+                      child: RichText(
+                        text:  TextSpan(
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 13,
+                            overflow: TextOverflow.ellipsis,
+                            fontFamily: 'CupertinoSystemText',
+                            letterSpacing: -0.45,
+                            height: 1.3,
+                          ),
+                          children: <TextSpan>[
+                            const TextSpan(text: 'PID: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                            TextSpan(text: "${data['pid']}\n"),
+                            const TextSpan(text: 'Animal: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                            TextSpan(text: "${data['animalName']}\n"),
+                            const TextSpan(text: 'Activity: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                            TextSpan(text: "${data['activity']}\n"),
+                            const TextSpan(text: 'Quantity: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                            TextSpan(text: "${data['quantity']}\n"),
+                          ]
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            )
+          ),
+        );
+      }
+    );
   }
-  
 }
 
 //Handles drop-down selection navigation

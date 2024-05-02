@@ -22,7 +22,7 @@ class Location {
     }
   }
 
-  Future<Position> currentLocation() async {
+  Future<Position> getCurrentLocation() async {
     checkLocationPerms();
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);

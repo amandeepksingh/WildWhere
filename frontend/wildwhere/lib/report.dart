@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -6,24 +7,34 @@ import 'package:geolocator/geolocator.dart';
 import 'package:wildwhere/database.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:wildwhere/post.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ReportPage extends StatefulWidget {
-  const ReportPage({super.key});
+  final Function? onPostCreated; // Callback function to update the map
+  final OverlayPortalController controller;
+  const ReportPage({super.key, this.onPostCreated, required this.controller});
 
   @override
   State<ReportPage> createState() => _ReportPageState();
 }
 
 class _ReportPageState extends State<ReportPage> {
-  XFile? selectedImage;
   final _imagePicker = ImagePicker();
+  String? uid = FirebaseAuth.instance.currentUser?.uid;
+  XFile? selectedImage;
   String? animal;
-  String? quantity;
+  int? quantity;
   String? activity;
   bool showError = false;
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
   Future<void> submitOnPressed() async {
-     if (animal == null || quantity == null || activity == null) {
+    if (animal == null || quantity == null || activity == null) {
       // If any selection is null, update the state to show the error message
       setState(() {
         showError = true;
@@ -31,28 +42,39 @@ class _ReportPageState extends State<ReportPage> {
       return; // Stop further execution
     }
     resetErrorState();
+
     Location location = Location();
-    Database db = Database();
-    Position position = await location.currentLocation();
-    String latitude = position.latitude.toString();
-    String longitude = position.longitude.toString();
-    String coordinate = '($longitude, $latitude)';
+    Position position = await location.getCurrentLocation();
+    Map<String, dynamic> coordinate = {
+      'x': position.longitude.toString(),
+      'y': position.latitude.toString()
+    };
     String datetime = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
-    String uid = '434Vdwivv7beTIyG'; //temporary, need to pull from user -> STORE WITH SHARED_PREFERENCES PACKAGE!!!!
+
+    Post newPost = Post(
+      uid: uid!,
+      datetime: datetime,
+      coordinate: coordinate,
+      animalName: animal!,
+      quantity: quantity!,
+      activity: activity!,
+    );
+
     try {
-      http.Response postResponse = await db.createPost(
-      uid: uid, datetime: datetime, coordinate: coordinate,
-      animalName: animal as String, quantity: quantity as String, activity: activity as String);
-      final Map<String, dynamic> newPost = json.decode(postResponse.body);
-      if (postResponse.statusCode != 200) {
-        throw Exception(postResponse.body);
+      Database db = Database();
+      http.Response response =
+          await db.createPost(newPost); //Pass post object to createPost
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        widget.onPostCreated!(); // Update the map
+        print(
+            "Post created with ID: ${responseData['pid']}"); //Print created pid for development purposes
       } else {
-          var pid = newPost['pid']; 
-          print("Post ID: $pid");
-          
+        throw Exception('Failed to create post');
       }
     } catch (e) {
-      throw Exception(e);
+      print('Error: $e');
     }
   }
 
@@ -64,82 +86,90 @@ class _ReportPageState extends State<ReportPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: Container(
-            margin: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-            width: MediaQuery.of(context).size.width * 0.85,
-            height: MediaQuery.of(context).size.height * 0.65,
-            decoration: BoxDecoration(
-              border: Border.all(
-                width: 3,
-                color: Colors.black,
-              ),
-            ),
-            child: Scaffold(
-                appBar: AppBar(
-                  automaticallyImplyLeading: false,
-                  title: const Text('Sighting Report'),
-                ),
-                body: Column(
-                  children: [
-                    if (showError) // Conditionally display the error message
-                       const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text(
-                          'Please fill out all selections.',
-                          style: TextStyle(
-                            color: Colors.red,
-                            backgroundColor: Colors.white,
+    return Stack(children: [
+      const ModalBarrier(
+        dismissible:
+            false, // Set to true if you want to allow dismissal by tapping outside the overlay
+      ),
+      BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+          child: Center(
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.85,
+                      height: MediaQuery.of(context).size.height * 0.63,
+                      child: Scaffold(
+                          appBar: AppBar(
+                            leading: CloseButton(
+                              onPressed: () {
+                                widget.controller.toggle();
+                              },
+                              
+                            ),
+                            title: const Text('Sighting Report'),
                           ),
-                        ),
-                      ),
-                    const Row(
-                      children: [
-                        Icon(Icons.image, size: 70),
-                        Text("Select an image to upload",
-                            style: TextStyle(fontSize: 20)),
-                      ],
-                    ),
-                    const SizedBox(height: 15),
-                    Row(
-                      children: [
-                        const SizedBox(width: 10),
-                        IntrinsicWidth(
-                            child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            OutlinedButton(
-                                onPressed: getImageFromGallery,
-                                child: const Text("Upload from library")),
-                            OutlinedButton(
-                                onPressed: getImageFromCamera,
-                                child: const Text("Take a photo")),
-                          ],
-                        ))
-                      ],
-                    ),
-                    const SizedBox(height: 40),
-                    IntrinsicWidth(
-                      child:
-                      Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        animalTypeButton(),
-                        animalQuantityButton(),
-                        animalActivityButton()
-                      ],
-                    )
-                    ),
-                    Expanded(
-                        child: Align(
-                            alignment: const FractionalOffset(.5, .9),
-                            child: ElevatedButton(
-                                onPressed: () {
-                                  submitOnPressed();
-                                },
-                                child: const Text('Submit'))))
-                  ],
-                ))));
+                          body: Column(
+                            children: [
+                              if (showError) // Conditionally display the error message
+                                const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Text(
+                                    'Please fill out all selections.',
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      backgroundColor: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              const Row(
+                                children: [
+                                  Icon(Icons.image, size: 70),
+                                  Text("Select an image to upload",
+                                      style: TextStyle(fontSize: 20)),
+                                ],
+                              ),
+                              const SizedBox(height: 15),
+                              Row(
+                                children: [
+                                  const SizedBox(width: 10),
+                                  IntrinsicWidth(
+                                      child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      OutlinedButton(
+                                          onPressed: getImageFromGallery,
+                                          child: const Text(
+                                              "Upload from library")),
+                                      OutlinedButton(
+                                          onPressed: getImageFromCamera,
+                                          child: const Text("Take a photo")),
+                                    ],
+                                  ))
+                                ],
+                              ),
+                              const SizedBox(height: 40),
+                              IntrinsicWidth(
+                                  child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  animalTypeButton(),
+                                  animalQuantityButton(),
+                                  animalActivityButton()
+                                ],
+                              )),
+                              Expanded(
+                                  child: Align(
+                                      alignment: const FractionalOffset(.5, .9),
+                                      child: ElevatedButton(
+                                          onPressed: () {
+                                            submitOnPressed();
+                                          },
+                                          child: const Text('Submit'))))
+                            ],
+                          ))))))
+    ]);
   }
 
   Future getImageFromGallery() async {
@@ -188,8 +218,7 @@ class _ReportPageState extends State<ReportPage> {
         'American Red Squirrel',
         'Northern Flying Squirrel',
         'Southern Flying Squirrel'
-        ]
-          .map<DropdownMenuItem<String>>((String value) {
+      ].map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
           child: Text(value),
@@ -205,19 +234,19 @@ class _ReportPageState extends State<ReportPage> {
   }
 
   Widget animalQuantityButton() {
-    return DropdownButton<String>(
+    return DropdownButton<int>(
       value: quantity,
       isExpanded: true,
-      items: <String>['1', '2', '3', '4', '5-10']
-          .map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
+      items: <int>[1, 2, 3, 4, 5] // Changed from strings to integers
+          .map<DropdownMenuItem<int>>((int value) {
+        return DropdownMenuItem<int>(
           value: value,
-          child: Text(value),
+          child: Text(value.toString()), // Convert int to string for display
         );
       }).toList(),
-      onChanged: (String? newQuantity) {
+      onChanged: (int? newValue) {
         setState(() {
-          quantity = newQuantity;
+          quantity = newValue;
         });
       },
       hint: const Text('Select a quantity'),
@@ -235,8 +264,7 @@ class _ReportPageState extends State<ReportPage> {
         'Hunting',
         'Mating',
         'Territorial Defense',
-        ]
-          .map<DropdownMenuItem<String>>((String value) {
+      ].map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
           child: Text(value),
@@ -250,6 +278,4 @@ class _ReportPageState extends State<ReportPage> {
       hint: const Text('Select an activity'),
     );
   }
-
 }
-
