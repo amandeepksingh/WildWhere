@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wildwhere/mapscreen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:wildwhere/google_signin.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -10,48 +9,30 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  User? _user;
-
-  @override
-  void initState() {
-    super.initState();
-    _auth.authStateChanges().listen((event) {
-      setState(() {
-        _user = event;
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _user != null ? MapScreen() : logInScreen(),
-    );
-  }
-
-  Widget logInScreen() {
     return Stack(
       children: [
         Container(
           //sets the background image
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/image.png"),
-              fit: BoxFit.cover,
-            ),
-          ),
+          decoration: BoxDecoration(
+              image: const DecorationImage(
+                image: AssetImage("assets/images/backgroundtransparent.png"),
+                fit: BoxFit.cover,
+              ),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Color.fromARGB(160, 255, 255, 255)
+                  : Color.fromARGB(237, 255, 255, 255)),
         ),
-        Center(
+        const Center(
           //aligns the sign in buttons
           child: IntrinsicWidth(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 80),
-                googleSignIn(context),
+                SizedBox(height: 80),
+                GoogleSignInButton(),
                 // const SizedBox(height: 25), //TODO
                 // appleSignIn(context),
                 // const SizedBox(height: 25), //TODO
@@ -63,21 +44,14 @@ class _LoginState extends State<Login> {
       ],
     );
   }
+}
 
-  void signInWithGoogle() async {
-    try {
-      GoogleAuthProvider _googleAuthProvider = GoogleAuthProvider();
-      _auth.signInWithProvider(_googleAuthProvider);
-    } catch(error) {
-      print(error);
-    }
-  }
-
+  /*
   void signInWithFB() async {
     try {
       FacebookAuthProvider _facebookAuthProvider = FacebookAuthProvider();
       _auth.signInWithProvider(_facebookAuthProvider);
-    } catch(error) {
+    } catch (error) {
       print(error);
     }
   }
@@ -86,10 +60,11 @@ class _LoginState extends State<Login> {
     try {
       AppleAuthProvider _appleAuthProvider = AppleAuthProvider();
       _auth.signInWithProvider(_appleAuthProvider);
-    } catch(error) {
+    } catch (error) {
       print(error);
     }
   }
+  
 
   //Facebook sign in button
   Widget fbSignIn(BuildContext context) {
@@ -106,28 +81,8 @@ class _LoginState extends State<Login> {
         child: Text('Sign in with Facebook', style: TextStyle(fontSize: 20)),
       ),
       style: OutlinedButton.styleFrom(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-          foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-          elevation: 5),
-    );
-  }
-
-  //Google sign in button
-  Widget googleSignIn(BuildContext context) {
-    return ElevatedButton.icon(
-      onPressed: () => signInWithGoogle(),
-      icon: Image.asset(
-        'assets/images/google.png',
-        width: 30,
-        height: 30,
-      ),
-      label: const SizedBox(
-        width: 213,
-        height: 30,
-        child: Text('Sign in with Google', style: TextStyle(fontSize: 20)),
-      ),
-      style: OutlinedButton.styleFrom(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
           foregroundColor: const Color.fromARGB(255, 0, 0, 0),
           elevation: 5),
     );
@@ -148,10 +103,10 @@ class _LoginState extends State<Login> {
         child: Text('Sign in with Apple', style: TextStyle(fontSize: 20)),
       ),
       style: OutlinedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
           foregroundColor: const Color.fromARGB(255, 0, 0, 0),
           elevation: 5),
     );
   }
-}
+  */
