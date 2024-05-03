@@ -268,6 +268,8 @@ class imgFuncs {
         const location = type+ "/" + idVal + "/" + extension;
       
        // await fs.unlink(localPath);
+        console.log(JSON.stringify(putResp));
+        await fs.unlink(localPath);
         
         //TODO: get s3 signed url - remove this
         // const url = await s3Helpers.s3GetSignedURL(type, idVal, extension);
