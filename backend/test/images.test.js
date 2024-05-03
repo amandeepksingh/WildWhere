@@ -35,11 +35,12 @@ describe("IMAGES: test user image upload", () => {
         const resp1 = await request(app).post('/images/userProfilePic/upload').field('uid', uid).attach('img', 'test/testImages/test1.jpg')
         assert.strictEqual(resp1.status, 200)
         const url1 = resp1.body.message
+        //console.log(url1);
         assert.ok(url1.includes('http'), "valid url returned by upload")
         
         //check img in db
         const resp2 = await request(app).get(`/users/selectUser?uid=${uid}`)
-        console.log(resp2.body.message[0]);
+        
         const url2 = resp2.body.message[0].imglink
         assert.ok(url2.includes('http'), "valid url put to database by upload")
 
@@ -105,10 +106,10 @@ describe("IMAGES: test post image upload", () => {
         const resp1 = await request(app).post('/images/postPic/upload').field('pid', pid).attach('img', 'test/testImages/test1.jpg')
         assert.strictEqual(resp1.status, 200)
         const url1 = resp1.body.message
-        
+        console.log('poopy');
         const resp2 = await request(app).get(`/posts/selectPost?pid=${pid}`)
         const url2 = resp2.body.message[0].imglink
-
+        console.log('poopy poopy');
         assert.strictEqual(url1, url2, 'url from post matches url in db')
 
         //teardown

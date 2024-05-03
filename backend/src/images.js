@@ -34,9 +34,6 @@ const imageStore = multer.diskStorage({
 const imageUpload = multer({ storage: imageStore })
 
 //configure S3Client
-// console.log(process.env.location);
-// console.log(process.env.accessKeyID);
-// console.log(process.env.secretAccessKey);
 const s3Client = new AWSs3Module.S3Client({
     credentials: {
         accessKeyId: process.env.accessKeyID,
@@ -56,6 +53,9 @@ images.delete('/postPic/delete', (req, res, next) => imgFuncs.delete("posts", re
 
 //s3 helper functions
 class s3Helpers {
+    static test_stupid(j) {
+        console.log("you called something");
+    }
     static s3Put(localStream, uploadPath, extension) {
         /**
          * puts file to s3
@@ -114,7 +114,7 @@ class s3Helpers {
          * @returns:
          *      url for file
          */
-        //console.log("signed url requested");
+        console.log("signed url requested");
         const params = {
             Bucket: process.env.accessPoint,
             Key: `${path}/${fileName}${extension}`,
@@ -259,7 +259,7 @@ class imgFuncs {
         
         //upload to S3
         //testing this output
-        const putResp = await s3Helpers.s3Put(localPath, uploadPath, extension)
+        const putResp = await s3Helpers.s3Put(localPath, uploadPath, extension);
         if (putResp != 200) {
             logger.logInternalError('error on put to s3')
             responseStatus = 500
@@ -267,12 +267,13 @@ class imgFuncs {
             return res.status(responseStatus).json(responseJson)
         }
         
+        //console.log("s3 Responded");
         const location = type+ "/" + idVal + "/" + extension;
       
-        await fs.unlink(localPath);
+       // await fs.unlink(localPath);
         
         //TODO: get s3 signed url - remove this
-        const url = await s3Helpers.s3GetSignedURL(type, idVal, extension);
+        // const url = await s3Helpers.s3GetSignedURL(type, idVal, extension);
        // console.log("this sucks: " + url);
        
         //put url into db
@@ -282,7 +283,7 @@ class imgFuncs {
         }
         logger.logQuery(query)
 
-        return pool.query(query, (error, result) => {
+        return pool.query(query, async (error, result) => {
             if (error) {
                 logger.logDBfail(error)
                 responseStatus = 400
@@ -293,6 +294,10 @@ class imgFuncs {
             logger.logDBsucc(result)
             responseStatus = 200
             responseJson = {message: location}
+            const toks = location.split("/");
+
+            const url = toks != null ? await s3Helpers.s3GetSignedURL(toks[0], toks[1], toks[2]): ""; 
+            responseJson = {message: url};
             logger.logResponse(responseStatus, responseJson)
             return res.status(responseStatus).json(responseJson)
         })
@@ -376,4 +381,4 @@ class imgFuncs {
     }
 }
 
-module.exports = [images, s3Helpers, imgFuncs];
+module.exports = {s3Helpers, images};

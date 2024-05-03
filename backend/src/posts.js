@@ -4,7 +4,7 @@ const Pool = require('pg').Pool;
 const logger = require('./logger');
 require('dotenv').config({path: "../.env"});
 const randomstring = require('randomstring');
-const {images, s3, img} = require('./images');
+const {s3Helpers, images} = require('./images');
 const AWSs3Module = require('@aws-sdk/client-s3');
 const AWSPreSigner = require('@aws-sdk/s3-request-presigner');
 
@@ -27,33 +27,31 @@ const s3Client = new AWSs3Module.S3Client({
     region: 'us-east-2'
 })
 
-console.log(process.env.location);
-console.log(process.env.accessKeyID);
-console.log(process.env.secretAccessKey);
-class s3Helpers {
-    static s3GetSignedURL(path, fileName, extension) {
-        /**
-         * gets url for file in s3
-         * @param:
-         *      path string
-         *      fileName string
-         * @returns:
-         *      url for file
-         */
-        //console.log("signed url requested");
-        const params = {
-            Bucket: process.env.accessPoint,
-            Key: `${path}/${fileName}${extension}`,
-            Expires: 604800
-        }
-        //logger.logS3Req("GET SIGNED URL", params)
-        return AWSPreSigner.getSignedUrl(s3Client, new AWSs3Module.GetObjectCommand(params)).then(url => {        
-            logger.logS3URL(url);
-            //console.log(url);
-            return url
-        })
-    }
-}
+// class s3Helpers {
+//     static s3GetSignedURL(path, fileName, extension) {
+//         /**
+//          * gets url for file in s3
+//          * @param:
+//          *      path string
+//          *      fileName string
+//          * @returns:
+//          *      url for file
+//          */
+//         //console.log("signed url requested");
+//         const params = {
+//             Bucket: process.env.accessPoint,
+//             Key: `${path}/${fileName}${extension}`,
+//             Expires: 604800
+//         }
+//         //logger.logS3Req("GET SIGNED URL", params)
+//         return AWSPreSigner.getSignedUrl(s3Client, new AWSs3Module.GetObjectCommand(params)).then(url => {        
+//             logger.logS3URL(url);
+//             //console.log(url);
+//             return url
+//         })
+//     }
+// }
+
 
 //creates posts and routes methods and endpoints to functions
 const posts = express();
@@ -61,6 +59,7 @@ posts.get('/selectPost', (req, res, next) => selectPost(req, res, next))
 posts.post('/createPost', (req, res, next) => createPost(req, res, next))
 posts.put('/updatePostByPID', (req, res, next) => updatePostByPID(req, res, next))
 posts.delete('/deletePostByPID', (req, res, next) => deletePostByPID(req, res, next))
+
 
 function selectPost(req, res, next) {
     /**
@@ -89,8 +88,7 @@ function selectPost(req, res, next) {
      *  }
      */
     var responseStatus, responseJson
-    logger.logRequest(req)
-
+    logger.logRequest(req);
     //parse req query into params and values
     var rawConditions = []
     var values = []
@@ -149,10 +147,12 @@ function selectPost(req, res, next) {
         text: `SELECT * FROM posts WHERE ${conditionsAsString}`,
         values: values
     }
+    s3Helpers.test_stupid('asdl;fkjsd');
     logger.logQuery(query)
     // run a s3 request to get the signed URL
-    const ret = pool.query(query, (error, result) => {
+    const ret = pool.query(query, async (error, result) => {
         if (error) {
+            console.log("d;sfd");
             logger.logDBerr(error);
             responseStatus = 400
             responseJson = {message: error.message}
@@ -162,21 +162,21 @@ function selectPost(req, res, next) {
         logger.logDBsucc(result);
         responseStatus = 200
         
-        logger.logResponse(responseStatus, responseJson)
+        logger.logResponse(responseStatus, responseJson);
         //respObj = JSON.parse(result.rows[0]);
         //console.log(result.rows[0]);
         const toks = result.rows[0].imglink != null ? result.rows[0].imglink.split("/") : null;
-        console.log(toks);
-        var url = "";
-        const purl = s3Helpers.s3GetSignedURL(toks[0], toks[1], toks[2]).then(prurl => {url = prurl});
-       console.log(url);
+        //console.log(toks);
+    
+        const url = await s3Helpers.s3GetSignedURL(toks[0], toks[1], toks[2]);
+        console.log(url);
         result.rows[0].imglink = toks == null ? "": url;
 
         responseJson = {message: result.rows}
         //get signed url for the 
-        console.log(responseJson);
+        //console.log(responseJson);
 
-        return res.status(200).json({message: result.rows})
+        return res.status(200).json(responseJson)
     })
     
     return ret;

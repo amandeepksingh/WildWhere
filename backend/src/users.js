@@ -1,6 +1,7 @@
 //imports
 const express = require('express')
 const Pool = require('pg').Pool;
+const {s3Helpers, images} = require('./images');
 const logger = require('./logger');
 require('dotenv').config({path: "../.env"});
 
@@ -61,7 +62,7 @@ function selectUser(req, res, next) {
     logger.logQuery(query)
 
     //send db query and return response
-    return pool.query(query, (error, result) => {
+    return pool.query(query, async (error, result) => {
         if (error) {
             logger.logDBerr(error);
             responseStatus = 400
@@ -73,7 +74,15 @@ function selectUser(req, res, next) {
         responseStatus = 200
         responseJson = {message: result.rows}
         logger.logResponse(responseStatus, responseJson)
-        return res.status(200).json({message: result.rows})
+
+        //request a new signedurl
+        const toks = result.rows[0].imglink != null ? result.rows[0].imglink.split("/") : null;
+        const url = await s3Helpers.s3GetSignedURL(toks[0], toks[1], toks[2]);
+        console.log(url);
+        result.rows[0].imglink = toks == null ? "": url;
+
+        responseJson = {message: result.rows};
+        return res.status(200).json(responseJson);
     })
 }
 
