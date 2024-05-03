@@ -214,7 +214,7 @@ class Database {
       prefs.setString('username', user['username'] ?? '');
       prefs.setString('bio', user['bio'] ?? '');
       prefs.setString('email', user['email'] ?? '');
-      prefs.setString('imagelink', user['imgLink']);
+      prefs.setString('imagelink', user['imglink']);
     } catch (e) {
       throw Exception("Error initializing user data: $e");
     }
