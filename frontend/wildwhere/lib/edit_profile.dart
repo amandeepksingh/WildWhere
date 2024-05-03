@@ -26,6 +26,7 @@ class EditProfileState extends State<EditProfile> {
   final TextEditingController _emailController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final picker = ImagePicker();
+  final db = Database();
   File? selectedProfileImage;
   String? imageLink;
 
@@ -149,8 +150,9 @@ class EditProfileState extends State<EditProfile> {
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter a username';
+                          } else {
+                            return null; // null means no error
                           }
-                          return null; // null means no error
                         },
                       ),
                       TextFormField(
@@ -234,6 +236,9 @@ class EditProfileState extends State<EditProfile> {
   }
 
   void handleSave() async {
+    if (await db.uniqueUsername(_usernameController.text) == false) {
+      
+    }
     if (_formKey.currentState!.validate()) {
       Database db = Database();
       await db.updateUserByUID(
