@@ -53,9 +53,6 @@ images.delete('/postPic/delete', (req, res, next) => imgFuncs.delete("posts", re
 
 //s3 helper functions
 class s3Helpers {
-    static test_stupid(j) {
-        console.log("you called something");
-    }
     static s3Put(localStream, uploadPath, extension) {
         /**
          * puts file to s3
@@ -114,11 +111,10 @@ class s3Helpers {
          * @returns:
          *      url for file
          */
-        console.log("signed url requested");
         const params = {
             Bucket: process.env.accessPoint,
             Key: `${path}/${fileName}${extension}`,
-            Expires: 604800
+            Expires: 3600
         }
         logger.logS3Req("GET SIGNED URL", params)
         return AWSPreSigner.getSignedUrl(s3Client, new AWSs3Module.GetObjectCommand(params)).then(url => {        
@@ -248,6 +244,7 @@ class imgFuncs {
         const uploadPath = `${type}/${idVal}${extension}`
         logger.logImgPathsParsed(localPath, uploadPath)
 
+        //await fs.unlink();
         //clear s3
         const deleteResp = await imgFuncs.clearS3(type, idVal)
         if (deleteResp != 204) {
@@ -274,7 +271,6 @@ class imgFuncs {
         
         //TODO: get s3 signed url - remove this
         // const url = await s3Helpers.s3GetSignedURL(type, idVal, extension);
-       // console.log("this sucks: " + url);
        
         //put url into db
         const query = {

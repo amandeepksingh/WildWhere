@@ -75,12 +75,16 @@ function selectUser(req, res, next) {
         responseJson = {message: result.rows}
         logger.logResponse(responseStatus, responseJson)
 
-        //request a new signedurl
-        const toks = result.rows[0].imglink != null ? result.rows[0].imglink.split("/") : null;
-        const url = await s3Helpers.s3GetSignedURL(toks[0], toks[1], toks[2]);
-        console.log(url);
-        result.rows[0].imglink = toks == null ? "": url;
-
+        if(result.rows && result.rows.length > 0) {
+            //request a new signedurl
+            if(result.rows[0].imglink != null) {
+                const toks = result.rows[0].imglink.split("/");
+                if(toks.length === 3) {
+                    const url = await s3Helpers.s3GetSignedURL(toks[0], toks[1], toks[2]);
+                    result.rows[0].imglink = url;
+                }
+            }
+        }
         responseJson = {message: result.rows};
         return res.status(200).json(responseJson);
     })
