@@ -285,6 +285,7 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin{
               reportanimationController.forward();
             });
           },
+          heroTag: 'tag3',
           elevation: 10,
           shape: const CircleBorder(),
           child: OverlayPortal(
@@ -312,6 +313,7 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin{
         child: Column(
           children: <Widget>[
             FloatingActionButton(
+              heroTag: 'tag',
               onPressed: () => currentLocation(_controller),
               shape: const CircleBorder(),
               elevation: 10,
@@ -319,6 +321,7 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin{
             ),
             const SizedBox(height: 10),
             FloatingActionButton(
+              heroTag: 'tag2',
               onPressed: _navigateToPostsPage,
               shape: const CircleBorder(),
               elevation: 10,
@@ -400,7 +403,7 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin{
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10.0),
                       child: Image.network(
-                          data['imgLink'] ??
+                          data['imglink'] ??
                               'https://via.placeholder.com/150', // Placeholder if no imgLink is available
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {

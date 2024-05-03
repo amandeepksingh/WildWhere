@@ -52,6 +52,7 @@ dependencies:
   mocktail: ^1.0.3
   shared_preferences: ^2.2.3
   permission_handler: ^11.3.1
+  geocoding: ^3.0.0
 
 dev_dependencies:
   flutter_test:

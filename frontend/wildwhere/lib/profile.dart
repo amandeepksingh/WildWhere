@@ -65,6 +65,7 @@ class _ProfilePageState extends State<Profile> {
                           clipBehavior: Clip.antiAlias,
                           decoration: const BoxDecoration(
                             shape: BoxShape.circle,
+                            color: Colors.grey,
                           ),
                           child: (imageLink == null || imageLink == '')
                               ? Image.asset('assets/images/defaultpp.png',
@@ -74,8 +75,8 @@ class _ProfilePageState extends State<Profile> {
                   ),
                   const SizedBox(width: 10),
                   SizedBox(
-                    width: 230,
-                    height: 75,
+                    width: MediaQuery.of(context).size.width * 0.55,
+                    height: MediaQuery.of(context).size.height * 0.10,
                     child: Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(

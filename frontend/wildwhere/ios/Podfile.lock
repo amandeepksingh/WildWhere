@@ -47,6 +47,8 @@ PODS:
     - Flutter
   - flutter_splash_screen (0.0.1):
     - Flutter
+  - geocoding_ios (1.0.5):
+    - Flutter
   - geolocator_apple (1.2.0):
     - Flutter
   - google_maps_flutter_ios (0.0.1):
@@ -124,6 +126,7 @@ DEPENDENCIES:
   - flutter_facebook_auth (from `.symlinks/plugins/flutter_facebook_auth/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - flutter_splash_screen (from `.symlinks/plugins/flutter_splash_screen/ios`)
+  - geocoding_ios (from `.symlinks/plugins/geocoding_ios/ios`)
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
   - google_maps_flutter_ios (from `.symlinks/plugins/google_maps_flutter_ios/ios`)
   - google_sign_in_ios (from `.symlinks/plugins/google_sign_in_ios/darwin`)
@@ -171,6 +174,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
   flutter_splash_screen:
     :path: ".symlinks/plugins/flutter_splash_screen/ios"
+  geocoding_ios:
+    :path: ".symlinks/plugins/geocoding_ios/ios"
   geolocator_apple:
     :path: ".symlinks/plugins/geolocator_apple/ios"
   google_maps_flutter_ios:
@@ -207,6 +212,7 @@ SPEC CHECKSUMS:
   flutter_facebook_auth: 66188df7905bfcaf3d6d2bd6527302c56448f04d
   flutter_secure_storage: 23fc622d89d073675f2eaa109381aefbcf5a49be
   flutter_splash_screen: 0323a1080aa7853a0f0af4491dc29d034be61746
+  geocoding_ios: d7460f56e80e118d57678efe5c2cdc888739ff18
   geolocator_apple: 6cbaf322953988e009e5ecb481f07efece75c450
   google_maps_flutter_ios: f135b968a67c05679e0a53538e900b5c174b0d99
   google_sign_in_ios: 7c205d44fdc266640375c6ac33d96ba3983dbe02
