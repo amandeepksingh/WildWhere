@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wildwhere/login.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -76,7 +79,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               Container(
                   alignment: Alignment.center,
-                  height: MediaQuery.of(context).size.height * 0.14,
+                  height: MediaQuery.of(context).size.height * 0.065,
                   padding: const EdgeInsets.only(
                       left: 0, top: 7, bottom: 7, right: 5),
                   margin: const EdgeInsets.only(
@@ -97,18 +100,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                 saveSettings();
                               });
                             })),
-                    const Divider(indent: 15, endIndent: 15),
-                    CupertinoListTile(
-                        title: const Text('Larger Text'),
-                        trailing: CupertinoSwitch(
-                            value: largeTextToggle,
-                            activeColor: const Color(0xFF5E9040),
-                            onChanged: (bool value) {
-                              setState(() {
-                                largeTextToggle = value;
-                                saveSettings();
-                              });
-                            }))
                   ])),
               const Padding(
                 padding: EdgeInsets.only(left: 2.0, top: 20.0, bottom: 0.0),
@@ -228,10 +219,72 @@ class _SettingsPageState extends State<SettingsPage> {
                   ],
                 ),
               ),
+              const SizedBox(height: 30),
+              Container(
+                width: double
+                    .infinity, // Ensures the container takes up all horizontal space
+                child: TextButton(
+                  style: ButtonStyle(
+                    padding: MaterialStateProperty.all(
+                        EdgeInsets.zero), // Removes any intrinsic padding
+                    backgroundColor: MaterialStateProperty.all(
+                        Colors.white), // Optional: sets background color
+                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                          15), // Keeps the rounded corners
+                    )),
+                  ),
+                  onPressed: () async {
+                    bool confirmed = await _showConfirmationDialog(context);
+                    if (confirmed) {
+                      await FirebaseAuth.instance.signOut();
+                      await GoogleSignIn().signOut();
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Login()));
+                    }
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(
+                        vertical:
+                            10.0), // Adjustable padding for button content
+                    child: Text(
+                      'Sign Out',
+                      style: TextStyle(
+                        color: Colors.red,
+                      ),
+                    ),
+                  ),
+                ),
+              )
             ]),
           ),
         ],
       ),
     );
+  }
+
+  Future<bool> _showConfirmationDialog(BuildContext context) async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (BuildContext context) {
+            return CupertinoAlertDialog(
+              content: const Text("Are you sure you want to log out?",
+                  style: TextStyle(fontSize: 14)),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text("Yes"),
+                  onPressed: () => Navigator.of(context).pop(true),
+                ),
+                TextButton(
+                  child: const Text("No"),
+                  onPressed: () => Navigator.of(context).pop(false),
+                ),
+              ],
+            );
+          },
+        ) ??
+        false; // In case the dialog is dismissed by tapping outside, return false.
   }
 }
