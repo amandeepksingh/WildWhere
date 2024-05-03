@@ -1,135 +1,807 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="Mocha Tests" time="6.492" tests="65" failures="0">
-  <testsuite name="" timestamp="2024-04-30T23:40:38" tests="65" time="6.491" failures="0">
-    <testcase name="HELP: test help method" time="0.006" classname="">
-    </testcase>
-    <testcase name="HELP: check every endpoint&apos;s other methods" time="0.258" classname="">
-    </testcase>
-    <testcase name="HELP: check every other endpoint" time="0.068" classname="">
-    </testcase>
-    <testcase name="IMAGES: test user normal functionality" time="1.314" classname="">
-    </testcase>
-    <testcase name="IMAGES: test user profile picture upload missing uid" time="0.045" classname="">
-    </testcase>
-    <testcase name="IMAGES: test user upload missing img" time="0.008" classname="">
-    </testcase>
-    <testcase name="IMAGES: test user override" time="0.849" classname="">
-    </testcase>
-    <testcase name="IMAGES: test post normal functionality" time="0.535" classname="">
-    </testcase>
-    <testcase name="IMAGES: test post profile picture upload missing pid" time="0.013" classname="">
-    </testcase>
-    <testcase name="IMAGES: test post upload missing img" time="0.006" classname="">
-    </testcase>
-    <testcase name="IMAGES: test post override" time="0.815" classname="">
-    </testcase>
-    <testcase name="IMAGES: test user delete normal" time="0.475" classname="">
-    </testcase>
-    <testcase name="IMAGES: test user delete missing uid" time="0.009" classname="">
-    </testcase>
-    <testcase name="IMAGES: test post delete normal" time="0.491" classname="">
-    </testcase>
-    <testcase name="IMAGES: test post delete missing pid" time="0.005" classname="">
-    </testcase>
-    <testcase name="POST: test select with empty" time="0.159" classname="">
-    </testcase>
-    <testcase name="POST: test select with too strict constraints" time="0.024" classname="">
-    </testcase>
-    <testcase name="POST: test select with few constraints" time="0.025" classname="">
-    </testcase>
-    <testcase name="POST: test select with radius but no coord" time="0.007" classname="">
-    </testcase>
-    <testcase name="POST: test select with ALL constraints (minus datetime and radius)" time="0.030" classname="">
-    </testcase>
-    <testcase name="POST: test select with multiple posts" time="0.033" classname="">
-    </testcase>
-    <testcase name="POST: null radius" time="0.031" classname="">
-    </testcase>
-    <testcase name="POST: zero radius" time="0.037" classname="">
-    </testcase>
-    <testcase name="POST: non-zero radius" time="0.080" classname="">
-    </testcase>
-    <testcase name="POST: after a time" time="0.041" classname="">
-    </testcase>
-    <testcase name="POST: before a time" time="0.036" classname="">
-    </testcase>
-    <testcase name="POST: between a time" time="0.037" classname="">
-    </testcase>
-    <testcase name="POST: camel instead of lowercase times" time="0.040" classname="">
-    </testcase>
-    <testcase name="POST: lowercase animalName" time="0.031" classname="">
-    </testcase>
-    <testcase name="POST: test create without uid" time="0.009" classname="">
-    </testcase>
-    <testcase name="POST: test create without coordinates" time="0.015" classname="">
-    </testcase>
-    <testcase name="POST: test create with only uid and coordinates" time="0.016" classname="">
-    </testcase>
-    <testcase name="POST: test create post with all params" time="0.017" classname="">
-    </testcase>
-    <testcase name="POST: test create with some but not all params" time="0.017" classname="">
-    </testcase>
-    <testcase name="POST: update post with imgLink" time="0.051" classname="">
-    </testcase>
-    <testcase name="POST: update post with empty imgLink" time="0.030" classname="">
-    </testcase>
-    <testcase name="POST: update post without pid" time="0.014" classname="">
-    </testcase>
-    <testcase name="POST: update post without updates" time="0.022" classname="">
-    </testcase>
-    <testcase name="POST: update post, update with camelcase" time="0.031" classname="">
-    </testcase>
-    <testcase name="POST: update post, update with lowercase" time="0.035" classname="">
-    </testcase>
-    <testcase name="POST: update post with all" time="0.041" classname="">
-    </testcase>
-    <testcase name="POST: delete post by PID" time="0.035" classname="">
-    </testcase>
-    <testcase name="POST: delete post by ID where ID not listed" time="0.008" classname="">
-    </testcase>
-    <testcase name="POST: delete post by without id" time="0.007" classname="">
-    </testcase>
-    <testcase name="USER: test select with empty" time="0.120" classname="">
-    </testcase>
-    <testcase name="USER: test select with no matching criteria" time="0.016" classname="">
-    </testcase>
-    <testcase name="USER: test select with some constraints" time="0.028" classname="">
-    </testcase>
-    <testcase name="USER: test select with ALL constraints" time="0.067" classname="">
-    </testcase>
-    <testcase name="USER: test select with many users" time="0.029" classname="">
-    </testcase>
-    <testcase name="USER: test create" time="0.009" classname="">
-    </testcase>
-    <testcase name="USER: test create without uid" time="0.007" classname="">
-    </testcase>
-    <testcase name="USER: test create with all params" time="0.017" classname="">
-    </testcase>
-    <testcase name="USER: test create with camel case qualifiers" time="0.015" classname="">
-    </testcase>
-    <testcase name="USER: test create with lower case qualifiers" time="0.018" classname="">
-    </testcase>
-    <testcase name="USER: test create with some but not all params" time="0.018" classname="">
-    </testcase>
-    <testcase name="USER: update user with email" time="0.032" classname="">
-    </testcase>
-    <testcase name="USER: update user, set field to empty string" time="0.044" classname="">
-    </testcase>
-    <testcase name="USER: update user, update all fields" time="0.026" classname="">
-    </testcase>
-    <testcase name="USER: update user, update with camelcase" time="0.037" classname="">
-    </testcase>
-    <testcase name="USER: update user, update with lowercase" time="0.024" classname="">
-    </testcase>
-    <testcase name="USER: update user without updates" time="0.014" classname="">
-    </testcase>
-    <testcase name="USER: update user without uid" time="0.020" classname="">
-    </testcase>
-    <testcase name="USER: delete user by ID" time="0.028" classname="">
-    </testcase>
-    <testcase name="USER: delete user by ID where ID not listed" time="0.009" classname="">
-    </testcase>
-    <testcase name="USER: delete user by ID without uid" time="0.007" classname="">
+<testsuites name="Mocha Tests" time="6.536" tests="72" failures="53">
+  <testsuite name="" timestamp="2024-05-02T17:56:21" tests="72" time="6.536" failures="53">
+    <testcase name="HELP: test help method" time="0.002" classname="">
+    </testcase>
+    <testcase name="HELP: check every endpoint&apos;s other methods" time="0.024" classname="">
+    </testcase>
+    <testcase name="HELP: check every other endpoint" time="0.004" classname="">
+    </testcase>
+    <testcase name="IMAGES: test user normal functionality" time="2.005" classname="">
+      <failure message="Timeout of 2000ms exceeded. For async tests and hooks, ensure &quot;done()&quot; is called; if returning a Promise, ensure it resolves. (/Users/andrewli/Documents/spring2024/320/WildWhere/backend/test/images.test.js)" type="Error"><![CDATA[Error: Timeout of 2000ms exceeded. For async tests and hooks, ensure "done()" is called; if returning a Promise, ensure it resolves. (/Users/andrewli/Documents/spring2024/320/WildWhere/backend/test/images.test.js)
+    at listOnTimeout (node:internal/timers:573:17)
+    at process.processTimers (node:internal/timers:514:7)]]></failure>
+    </testcase>
+    <testcase name="IMAGES: test user profile picture upload missing uid" time="0.006" classname="">
+    </testcase>
+    <testcase name="IMAGES: test user upload missing img" time="0.002" classname="">
+    </testcase>
+    <testcase name="IMAGES: test user override" time="2.001" classname="">
+      <failure message="Timeout of 2000ms exceeded. For async tests and hooks, ensure &quot;done()&quot; is called; if returning a Promise, ensure it resolves. (/Users/andrewli/Documents/spring2024/320/WildWhere/backend/test/images.test.js)" type="Error"><![CDATA[Error: Timeout of 2000ms exceeded. For async tests and hooks, ensure "done()" is called; if returning a Promise, ensure it resolves. (/Users/andrewli/Documents/spring2024/320/WildWhere/backend/test/images.test.js)
+    at listOnTimeout (node:internal/timers:573:17)
+    at process.processTimers (node:internal/timers:514:7)]]></failure>
+    </testcase>
+    <testcase name="IMAGES: test post normal functionality" time="0.021" classname="">
+      <failure message=".field(name, val) val can not be empty" type="Error"><![CDATA[Error: .field(name, val) val can not be empty
+    at RequestBase.field (node_modules/superagent/lib/request-base.js:421:11)
+    at Context.<anonymous> (test/images.test.js:104:73)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)]]></failure>
+    </testcase>
+    <testcase name="IMAGES: test post profile picture upload missing pid" time="0.006" classname="">
+    </testcase>
+    <testcase name="IMAGES: test post upload missing img" time="0.002" classname="">
+    </testcase>
+    <testcase name="IMAGES: test post override" time="0.009" classname="">
+      <failure message=".field(name, val) val can not be empty" type="Error"><![CDATA[Error: .field(name, val) val can not be empty
+    at RequestBase.field (node_modules/superagent/lib/request-base.js:421:11)
+    at Context.<anonymous> (test/images.test.js:138:73)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)]]></failure>
+    </testcase>
+    <testcase name="IMAGES: test user delete normal" time="2.001" classname="">
+      <failure message="Timeout of 2000ms exceeded. For async tests and hooks, ensure &quot;done()&quot; is called; if returning a Promise, ensure it resolves. (/Users/andrewli/Documents/spring2024/320/WildWhere/backend/test/images.test.js)" type="Error"><![CDATA[Error: Timeout of 2000ms exceeded. For async tests and hooks, ensure "done()" is called; if returning a Promise, ensure it resolves. (/Users/andrewli/Documents/spring2024/320/WildWhere/backend/test/images.test.js)
+    at listOnTimeout (node:internal/timers:573:17)
+    at process.processTimers (node:internal/timers:514:7)]]></failure>
+    </testcase>
+    <testcase name="IMAGES: test user delete missing uid" time="0.006" classname="">
+    </testcase>
+    <testcase name="IMAGES: test post delete normal" time="0.014" classname="">
+      <failure message=".field(name, val) val can not be empty" type="Error"><![CDATA[Error: .field(name, val) val can not be empty
+    at RequestBase.field (node_modules/superagent/lib/request-base.js:421:11)
+    at Context.<anonymous> (test/images.test.js:199:59)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)]]></failure>
+    </testcase>
+    <testcase name="IMAGES: test post delete missing pid" time="0.003" classname="">
+    </testcase>
+    <testcase name="POST: test select with empty" time="0.014" classname="">
+      <failure message="logger.logDBerr is not a function" type="TypeError"><![CDATA[TypeError: logger.logDBerr is not a function
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/src/posts.js:118:20
+    at PendingItem.callback (node_modules/pg-pool/index.js:401:16)
+    at Client._connectionCallback (node_modules/pg-pool/index.js:254:23)
+    at Client._handleErrorWhileConnecting (node_modules/pg/lib/client.js:327:19)
+    at Client._handleErrorEvent (node_modules/pg/lib/client.js:337:19)
+    at Connection.emit (node:events:519:28)
+    at Socket.<anonymous> (node_modules/pg/lib/connection.js:77:23)
+    at Object.onceWrapper (node:events:634:26)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:559:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:510:3)
+    at Readable.push (node:internal/streams/readable:390:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)]]></failure>
+    </testcase>
+    <testcase name="POST: test select with too strict constraints" time="0.012" classname="">
+      <failure message="Expected values to be strictly equal:
+[32m+ actual[39m [31m- expected[39m
+
+[32m+[39m &apos;The server does not support SSL connections&apos;
+[31m-[39m &apos;post created&apos;" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+[32m+ actual[39m [31m- expected[39m
+
+[32m+[39m 'The server does not support SSL connections'
+[31m-[39m 'post created'
+    at Context.<anonymous> (test/posts.test.js:45:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -The server does not support SSL connections
+      +post created
+      ]]></failure>
+    </testcase>
+    <testcase name="POST: test select with few constraints" time="0.008" classname="">
+      <failure message="Expected values to be strictly equal:
+[32m+ actual[39m [31m- expected[39m
+
+[32m+[39m &apos;The server does not support SSL connections&apos;
+[31m-[39m &apos;post created&apos;" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+[32m+ actual[39m [31m- expected[39m
+
+[32m+[39m 'The server does not support SSL connections'
+[31m-[39m 'post created'
+    at Context.<anonymous> (test/posts.test.js:60:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -The server does not support SSL connections
+      +post created
+      ]]></failure>
+    </testcase>
+    <testcase name="POST: test select with radius but no coord" time="0.002" classname="">
+    </testcase>
+    <testcase name="POST: test select with ALL constraints (minus datetime and radius)" time="0.010" classname="">
+      <failure message="logger.logDBerr is not a function" type="TypeError"><![CDATA[TypeError: logger.logDBerr is not a function
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/src/posts.js:118:20
+    at PendingItem.callback (node_modules/pg-pool/index.js:401:16)
+    at Client._connectionCallback (node_modules/pg-pool/index.js:254:23)
+    at Client._handleErrorWhileConnecting (node_modules/pg/lib/client.js:327:19)
+    at Client._handleErrorEvent (node_modules/pg/lib/client.js:337:19)
+    at Connection.emit (node:events:519:28)
+    at Socket.<anonymous> (node_modules/pg/lib/connection.js:77:23)
+    at Object.onceWrapper (node:events:634:26)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:559:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:510:3)
+    at Readable.push (node:internal/streams/readable:390:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)]]></failure>
+    </testcase>
+    <testcase name="POST: test select with multiple posts" time="0.012" classname="">
+      <failure message="logger.logDBerr is not a function" type="TypeError"><![CDATA[TypeError: logger.logDBerr is not a function
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/src/posts.js:118:20
+    at PendingItem.callback (node_modules/pg-pool/index.js:401:16)
+    at Client._connectionCallback (node_modules/pg-pool/index.js:254:23)
+    at Client._handleErrorWhileConnecting (node_modules/pg/lib/client.js:327:19)
+    at Client._handleErrorEvent (node_modules/pg/lib/client.js:337:19)
+    at Connection.emit (node:events:519:28)
+    at Socket.<anonymous> (node_modules/pg/lib/connection.js:77:23)
+    at Object.onceWrapper (node:events:634:26)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:559:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:510:3)
+    at Readable.push (node:internal/streams/readable:390:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)]]></failure>
+    </testcase>
+    <testcase name="POST: null radius" time="0.015" classname="">
+      <failure message="logger.logDBerr is not a function" type="TypeError"><![CDATA[TypeError: logger.logDBerr is not a function
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/src/posts.js:118:20
+    at PendingItem.callback (node_modules/pg-pool/index.js:401:16)
+    at Client._connectionCallback (node_modules/pg-pool/index.js:254:23)
+    at Client._handleErrorWhileConnecting (node_modules/pg/lib/client.js:327:19)
+    at Client._handleErrorEvent (node_modules/pg/lib/client.js:337:19)
+    at Connection.emit (node:events:519:28)
+    at Socket.<anonymous> (node_modules/pg/lib/connection.js:77:23)
+    at Object.onceWrapper (node:events:634:26)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:559:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:510:3)
+    at Readable.push (node:internal/streams/readable:390:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)]]></failure>
+    </testcase>
+    <testcase name="POST: zero radius" time="0.012" classname="">
+      <failure message="logger.logDBerr is not a function" type="TypeError"><![CDATA[TypeError: logger.logDBerr is not a function
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/src/posts.js:118:20
+    at PendingItem.callback (node_modules/pg-pool/index.js:401:16)
+    at Client._connectionCallback (node_modules/pg-pool/index.js:254:23)
+    at Client._handleErrorWhileConnecting (node_modules/pg/lib/client.js:327:19)
+    at Client._handleErrorEvent (node_modules/pg/lib/client.js:337:19)
+    at Connection.emit (node:events:519:28)
+    at Socket.<anonymous> (node_modules/pg/lib/connection.js:77:23)
+    at Object.onceWrapper (node:events:634:26)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:559:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:510:3)
+    at Readable.push (node:internal/streams/readable:390:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)]]></failure>
+    </testcase>
+    <testcase name="POST: non-zero radius" time="0.018" classname="">
+      <failure message="logger.logDBerr is not a function" type="TypeError"><![CDATA[TypeError: logger.logDBerr is not a function
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/src/posts.js:118:20
+    at PendingItem.callback (node_modules/pg-pool/index.js:401:16)
+    at Client._connectionCallback (node_modules/pg-pool/index.js:254:23)
+    at Client._handleErrorWhileConnecting (node_modules/pg/lib/client.js:327:19)
+    at Client._handleErrorEvent (node_modules/pg/lib/client.js:337:19)
+    at Connection.emit (node:events:519:28)
+    at Socket.<anonymous> (node_modules/pg/lib/connection.js:77:23)
+    at Object.onceWrapper (node:events:634:26)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:559:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:510:3)
+    at Readable.push (node:internal/streams/readable:390:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)]]></failure>
+    </testcase>
+    <testcase name="POST: after a time" time="0.014" classname="">
+      <failure message="logger.logDBerr is not a function" type="TypeError"><![CDATA[TypeError: logger.logDBerr is not a function
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/src/posts.js:118:20
+    at PendingItem.callback (node_modules/pg-pool/index.js:401:16)
+    at Client._connectionCallback (node_modules/pg-pool/index.js:254:23)
+    at Client._handleErrorWhileConnecting (node_modules/pg/lib/client.js:327:19)
+    at Client._handleErrorEvent (node_modules/pg/lib/client.js:337:19)
+    at Connection.emit (node:events:519:28)
+    at Socket.<anonymous> (node_modules/pg/lib/connection.js:77:23)
+    at Object.onceWrapper (node:events:634:26)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:559:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:510:3)
+    at Readable.push (node:internal/streams/readable:390:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)]]></failure>
+    </testcase>
+    <testcase name="POST: before a time" time="0.013" classname="">
+      <failure message="logger.logDBerr is not a function" type="TypeError"><![CDATA[TypeError: logger.logDBerr is not a function
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/src/posts.js:118:20
+    at PendingItem.callback (node_modules/pg-pool/index.js:401:16)
+    at Client._connectionCallback (node_modules/pg-pool/index.js:254:23)
+    at Client._handleErrorWhileConnecting (node_modules/pg/lib/client.js:327:19)
+    at Client._handleErrorEvent (node_modules/pg/lib/client.js:337:19)
+    at Connection.emit (node:events:519:28)
+    at Socket.<anonymous> (node_modules/pg/lib/connection.js:77:23)
+    at Object.onceWrapper (node:events:634:26)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:559:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:510:3)
+    at Readable.push (node:internal/streams/readable:390:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)]]></failure>
+    </testcase>
+    <testcase name="POST: between a time" time="0.014" classname="">
+      <failure message="logger.logDBerr is not a function" type="TypeError"><![CDATA[TypeError: logger.logDBerr is not a function
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/src/posts.js:118:20
+    at PendingItem.callback (node_modules/pg-pool/index.js:401:16)
+    at Client._connectionCallback (node_modules/pg-pool/index.js:254:23)
+    at Client._handleErrorWhileConnecting (node_modules/pg/lib/client.js:327:19)
+    at Client._handleErrorEvent (node_modules/pg/lib/client.js:337:19)
+    at Connection.emit (node:events:519:28)
+    at Socket.<anonymous> (node_modules/pg/lib/connection.js:77:23)
+    at Object.onceWrapper (node:events:634:26)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:559:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:510:3)
+    at Readable.push (node:internal/streams/readable:390:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)]]></failure>
+    </testcase>
+    <testcase name="POST: camel instead of lowercase times" time="0.013" classname="">
+      <failure message="logger.logDBerr is not a function" type="TypeError"><![CDATA[TypeError: logger.logDBerr is not a function
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/src/posts.js:118:20
+    at PendingItem.callback (node_modules/pg-pool/index.js:401:16)
+    at Client._connectionCallback (node_modules/pg-pool/index.js:254:23)
+    at Client._handleErrorWhileConnecting (node_modules/pg/lib/client.js:327:19)
+    at Client._handleErrorEvent (node_modules/pg/lib/client.js:337:19)
+    at Connection.emit (node:events:519:28)
+    at Socket.<anonymous> (node_modules/pg/lib/connection.js:77:23)
+    at Object.onceWrapper (node:events:634:26)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:559:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:510:3)
+    at Readable.push (node:internal/streams/readable:390:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)]]></failure>
+    </testcase>
+    <testcase name="POST: lowercase animalName" time="0.008" classname="">
+      <failure message="logger.logDBerr is not a function" type="TypeError"><![CDATA[TypeError: logger.logDBerr is not a function
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/src/posts.js:118:20
+    at PendingItem.callback (node_modules/pg-pool/index.js:401:16)
+    at Client._connectionCallback (node_modules/pg-pool/index.js:254:23)
+    at Client._handleErrorWhileConnecting (node_modules/pg/lib/client.js:327:19)
+    at Client._handleErrorEvent (node_modules/pg/lib/client.js:337:19)
+    at Connection.emit (node:events:519:28)
+    at Socket.<anonymous> (node_modules/pg/lib/connection.js:77:23)
+    at Object.onceWrapper (node:events:634:26)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:559:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:510:3)
+    at Readable.push (node:internal/streams/readable:390:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)]]></failure>
+    </testcase>
+    <testcase name="POST: test create without uid" time="0.002" classname="">
+    </testcase>
+    <testcase name="POST: test create without coordinates" time="0.004" classname="">
+    </testcase>
+    <testcase name="POST: test create with only uid and coordinates" time="0.006" classname="">
+      <failure message="Expected values to be strictly equal:
+
+400 !== 200
+" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+400 !== 200
+
+    at Context.<anonymous> (test/posts.test.js:420:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -400
+      +200
+      ]]></failure>
+    </testcase>
+    <testcase name="POST: test create post with all params" time="0.006" classname="">
+      <failure message="Expected values to be strictly equal:
+[32m+ actual[39m [31m- expected[39m
+
+[32m+[39m &apos;The server does not support SSL connections&apos;
+[31m-[39m &apos;post created&apos;" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+[32m+ actual[39m [31m- expected[39m
+
+[32m+[39m 'The server does not support SSL connections'
+[31m-[39m 'post created'
+    at Context.<anonymous> (test/posts.test.js:432:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -The server does not support SSL connections
+      +post created
+      ]]></failure>
+    </testcase>
+    <testcase name="POST: test create with some but not all params" time="0.007" classname="">
+      <failure message="Expected values to be strictly equal:
+[32m+ actual[39m [31m- expected[39m
+
+[32m+[39m &apos;The server does not support SSL connections&apos;
+[31m-[39m &apos;post created&apos;" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+[32m+ actual[39m [31m- expected[39m
+
+[32m+[39m 'The server does not support SSL connections'
+[31m-[39m 'post created'
+    at Context.<anonymous> (test/posts.test.js:443:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -The server does not support SSL connections
+      +post created
+      ]]></failure>
+    </testcase>
+    <testcase name="POST: update post with imgLink" time="0.008" classname="">
+      <failure message="Expected values to be strictly equal:
+
+400 !== 200
+" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+400 !== 200
+
+    at Context.<anonymous> (test/posts.test.js:459:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -400
+      +200
+      ]]></failure>
+    </testcase>
+    <testcase name="POST: update post with empty imgLink" time="0.020" classname="">
+      <failure message="Expected values to be strictly equal:
+
+400 !== 200
+" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+400 !== 200
+
+    at Context.<anonymous> (test/posts.test.js:491:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -400
+      +200
+      ]]></failure>
+    </testcase>
+    <testcase name="POST: update post without pid" time="0.005" classname="">
+    </testcase>
+    <testcase name="POST: update post without updates" time="0.007" classname="">
+    </testcase>
+    <testcase name="POST: update post, update with camelcase" time="0.009" classname="">
+      <failure message="Expected values to be strictly equal:
+
+400 !== 200
+" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+400 !== 200
+
+    at Context.<anonymous> (test/posts.test.js:546:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -400
+      +200
+      ]]></failure>
+    </testcase>
+    <testcase name="POST: update post, update with lowercase" time="0.008" classname="">
+      <failure message="Expected values to be strictly equal:
+
+400 !== 200
+" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+400 !== 200
+
+    at Context.<anonymous> (test/posts.test.js:576:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -400
+      +200
+      ]]></failure>
+    </testcase>
+    <testcase name="POST: update post with all" time="0.010" classname="">
+      <failure message="Expected values to be strictly equal:
+
+400 !== 200
+" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+400 !== 200
+
+    at Context.<anonymous> (test/posts.test.js:609:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -400
+      +200
+      ]]></failure>
+    </testcase>
+    <testcase name="POST: delete post by PID" time="0.010" classname="">
+      <failure message="Expected values to be strictly equal:
+[32m+ actual[39m [31m- expected[39m
+
+[32m+[39m &apos;The server does not support SSL connections&apos;
+[31m-[39m &apos;post with pid undefined deleted if existed&apos;" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+[32m+ actual[39m [31m- expected[39m
+
+[32m+[39m 'The server does not support SSL connections'
+[31m-[39m 'post with pid undefined deleted if existed'
+    at Context.<anonymous> (test/posts.test.js:642:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -The server does not support SSL connections
+      +post with pid undefined deleted if existed
+      ]]></failure>
+    </testcase>
+    <testcase name="POST: delete post by ID where ID not listed" time="0.003" classname="">
+      <failure message="Expected values to be strictly equal:
+
+400 !== 200
+" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+400 !== 200
+
+    at Context.<anonymous> (test/posts.test.js:654:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -400
+      +200
+      ]]></failure>
+    </testcase>
+    <testcase name="POST: delete post by without id" time="0.002" classname="">
+    </testcase>
+    <testcase name="REPORTS: normal functionality with single post" time="0.008" classname="">
+      <failure message="relation &quot;reports&quot; does not exist" type="error"><![CDATA[error: relation "reports" does not exist
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/reports.test.js:25:5)
+    at async Context.<anonymous> (test/reports.test.js:30:9)]]></failure>
+    </testcase>
+    <testcase name="REPORTS: normal functionality too strict" time="0.006" classname="">
+      <failure message="relation &quot;reports&quot; does not exist" type="error"><![CDATA[error: relation "reports" does not exist
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/reports.test.js:25:5)
+    at async Context.<anonymous> (test/reports.test.js:51:9)]]></failure>
+    </testcase>
+    <testcase name="REPORTS: normal functionality multiple posts" time="0.005" classname="">
+      <failure message="relation &quot;reports&quot; does not exist" type="error"><![CDATA[error: relation "reports" does not exist
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/reports.test.js:25:5)
+    at async Context.<anonymous> (test/reports.test.js:73:9)]]></failure>
+    </testcase>
+    <testcase name="REPORTS: normal functionality" time="0.004" classname="">
+      <failure message="relation &quot;reports&quot; does not exist" type="error"><![CDATA[error: relation "reports" does not exist
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/reports.test.js:25:5)
+    at async Context.<anonymous> (test/reports.test.js:105:9)]]></failure>
+    </testcase>
+    <testcase name="REPORTS: missing pid" time="0.004" classname="">
+      <failure message="relation &quot;reports&quot; does not exist" type="error"><![CDATA[error: relation "reports" does not exist
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/reports.test.js:25:5)
+    at async Context.<anonymous> (test/reports.test.js:118:9)]]></failure>
+    </testcase>
+    <testcase name="REPORTS: missing uid" time="0.003" classname="">
+      <failure message="relation &quot;reports&quot; does not exist" type="error"><![CDATA[error: relation "reports" does not exist
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/reports.test.js:25:5)
+    at async Context.<anonymous> (test/reports.test.js:131:9)]]></failure>
+    </testcase>
+    <testcase name="REPORTS: missing reason" time="0.003" classname="">
+      <failure message="relation &quot;reports&quot; does not exist" type="error"><![CDATA[error: relation "reports" does not exist
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/reports.test.js:25:5)
+    at async Context.<anonymous> (test/reports.test.js:144:9)]]></failure>
+    </testcase>
+    <testcase name="USER: test select with empty" time="0.005" classname="">
+      <failure message="logger.logDBerr is not a function" type="TypeError"><![CDATA[TypeError: logger.logDBerr is not a function
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/src/users.js:66:20
+    at PendingItem.callback (node_modules/pg-pool/index.js:401:16)
+    at Client._connectionCallback (node_modules/pg-pool/index.js:254:23)
+    at Client._handleErrorWhileConnecting (node_modules/pg/lib/client.js:327:19)
+    at Client._handleErrorEvent (node_modules/pg/lib/client.js:337:19)
+    at Connection.emit (node:events:519:28)
+    at Socket.<anonymous> (node_modules/pg/lib/connection.js:77:23)
+    at Object.onceWrapper (node:events:634:26)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:559:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:510:3)
+    at Readable.push (node:internal/streams/readable:390:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)]]></failure>
+    </testcase>
+    <testcase name="USER: test select with no matching criteria" time="0.004" classname="">
+      <failure message="logger.logDBerr is not a function" type="TypeError"><![CDATA[TypeError: logger.logDBerr is not a function
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/src/users.js:66:20
+    at PendingItem.callback (node_modules/pg-pool/index.js:401:16)
+    at Client._connectionCallback (node_modules/pg-pool/index.js:254:23)
+    at Client._handleErrorWhileConnecting (node_modules/pg/lib/client.js:327:19)
+    at Client._handleErrorEvent (node_modules/pg/lib/client.js:337:19)
+    at Connection.emit (node:events:519:28)
+    at Socket.<anonymous> (node_modules/pg/lib/connection.js:77:23)
+    at Object.onceWrapper (node:events:634:26)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:559:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:510:3)
+    at Readable.push (node:internal/streams/readable:390:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)]]></failure>
+    </testcase>
+    <testcase name="USER: test select with some constraints" time="0.006" classname="">
+      <failure message="logger.logDBerr is not a function" type="TypeError"><![CDATA[TypeError: logger.logDBerr is not a function
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/src/users.js:66:20
+    at PendingItem.callback (node_modules/pg-pool/index.js:401:16)
+    at Client._connectionCallback (node_modules/pg-pool/index.js:254:23)
+    at Client._handleErrorWhileConnecting (node_modules/pg/lib/client.js:327:19)
+    at Client._handleErrorEvent (node_modules/pg/lib/client.js:337:19)
+    at Connection.emit (node:events:519:28)
+    at Socket.<anonymous> (node_modules/pg/lib/connection.js:77:23)
+    at Object.onceWrapper (node:events:634:26)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:559:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:510:3)
+    at Readable.push (node:internal/streams/readable:390:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)]]></failure>
+    </testcase>
+    <testcase name="USER: test select with ALL constraints" time="0.019" classname="">
+      <failure message="logger.logDBerr is not a function" type="TypeError"><![CDATA[TypeError: logger.logDBerr is not a function
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/src/users.js:66:20
+    at PendingItem.callback (node_modules/pg-pool/index.js:401:16)
+    at Client._connectionCallback (node_modules/pg-pool/index.js:254:23)
+    at Client._handleErrorWhileConnecting (node_modules/pg/lib/client.js:327:19)
+    at Client._handleErrorEvent (node_modules/pg/lib/client.js:337:19)
+    at Connection.emit (node:events:519:28)
+    at Socket.<anonymous> (node_modules/pg/lib/connection.js:77:23)
+    at Object.onceWrapper (node:events:634:26)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:559:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:510:3)
+    at Readable.push (node:internal/streams/readable:390:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)]]></failure>
+    </testcase>
+    <testcase name="USER: test select with many users" time="0.011" classname="">
+      <failure message="logger.logDBerr is not a function" type="TypeError"><![CDATA[TypeError: logger.logDBerr is not a function
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/src/users.js:66:20
+    at PendingItem.callback (node_modules/pg-pool/index.js:401:16)
+    at Client._connectionCallback (node_modules/pg-pool/index.js:254:23)
+    at Client._handleErrorWhileConnecting (node_modules/pg/lib/client.js:327:19)
+    at Client._handleErrorEvent (node_modules/pg/lib/client.js:337:19)
+    at Connection.emit (node:events:519:28)
+    at Socket.<anonymous> (node_modules/pg/lib/connection.js:77:23)
+    at Object.onceWrapper (node:events:634:26)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:559:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:510:3)
+    at Readable.push (node:internal/streams/readable:390:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23)]]></failure>
+    </testcase>
+    <testcase name="USER: test create" time="0.003" classname="">
+      <failure message="Expected values to be strictly equal:
+
+400 !== 200
+" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+400 !== 200
+
+    at Context.<anonymous> (test/users.test.js:150:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -400
+      +200
+      ]]></failure>
+    </testcase>
+    <testcase name="USER: test create without uid" time="0.002" classname="">
+    </testcase>
+    <testcase name="USER: test create with all params" time="0.003" classname="">
+      <failure message="Expected values to be strictly equal:
+[32m+ actual[39m [31m- expected[39m
+
+[32m+[39m &apos;The server does not support SSL connections&apos;
+[31m-[39m &apos;user created&apos;" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+[32m+ actual[39m [31m- expected[39m
+
+[32m+[39m 'The server does not support SSL connections'
+[31m-[39m 'user created'
+    at Context.<anonymous> (test/users.test.js:186:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -The server does not support SSL connections
+      +user created
+      ]]></failure>
+    </testcase>
+    <testcase name="USER: test create with camel case qualifiers" time="0.003" classname="">
+      <failure message="Expected values to be strictly equal:
+[32m+ actual[39m [31m- expected[39m
+
+[32m+[39m &apos;The server does not support SSL connections&apos;
+[31m-[39m &apos;user created&apos;" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+[32m+ actual[39m [31m- expected[39m
+
+[32m+[39m 'The server does not support SSL connections'
+[31m-[39m 'user created'
+    at Context.<anonymous> (test/users.test.js:212:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -The server does not support SSL connections
+      +user created
+      ]]></failure>
+    </testcase>
+    <testcase name="USER: test create with lower case qualifiers" time="0.003" classname="">
+      <failure message="Expected values to be strictly equal:
+[32m+ actual[39m [31m- expected[39m
+
+[32m+[39m &apos;The server does not support SSL connections&apos;
+[31m-[39m &apos;user created&apos;" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+[32m+ actual[39m [31m- expected[39m
+
+[32m+[39m 'The server does not support SSL connections'
+[31m-[39m 'user created'
+    at Context.<anonymous> (test/users.test.js:238:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -The server does not support SSL connections
+      +user created
+      ]]></failure>
+    </testcase>
+    <testcase name="USER: test create with some but not all params" time="0.003" classname="">
+      <failure message="Expected values to be strictly equal:
+[32m+ actual[39m [31m- expected[39m
+
+[32m+[39m &apos;The server does not support SSL connections&apos;
+[31m-[39m &apos;user created&apos;" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+[32m+ actual[39m [31m- expected[39m
+
+[32m+[39m 'The server does not support SSL connections'
+[31m-[39m 'user created'
+    at Context.<anonymous> (test/users.test.js:273:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -The server does not support SSL connections
+      +user created
+      ]]></failure>
+    </testcase>
+    <testcase name="USER: update user with email" time="0.006" classname="">
+      <failure message="Expected values to be strictly equal:
+
+400 !== 200
+" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+400 !== 200
+
+    at Context.<anonymous> (test/users.test.js:286:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -400
+      +200
+      ]]></failure>
+    </testcase>
+    <testcase name="USER: update user, set field to empty string" time="0.005" classname="">
+      <failure message="Expected values to be strictly equal:
+
+400 !== 200
+" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+400 !== 200
+
+    at Context.<anonymous> (test/users.test.js:314:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -400
+      +200
+      ]]></failure>
+    </testcase>
+    <testcase name="USER: update user, update all fields" time="0.004" classname="">
+      <failure message="Expected values to be strictly equal:
+
+400 !== 200
+" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+400 !== 200
+
+    at Context.<anonymous> (test/users.test.js:342:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -400
+      +200
+      ]]></failure>
+    </testcase>
+    <testcase name="USER: update user, update with camelcase" time="0.006" classname="">
+      <failure message="Expected values to be strictly equal:
+
+400 !== 200
+" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+400 !== 200
+
+    at Context.<anonymous> (test/users.test.js:369:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -400
+      +200
+      ]]></failure>
+    </testcase>
+    <testcase name="USER: update user, update with lowercase" time="0.005" classname="">
+      <failure message="Expected values to be strictly equal:
+
+400 !== 200
+" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+400 !== 200
+
+    at Context.<anonymous> (test/users.test.js:396:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -400
+      +200
+      ]]></failure>
+    </testcase>
+    <testcase name="USER: update user without updates" time="0.003" classname="">
+    </testcase>
+    <testcase name="USER: update user without uid" time="0.006" classname="">
+    </testcase>
+    <testcase name="USER: delete user by ID" time="0.006" classname="">
+      <failure message="Expected values to be strictly equal:
+
+400 !== 200
+" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+400 !== 200
+
+    at Context.<anonymous> (test/users.test.js:445:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -400
+      +200
+      ]]></failure>
+    </testcase>
+    <testcase name="USER: delete user by ID where ID not listed" time="0.002" classname="">
+      <failure message="Expected values to be strictly equal:
+
+400 !== 200
+" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+400 !== 200
+
+    at Context.<anonymous> (test/users.test.js:456:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -400
+      +200
+      ]]></failure>
+    </testcase>
+    <testcase name="USER: delete user by ID without uid" time="0.001" classname="">
     </testcase>
   </testsuite>
 </testsuites>

@@ -39,6 +39,7 @@ describe("IMAGES: test user image upload", () => {
         
         //check img in db
         const resp2 = await request(app).get(`/users/selectUser?uid=${uid}`)
+        console.log(resp2.body.message[0]);
         const url2 = resp2.body.message[0].imglink
         assert.ok(url2.includes('http'), "valid url put to database by upload")
 

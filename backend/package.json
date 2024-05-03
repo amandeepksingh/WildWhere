@@ -7,6 +7,7 @@
     "start": "node src/server.js",
     "test": "npx mocha --reporter mocha-junit-reporter --reporter-options mochaFile=server_testing/test-results.xml --reporter-options jenkinsMode=true --serial --exit ",
     "coverage": "npx nyc mocha",
+    "test-no-report": "npx mocha --serial --exit",
     "serve": "forever start src/server.js"
   },
   "author": "",

@@ -4,6 +4,8 @@ const app = require('./app');
 const fs = require('fs');
 require('dotenv').config({path: "../../.env"});
 
+
+console.log(process.env.location);
 if(process.env.location == "local") {
 	console.log(`[server] Detected that you are running locally`);
 } else {

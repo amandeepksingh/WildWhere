@@ -34,6 +34,9 @@ const imageStore = multer.diskStorage({
 const imageUpload = multer({ storage: imageStore })
 
 //configure S3Client
+// console.log(process.env.location);
+// console.log(process.env.accessKeyID);
+// console.log(process.env.secretAccessKey);
 const s3Client = new AWSs3Module.S3Client({
     credentials: {
         accessKeyId: process.env.accessKeyID,
@@ -41,6 +44,8 @@ const s3Client = new AWSs3Module.S3Client({
     },
     region: 'us-east-2'
 })
+
+
 
 //route to endpoints
 const images = express()
@@ -109,6 +114,7 @@ class s3Helpers {
          * @returns:
          *      url for file
          */
+        //console.log("signed url requested");
         const params = {
             Bucket: process.env.accessPoint,
             Key: `${path}/${fileName}${extension}`,
@@ -116,7 +122,8 @@ class s3Helpers {
         }
         logger.logS3Req("GET SIGNED URL", params)
         return AWSPreSigner.getSignedUrl(s3Client, new AWSs3Module.GetObjectCommand(params)).then(url => {        
-            logger.logS3URL(url)
+            logger.logS3URL(url);
+            //console.log(url);
             return url
         })
     }
@@ -159,6 +166,12 @@ class imgFuncs {
             logger.logAlreadyInS3(type, id, false)
             return 204 //replacing successful delete with successful inaction
         }
+    }
+
+    static async retrieveSignedURL (type, id, ext) {
+        console.log("imgfuncs recieved");
+
+        return await s3Helpers.getSignedUrl(type, id, ext);
     }
 
     static async upload(type, req, res, next) {
@@ -245,7 +258,7 @@ class imgFuncs {
         }
         
         //upload to S3
-        //testing this
+        //testing this output
         const putResp = await s3Helpers.s3Put(localPath, uploadPath, extension)
         if (putResp != 200) {
             logger.logInternalError('error on put to s3')
@@ -253,16 +266,19 @@ class imgFuncs {
             responseJson = 'error on put to s3'
             return res.status(responseStatus).json(responseJson)
         }
-
+        
+        const location = type+ "/" + idVal + "/" + extension;
+      
         await fs.unlink(localPath);
         
         //TODO: get s3 signed url - remove this
-        const url = await s3Helpers.s3GetSignedURL(type, idVal, extension)
-    
+        const url = await s3Helpers.s3GetSignedURL(type, idVal, extension);
+       // console.log("this sucks: " + url);
+       
         //put url into db
         const query = {
             text: `UPDATE ${type} SET imglink = $1 WHERE ${id} = $2`,
-            values: [url, idVal]
+            values: [location, idVal]
         }
         logger.logQuery(query)
 
@@ -276,7 +292,7 @@ class imgFuncs {
             }
             logger.logDBsucc(result)
             responseStatus = 200
-            responseJson = {message: url}
+            responseJson = {message: location}
             logger.logResponse(responseStatus, responseJson)
             return res.status(responseStatus).json(responseJson)
         })
@@ -360,4 +376,4 @@ class imgFuncs {
     }
 }
 
-module.exports = images
+module.exports = [images, s3Helpers, imgFuncs];
