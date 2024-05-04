@@ -130,15 +130,24 @@ function selectPost(req, res, next) {
         
         logger.logResponse(responseStatus);
         //respObj = JSON.parse(result.rows[0]);
+        //console.log(result.rows)
+
         if(result.rows && result.rows.length > 0) {
             //request a new signedurl
-            if(result.rows[0].imglink != null) {
-                const toks = result.rows[0].imglink.split("/");
-                if(toks.length === 3) {
-                    const url = await s3Helpers.s3GetSignedURL(toks[0], toks[1], toks[2]);
-                    result.rows[0].imglink = url;
+            for(let i = 0; i < result.rows.length; ++i) {
+                //console.log("row: " + i + " " + result.rows[i].imglink)
+                if(result.rows[i].imglink != null) {
+                    const toks = result.rows[i].imglink.split("/");
+                    //console.log(toks);
+                    if(toks.length === 3) {
+                        const url = await s3Helpers.s3GetSignedURL(toks[0], toks[1], toks[2]);
+                        //console.log(url)
+                        result.rows[i].imglink = url;
+                    }
                 }
+                //console.log("------")
             }
+  
         }
         responseJson = {message: result.rows}
         //get signed url for the 
