@@ -17,7 +17,7 @@ pipeline {
                 sh 'rm -r frontend'
                 sh 'rm .gitignore'
                 sh 'rm README.md'
-                sh 'rm .DS_Store'
+                //sh 'rm .DS_Store'
                 sh 'rm -r .git'
                 sh 'rm -r backend/test'
                 sh 'ls -la'
@@ -34,7 +34,7 @@ pipeline {
                sh 'ls -l -a'
                dir('backend') {
                     sh 'ls -la'
-                    sh 'rm .DS_Store'
+                    //sh 'rm .DS_Store'
                }
                dir('backend/src/process_src') {
 
