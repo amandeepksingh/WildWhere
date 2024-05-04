@@ -63,6 +63,9 @@ class logger {
         if (inS3) logger.log(errorCodes.INFO, `ALREADY IN S3 CHECK: ${type.substring(0, type.length - 1)} with id=${id} already in s3`)
         else logger.log(errorCodes.INFO, `ALREADY IN S3 CHECK: ${type.substring(0,type.length - 1)} with id=${id} not already in s3`)
     }
+    static logDBerr(error) {
+        logger.log(errorCodes.ERROR, error.message);
+    }
     static logS3Req(method, params) {
         logger.log(errorCodes.INFO, `S3 REQ ${method}, params=${JSON.stringify(params)}`)
     }

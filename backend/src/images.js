@@ -42,6 +42,8 @@ const s3Client = new AWSs3Module.S3Client({
     region: 'us-east-2'
 })
 
+
+
 //route to endpoints
 const images = express()
 images.post('/userProfilePic/upload', imageUpload.fields([{name: 'uid'}, {name: 'img', maxCount: 1}]), (req, res, next) => imgFuncs.upload("users", req, res, next))
@@ -111,11 +113,13 @@ class s3Helpers {
          */
         const params = {
             Bucket: process.env.accessPoint,
-            Key: `${path}/${fileName}${extension}`
+            Key: `${path}/${fileName}${extension}`,
+            Expires: 3600
         }
         logger.logS3Req("GET SIGNED URL", params)
-        return AWSPreSigner.getSignedUrl(s3Client, new AWSs3Module.GetObjectCommand(params), {expiresIn: 604800}).then(url => {        
-            logger.logS3URL(url)
+        return AWSPreSigner.getSignedUrl(s3Client, new AWSs3Module.GetObjectCommand(params), {expiresIn: 3600}).then(url => {        
+            logger.logS3URL(url);
+            //console.log(url);
             return url
         })
     }
@@ -158,6 +162,12 @@ class imgFuncs {
             logger.logAlreadyInS3(type, id, false)
             return 204 //replacing successful delete with successful inaction
         }
+    }
+
+    static async retrieveSignedURL (type, id, ext) {
+        console.log("imgfuncs recieved");
+
+        return await s3Helpers.getSignedUrl(type, id, ext);
     }
 
     static async upload(type, req, res, next) {
@@ -234,6 +244,7 @@ class imgFuncs {
         const uploadPath = `${type}/${idVal}${extension}`
         logger.logImgPathsParsed(localPath, uploadPath)
 
+        //await fs.unlink();
         //clear s3
         const deleteResp = await imgFuncs.clearS3(type, idVal)
         if (deleteResp != 204) {
@@ -244,27 +255,33 @@ class imgFuncs {
         }
         
         //upload to S3
-        const putResp = await s3Helpers.s3Put(localPath, uploadPath, extension)
+        //testing this output
+        const putResp = await s3Helpers.s3Put(localPath, uploadPath, extension);
         if (putResp != 200) {
             logger.logInternalError('error on put to s3')
             responseStatus = 500
             responseJson = 'error on put to s3'
             return res.status(responseStatus).json(responseJson)
         }
-
+        
+        //console.log("s3 Responded");
+        const location = type+ "/" + idVal + "/" + extension;
+      
+       // await fs.unlink(localPath);
+        console.log(JSON.stringify(putResp));
         await fs.unlink(localPath);
         
-        //get s3 signed url
-        const url = await s3Helpers.s3GetSignedURL(type, idVal, extension)
-    
+        //TODO: get s3 signed url - remove this
+        // const url = await s3Helpers.s3GetSignedURL(type, idVal, extension);
+       
         //put url into db
         const query = {
             text: `UPDATE ${type} SET imglink = $1 WHERE ${id} = $2`,
-            values: [url, idVal]
+            values: [location, idVal]
         }
         logger.logQuery(query)
 
-        return pool.query(query, (error, result) => {
+        return pool.query(query, async (error, result) => {
             if (error) {
                 logger.logDBfail(error)
                 responseStatus = 400
@@ -274,7 +291,11 @@ class imgFuncs {
             }
             logger.logDBsucc(result)
             responseStatus = 200
-            responseJson = {message: url}
+            responseJson = {message: location}
+            const toks = location.split("/");
+
+            const url = toks != null ? await s3Helpers.s3GetSignedURL(toks[0], toks[1], toks[2]): ""; 
+            responseJson = {message: url};
             logger.logResponse(responseStatus, responseJson)
             return res.status(responseStatus).json(responseJson)
         })
@@ -358,4 +379,4 @@ class imgFuncs {
     }
 }
 
-module.exports = images
+module.exports = {s3Helpers, images};

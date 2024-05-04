@@ -4,6 +4,9 @@ const Pool = require('pg').Pool;
 const logger = require('./logger');
 require('dotenv').config({path: "../.env"});
 const randomstring = require('randomstring');
+const {s3Helpers, images} = require('./images');
+const AWSs3Module = require('@aws-sdk/client-s3');
+const AWSPreSigner = require('@aws-sdk/s3-request-presigner');
 
 //creates DB connection
 var poolParams = {
@@ -23,6 +26,7 @@ posts.get('/selectPost', (req, res, next) => selectPost(req, res, next))
 posts.post('/createPost', (req, res, next) => createPost(req, res, next))
 posts.put('/updatePostByPID', (req, res, next) => updatePostByPID(req, res, next))
 posts.delete('/deletePostByPID', (req, res, next) => deletePostByPID(req, res, next))
+
 
 function selectPost(req, res, next) {
     /**
@@ -51,8 +55,7 @@ function selectPost(req, res, next) {
      *  }
      */
     var responseStatus, responseJson
-    logger.logRequest(req)
-
+    logger.logRequest(req);
     //parse req query into params and values
     var rawConditions = []
     var values = []
@@ -111,9 +114,10 @@ function selectPost(req, res, next) {
         text: `SELECT * FROM posts WHERE ${conditionsAsString}`,
         values: values
     }
-    logger.logQuery(query)
 
-    return pool.query(query, (error, result) => {
+    logger.logQuery(query)
+    // run a s3 request to get the signed URL
+    const ret = pool.query(query, async (error, result) => {
         if (error) {
             logger.logDBerr(error);
             responseStatus = 400
@@ -123,10 +127,27 @@ function selectPost(req, res, next) {
         }
         logger.logDBsucc(result);
         responseStatus = 200
+        
+        logger.logResponse(responseStatus);
+        //respObj = JSON.parse(result.rows[0]);
+        if(result.rows && result.rows.length > 0) {
+            //request a new signedurl
+            if(result.rows[0].imglink != null) {
+                const toks = result.rows[0].imglink.split("/");
+                if(toks.length === 3) {
+                    const url = await s3Helpers.s3GetSignedURL(toks[0], toks[1], toks[2]);
+                    result.rows[0].imglink = url;
+                }
+            }
+        }
         responseJson = {message: result.rows}
-        logger.logResponse(responseStatus, responseJson)
-        return res.status(200).json({message: result.rows})
+        //get signed url for the 
+        //console.log(responseJson);
+
+        return res.status(200).json(responseJson)
     })
+    
+    return ret;
 }
 
 function createPost(req, res, next) {
