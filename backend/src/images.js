@@ -117,7 +117,7 @@ class s3Helpers {
             Expires: 3600
         }
         logger.logS3Req("GET SIGNED URL", params)
-        return AWSPreSigner.getSignedUrl(s3Client, new AWSs3Module.GetObjectCommand(params)).then(url => {        
+        return AWSPreSigner.getSignedUrl(s3Client, new AWSs3Module.GetObjectCommand(params), {expiresIn: 3600}).then(url => {        
             logger.logS3URL(url);
             //console.log(url);
             return url
