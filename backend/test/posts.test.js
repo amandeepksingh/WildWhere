@@ -98,7 +98,7 @@ describe("selecting posts", () => {
         const pid = resp1.body.pid
 
         const resp2 = await request(app)
-        .get(`/posts/selectPost?pid=${pid}&uid=${uid}&coordinate=(2.5, 7.9)&quantity=8&activity=running&state=Massachusetts&city=amherst`)
+        .get(`/posts/selectPost?pid=${pid}&uid=${uid}&coordinate=(2.5, 7.9)&quantity=8&activity=running&state=Massachusetts&city=Amherst`)
         assert.strictEqual(resp2.status,200)
         assert.deepStrictEqual(resp2.body.message, [
             {

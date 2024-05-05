@@ -109,6 +109,14 @@ function selectPost(req, res, next) {
         rawConditions.push(`activity = $${i++}`)
         values.push(req.query.activity)
     }
+    if (req.query.state !== undefined) {
+        rawConditions.push(`state = $${i++}`)
+        values.push(req.query.state)
+    }
+    if (req.query.city !== undefined) {
+        rawConditions.push(`city = $${i++}`)
+        values.push(req.query.city)
+    }
     const conditionsAsString = rawConditions.join(' AND ')
     const query = rawConditions.length === 0 ? "SELECT * FROM posts" : {
         text: `SELECT * FROM posts WHERE ${conditionsAsString}`,
