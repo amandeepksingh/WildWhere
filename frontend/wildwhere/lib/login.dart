@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wildwhere/google_signin.dart';
+import 'package:wildwhere/apple_signin.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -15,14 +16,12 @@ class _LoginState extends State<Login> {
       children: [
         Container(
           //sets the background image
-          decoration: BoxDecoration(
-              image: const DecorationImage(
-                image: AssetImage("assets/images/backgroundtransparent.png"),
-                fit: BoxFit.cover,
-              ),
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Color.fromARGB(160, 255, 255, 255)
-                  : Color.fromARGB(237, 255, 255, 255)),
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/image.png"),
+              fit: BoxFit.cover,
+            ),
+          ),
         ),
         const Center(
           //aligns the sign in buttons
@@ -33,8 +32,8 @@ class _LoginState extends State<Login> {
               children: [
                 SizedBox(height: 80),
                 GoogleSignInButton(),
-                // const SizedBox(height: 25), //TODO
-                // appleSignIn(context),
+                SizedBox(height: 25), //TODO
+                AppleSignInButton(),
                 // const SizedBox(height: 25), //TODO
                 // fbSignIn(context)
               ],
@@ -44,6 +43,7 @@ class _LoginState extends State<Login> {
       ],
     );
   }
+
 }
 
   /*
@@ -55,17 +55,18 @@ class _LoginState extends State<Login> {
       print(error);
     }
   }
+  */
 
-  void signInWithApple() async {
-    try {
-      AppleAuthProvider _appleAuthProvider = AppleAuthProvider();
-      _auth.signInWithProvider(_appleAuthProvider);
-    } catch (error) {
-      print(error);
-    }
-  }
+  // void signInWithApple() async {
+  //   try {
+  //     AppleAuthProvider _appleAuthProvider = AppleAuthProvider();
+  //     _auth.signInWithProvider(_appleAuthProvider);
+  //   } catch (error) {
+  //     print(error);
+  //   }
+  // }
   
-
+  /*
   //Facebook sign in button
   Widget fbSignIn(BuildContext context) {
     return ElevatedButton.icon(
@@ -87,26 +88,26 @@ class _LoginState extends State<Login> {
           elevation: 5),
     );
   }
+  */
 
   //Apple sign in button
-  Widget appleSignIn(BuildContext context) {
-    return ElevatedButton.icon(
-      onPressed: () => signInWithApple(),
-      icon: Image.asset(
-        'assets/images/apple.png',
-        width: 30,
-        height: 30,
-      ),
-      label: const SizedBox(
-        width: 213,
-        height: 30,
-        child: Text('Sign in with Apple', style: TextStyle(fontSize: 20)),
-      ),
-      style: OutlinedButton.styleFrom(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-          foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-          elevation: 5),
-    );
-  }
-  */
+  // Widget appleSignIn(BuildContext context) {
+  //   return ElevatedButton.icon(
+  //     onPressed: () => signInWithApple(),
+  //     icon: Image.asset(
+  //       'assets/images/apple.png',
+  //       width: 30,
+  //       height: 30,
+  //     ),
+  //     label: const SizedBox(
+  //       width: 213,
+  //       height: 30,
+  //       child: Text('Sign in with Apple', style: TextStyle(fontSize: 20)),
+  //     ),
+  //     style: OutlinedButton.styleFrom(
+  //         shape:
+  //             RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+  //         foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+  //         elevation: 5),
+  //   );
+  // }
