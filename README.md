@@ -168,11 +168,11 @@ Requests accepted by URL-encoded query
 ||| email string | optional || email string
 ||| username string | optional || username string
 ||| bio string | optional || bio string
-||| imgLink string | optional || imgLink string
-||| superUser boolean | optional || superUser boolean
-||| locationPerm boolean | optional || locationPerm boolean
-||| notificationPerm boolean | optional || notificationPerm boolean
-||| colorBlindRating int | optional || colorBlindRating int
+||| imgLink string | optional || imglink string
+||| superUser boolean | optional || superuser boolean
+||| locationPerm boolean | optional || locationperm boolean
+||| notificationPerm boolean | optional || notificationperm boolean
+||| colorBlindRating int | optional || colorblindrating int
 
 _creating users_: Used to create user with attributes matching the input JSON body.  
 Requests accepted by JSON-body encoded request
@@ -229,13 +229,15 @@ Requests accepted by URL-encoded query
 ||| pid string | optional || pid string
 ||| uid string | optional || uid string
 ||| radius int | optional || radius int 
-||| imgLink string | optional || imgLink string
+||| imgLink string | optional || imglink string
 ||| starttime timestamp YYYY/MM/DD/HH24/MI/ss | optional || starttime timestamp
 ||| endtime timestamp YYYY/MM/DD/HH24/MI/ss | optional || endtime timestamp
 ||| coordinate point (longitude [-180, 180], latitude [-90, 90]) e.g. (-169.2, 25.0) | optional (required for non-null radius) || coordinate point
-||| animalName string | optional || animalName string
+||| animalName string | optional || animalname string
 ||| quantity int | optional || quantity int
 ||| activity string | optional || activity string
+||| city string | optional || city string
+||| state string | optional || state string
 
 
 _creating posts_: Used to create post with attributes matching the input JSON body.  
@@ -252,6 +254,8 @@ Requests accepted by JSON-body encoded request
 ||| animalName string | optional ||
 ||| quantity int | optional ||
 ||| activity string | optional ||
+||| city string | optional ||
+||| state string | optional ||
 
 _updating posts_: Used to update post with given PID so the match the input JSON body.  
 Requests accepted by JSON-body encoded request
@@ -267,6 +271,8 @@ Requests accepted by JSON-body encoded request
 ||| animalName string | optional ||
 ||| quantity int | optional ||
 ||| activity string | optional ||
+||| city string | optional ||
+||| state string | optional ||
 
 _deleting posts_: Used to delete post with given PID.  
 Requests accepted by URL-encoded query
@@ -288,7 +294,7 @@ Requests accepted by form-data encoded request
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
 | _ec2Host/images/userProfilePic/upload_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string
 | :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
-||| uid int | REQUIRED || link to pfp
+||| uid int | REQUIRED || link to img
 ||| img image | REQUIRED || _or_
 ||| ||| error message
 
@@ -311,7 +317,7 @@ Requests accepted by form-data encoded request
 | :-------: | :----: | :-------------: | :------------------: | :---------------: | :---------------: |
 | _ec2Host/images/postPic/upload_ | _post_ | _JSON body of following_ | _optional or required_ | _200_ | string
 | :-------: | :----: | :-------------: | :------------------: | :-------------: | :---------------: |
-||| pid int | REQUIRED || link to pfp
+||| pid int | REQUIRED || link to img
 ||| img image | REQUIRED || _or_
 ||| ||| error message
 

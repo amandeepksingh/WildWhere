@@ -41,6 +41,8 @@ function selectPost(req, res, next) {
      *  animalName string (optional)
      *  quantity int (optional)
      *  activity string (optional)
+     *  city string (optional)
+     *  state string (optional)
      * @returns:
      *   message []{
      *      pid string,
@@ -51,7 +53,9 @@ function selectPost(req, res, next) {
      *      coordinate (x: float, y: float),
      *      animalName string,
      *      quantity int,
-     *      activity string
+     *      activity string,
+     *      city string,
+     *      state string
      *  }
      */
     var responseStatus, responseJson
