@@ -187,8 +187,9 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin{
         body: Stack(
           children: [
             MapboxMap(
-              styleString:
-                  "mapbox://styles/mberezuns/clv1ba4fz019m01p61mdggons",
+              styleString: Theme.of(context).brightness == Brightness.dark
+                ? "mapbox://styles/mapbox/dark-v11"
+                :  "mapbox://styles/mberezuns/clv1ba4fz019m01p61mdggons",
               accessToken:
                   "pk.eyJ1IjoibWJlcmV6dW5zIiwiYSI6ImNsdjA1MTk0djFlcDIybG14bHNtem1xeGEifQ.Xcg2SVacZ2TjY0zcKVKTig",
               myLocationEnabled: true,
@@ -231,7 +232,6 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin{
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(15)),
                   ),
-                  color: Colors.white,
                   popUpAnimationStyle: AnimationStyle(
                     curve: Curves.easeInOut,
                     duration: const Duration( milliseconds: 330)
@@ -278,7 +278,6 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin{
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton.large(
-          backgroundColor: Colors.white,
           onPressed: () {
             setState(() {
               reportOverlayControl.toggle();
@@ -286,6 +285,7 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin{
               reportanimationController.forward();
             });
           },
+          heroTag: 'tag3',
           elevation: 10,
           shape: const CircleBorder(),
           child: OverlayPortal(
@@ -313,7 +313,7 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin{
         child: Column(
           children: <Widget>[
             FloatingActionButton(
-              backgroundColor: Colors.white,
+              heroTag: 'tag',
               onPressed: () => currentLocation(_controller),
               shape: const CircleBorder(),
               elevation: 10,
@@ -321,7 +321,7 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin{
             ),
             const SizedBox(height: 10),
             FloatingActionButton(
-              backgroundColor: Colors.white,
+              heroTag: 'tag2',
               onPressed: _navigateToPostsPage,
               shape: const CircleBorder(),
               elevation: 10,
@@ -403,7 +403,7 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin{
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10.0),
                       child: Image.network(
-                          data['imgLink'] ??
+                          data['imglink'] ??
                               'https://via.placeholder.com/150', // Placeholder if no imgLink is available
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {

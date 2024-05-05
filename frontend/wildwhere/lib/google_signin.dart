@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wildwhere/database.dart';
 import 'package:wildwhere/mapscreen.dart';
 import 'package:wildwhere/edit_profile.dart';
-import 'package:wildwhere/profile.dart';
 import 'package:wildwhere/user.dart' as app_user;
 import 'package:wildwhere/user_controller.dart';
 
@@ -45,7 +44,6 @@ class GoogleSignInButtonState extends State<GoogleSignInButton> {
       style: OutlinedButton.styleFrom(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-          foregroundColor: const Color.fromARGB(255, 0, 0, 0),
           elevation: 5),
     );
   }
@@ -73,14 +71,10 @@ class GoogleSignInButtonState extends State<GoogleSignInButton> {
       db.createUser(newUser);
       createUserPrefs(userData);
       Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => const Profile()))
-          .then((_) {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    EditProfile(prefs: prefs, firstTimeSignin: true)));
-      });
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  EditProfile(prefs: prefs, firstTimeSignin: true)));
       //returning user
     } else {
       db.initializePrefs(userData.uid);
