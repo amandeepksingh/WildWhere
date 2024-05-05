@@ -71,7 +71,9 @@ describe("selecting posts", () => {
                 "coordinate": {"x": 0.0, "y": 0.0},
                 "activity": null,
                 "animalname": null,
-                "quantity": null
+                "quantity": null,
+                "state": null,
+                "city": null
             }
         ])
     })
@@ -92,10 +94,11 @@ describe("selecting posts", () => {
         await request(app).post('/users/createUser').send(`uid=${uid}`)
 
         const resp1 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(2.5, 7.9)').send('animalName=John').send('quantity=8').send('activity=running')
+            .send("state=Massachusetts").send("city=Amherst")
         const pid = resp1.body.pid
 
         const resp2 = await request(app)
-        .get(`/posts/selectPost?pid=${pid}&uid=${uid}&coordinate=(2.5, 7.9)&quantity=8&activity=running`)
+        .get(`/posts/selectPost?pid=${pid}&uid=${uid}&coordinate=(2.5, 7.9)&quantity=8&activity=running&state=Massachusetts&city=amherst`)
         assert.strictEqual(resp2.status,200)
         assert.deepStrictEqual(resp2.body.message, [
             {
@@ -106,7 +109,9 @@ describe("selecting posts", () => {
                 "coordinate": {"x": 2.5, "y": 7.9},
                 "activity": "running",
                 "animalname": "John",
-                "quantity": 8
+                "quantity": 8,
+                "state": "Massachusetts",
+                "city": "Amherst"
             }
         ])
     })
@@ -133,7 +138,9 @@ describe("selecting posts", () => {
                 "coordinate": {"x": 3.6, "y": 5.8},
                 "activity": null,
                 "animalname": null,
-                "quantity": null
+                "quantity": null,
+                "state": null,
+                "city": null
             },
             {
                 "pid": pid2,
@@ -143,7 +150,9 @@ describe("selecting posts", () => {
                 "coordinate": {"x": 2.6, "y": 7.5},
                 "activity": null,
                 "animalname": null,
-                "quantity": null
+                "quantity": null,
+                "state": null,
+                "city": null
             }
         ])
     })
@@ -170,7 +179,9 @@ describe("selecting posts", () => {
                 "coordinate": {"x": 177.0, "y": 0.0},
                 "activity": null,
                 "animalname": null,
-                "quantity": null
+                "quantity": null,
+                "state": null,
+                "city": null
             }
         ])
     })
@@ -197,7 +208,9 @@ describe("selecting posts", () => {
                 "coordinate": {"x": 177.0, "y": 0.0},
                 "activity": null,
                 "animalname": null,
-                "quantity": null
+                "quantity": null,
+                "state": null,
+                "city": null
             }
         ])
     })
@@ -228,7 +241,9 @@ describe("selecting posts", () => {
                 "coordinate": {"x":177.0, "y":0.0},
                 "activity": null,
                 "animalname": null,
-                "quantity": null
+                "quantity": null,
+                "state": null,
+                "city": null
             },
             {
                 "pid": pid2,
@@ -238,7 +253,9 @@ describe("selecting posts", () => {
                 "coordinate": {"x":50.0, "y":50.0},
                 "activity": null,
                 "animalname": null,
-                "quantity": null
+                "quantity": null,
+                "state": null,
+                "city": null
             },
             {
                 "pid": pid4,
@@ -248,7 +265,9 @@ describe("selecting posts", () => {
                 "coordinate": {"x":100.0, "y":0.0},
                 "activity": null,
                 "animalname": null,
-                "quantity": null
+                "quantity": null,
+                "state": null,
+                "city": null
             }
         ])
     })
@@ -275,7 +294,9 @@ describe("selecting posts", () => {
                 "coordinate": {"x": 2.6, "y": 0.0},
                 "activity": null,
                 "animalname": null,
-                "quantity": null
+                "quantity": null,
+                "state": null,
+                "city": null
             }
         ])
     })
@@ -302,7 +323,9 @@ describe("selecting posts", () => {
                 "coordinate": {"x": 177.0, "y": 0.0},
                 "activity": null,
                 "animalname": null,
-                "quantity": null
+                "quantity": null,
+                "state": null,
+                "city": null
             }
         ])
     })
@@ -330,7 +353,9 @@ describe("selecting posts", () => {
                 "coordinate": {"x": 2.6, "y": 0.0},
                 "activity": null,
                 "animalname": null,
-                "quantity": null
+                "quantity": null,
+                "state": null,
+                "city": null
             }
         ])
     })
@@ -357,7 +382,9 @@ describe("selecting posts", () => {
                 "coordinate": {"x": 2.6, "y": 0.0},
                 "activity": null,
                 "animalname": null,
-                "quantity": null
+                "quantity": null,
+                "state": null,
+                "city": null
             }
         ])
     })
@@ -381,7 +408,9 @@ describe("selecting posts", () => {
                 "coordinate": {"x": 177.0, "y": 0.0},
                 "activity": null,
                 "animalname": 'tyrone',
-                "quantity": null
+                "quantity": null,
+                "state": null,
+                "city": null
             }
         ])
 
@@ -428,7 +457,7 @@ describe("creating posts", () => {
         await request(app).post('/users/createUser').send(`uid=${uid}`)
         
         const resp = await request(app).post('/posts/createPost').send(`uid=${uid}`).send(`imgLink=test_link`).send(`datetime=1999-01-08 04:05:06`)
-            .send(`coordinate=(2.6, 7.5)`).send(`quantity=2`).send(`activity=running`)
+            .send(`coordinate=(2.6, 7.5)`).send(`quantity=2`).send(`activity=running`).send("state=Massachusetts").send("city=Amherst")
         assert.strictEqual(resp.body.message, `post created`)
         assert.strictEqual(resp.status, 200)
     })
@@ -471,7 +500,9 @@ describe("updating posts", () => {
                     "coordinate": {"x":2.6, "y":7.5},
                     "activity": null,
                     "animalname": null,
-                    "quantity": null
+                    "quantity": null,
+                    "state": null,
+                    "city": null
                 }
             ]
         ) 
@@ -503,7 +534,9 @@ describe("updating posts", () => {
                     "coordinate": {"x":0.0, "y":0.0},
                     "activity": null,
                     "animalname": null,
-                    "quantity": null
+                    "quantity": null,
+                    "state": null,
+                    "city": null
                 }
             ]
         ) 
@@ -557,7 +590,9 @@ describe("updating posts", () => {
                     "coordinate": {"x":0.0, "y":0.0},
                     "activity": null,
                     "animalname": null,
-                    "quantity": null
+                    "quantity": null,
+                    "state": null,
+                    "city": null
                 }
             ]
         ) 
@@ -587,7 +622,9 @@ describe("updating posts", () => {
                     "coordinate": {"x":0.0, "y":0.0},
                     "activity": null,
                     "animalname": null,
-                    "quantity": null
+                    "quantity": null,
+                    "state": null,
+                    "city": null
                 }
             ]
         ) 
@@ -606,6 +643,7 @@ describe("updating posts", () => {
         
         const resp2 = await request(app).put('/posts/updatePostByPID').send(`pid=${pid}`).send('imgLink=test_link').send('datetime=1997-12-17 07:37:16')
             .send(`uid=${uid2}`).send(`coordinate=(2.6, 7.5)`).send('animalName=John').send('quantity=34').send('activity=running')
+            .send("state=Massachusetts").send("city=Amherst")
         assert.strictEqual(resp2.status, 200)
         assert.strictEqual(resp2.body.message, `post with pid ${pid} updated`)
 
@@ -621,7 +659,9 @@ describe("updating posts", () => {
                     "coordinate": {"x":2.6, "y":7.5},
                     "activity": 'running',
                     "animalname": 'John',
-                    "quantity": 34
+                    "quantity": 34,
+                    "state": "Massachusetts",
+                    "city": "Amherst"
                 }
             ]
         ) 

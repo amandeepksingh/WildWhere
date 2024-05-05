@@ -220,6 +220,12 @@ function createPost(req, res, next) {
     if (req.body.activity !== undefined) {
         params['activity'] = req.body.activity
     }
+    if (req.body.state !== undefined) {
+        params['state'] = req.body.state
+    }
+    if (req.body.city !== undefined) {
+        params['city'] = req.body.city
+    }
 
     //parse params array into db query
     const paramsAsString = Object.keys(params).join(', ')
@@ -268,7 +274,7 @@ function updatePostByPID(req, res, next) {
     logger.logRequest(req)
 
     //parse valid elements of req.body into columns array
-    const columns = ["uid", "imgLink", "datetime", "coordinate", "animalName", "quantity", "activity"]
+    const columns = ["uid", "imgLink", "datetime", "coordinate", "animalName", "quantity", "activity", "state", "city"]
     var params = {}
     for(const col of columns) {
         if(req.body[col] !== undefined) {
