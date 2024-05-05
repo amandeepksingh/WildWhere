@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:wildwhere/edit_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,7 +15,7 @@ class _ProfilePageState extends State<Profile> {
   String? pronouns;
   String? bio;
   String? email;
-  String? imageLink;
+  File? image;
   late SharedPreferences prefs;
 
   @override
@@ -23,15 +24,16 @@ class _ProfilePageState extends State<Profile> {
     loadProfileData();
   }
 
+  void updateImage(File newImage) {
+    setState(() => image = newImage);
+  }
+
   void loadProfileData() async {
     prefs = await SharedPreferences.getInstance();
     setState(() {
       username = prefs.getString('username');
-      bio = (prefs.getString('bio')?.isEmpty == true
-          ? 'Say something about yourself!'
-          : prefs.getString('bio'));
+      bio = prefs.getString('bio');
       email = prefs.getString('email');
-      imageLink = prefs.getString('imagelink');
     });
   }
 
@@ -65,18 +67,16 @@ class _ProfilePageState extends State<Profile> {
                           clipBehavior: Clip.antiAlias,
                           decoration: const BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Colors.grey,
                           ),
-                          child: (imageLink == null || imageLink == '')
-                              ? Image.asset('assets/images/defaultpp.png',
-                                  fit: BoxFit.cover)
-                              : Image.network(imageLink!, fit: BoxFit.cover))
+                          child: Image.asset(
+                              image?.path ?? 'assets/images/defaultUserProfileImg.jpeg',
+                              fit: BoxFit.cover)),
                     ],
                   ),
                   const SizedBox(width: 10),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.55,
-                    height: MediaQuery.of(context).size.height * 0.10,
+                    width: 230,
+                    height: 75,
                     child: Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(

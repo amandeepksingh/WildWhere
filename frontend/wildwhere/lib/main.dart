@@ -13,7 +13,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  //await FirebaseAuth.instance.signOut();
+  await FirebaseAuth.instance.signOut();
   UserController.init(); //refresh user token
   Database db = Database();
   if (UserController.user != null) {
@@ -41,11 +41,7 @@ class MyApp extends StatelessWidget {
               foregroundColor: Colors.white),
           floatingActionButtonTheme: const FloatingActionButtonThemeData(
               backgroundColor: Color.fromARGB(255, 239, 239, 239),
-              foregroundColor: Colors.black),
-          elevatedButtonTheme: ElevatedButtonThemeData(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 239, 239, 239),
-                  foregroundColor: Colors.black))),
+              foregroundColor: Colors.black)),
       darkTheme: ThemeData(
           //settings for dark mode
           brightness: Brightness.dark,
@@ -54,13 +50,8 @@ class MyApp extends StatelessWidget {
               color: Color.fromARGB(255, 92, 110, 71),
               foregroundColor: Colors.white),
           floatingActionButtonTheme: const FloatingActionButtonThemeData(
-              backgroundColor: Color.fromARGB(255, 92, 110, 71),
-              foregroundColor: Color.fromARGB(255, 206, 206, 206)),
-          elevatedButtonTheme: ElevatedButtonThemeData(
-              style: ElevatedButton.styleFrom(
-            backgroundColor: Color.fromARGB(255, 92, 110, 71),
-            foregroundColor: Color.fromARGB(255, 206, 206, 206),
-          ))),
+              backgroundColor: Color.fromARGB(255, 37, 37, 37),
+              foregroundColor: Color.fromARGB(255, 206, 206, 206))),
       themeMode: ThemeMode.light,
       /* 
          ThemeMode.system to follow system theme, 
