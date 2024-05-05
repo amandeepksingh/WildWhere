@@ -1,22 +1,20 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wildwhere/mapscreen.dart';
 import 'package:wildwhere/profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:wildwhere/database.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class EditProfile extends StatefulWidget {
   final SharedPreferences prefs;
   final bool? firstTimeSignin;
-  final Function(File)? onUpdateImage;
 
-  const EditProfile(
-      {super.key,
-      required this.prefs,
-      this.firstTimeSignin,
-      this.onUpdateImage});
+  const EditProfile({super.key, required this.prefs, this.firstTimeSignin});
 
   @override
   State<EditProfile> createState() => EditProfileState();
@@ -29,7 +27,9 @@ class EditProfileState extends State<EditProfile> {
   final TextEditingController _emailController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final picker = ImagePicker();
+  final db = Database();
   File? selectedProfileImage;
+  String? imageLink;
 
   @override
   void initState() {
@@ -38,7 +38,8 @@ class EditProfileState extends State<EditProfile> {
       _usernameController.text = widget.prefs.getString('username') ?? '';
       _emailController.text = widget.prefs.getString('email') ?? '';
       _bioController.text = widget.prefs.getString('bio') ?? '';
-      //_pronounsController.text = widger.prefs.getString('pronouns') ?? ''
+      imageLink = widget.prefs.getString('imagelink');
+      //_pronounsController.text = widget.prefs.getString('pronouns') ?? ''
     });
   }
 
@@ -87,7 +88,10 @@ class EditProfileState extends State<EditProfile> {
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                         ),
-                        child: Image.asset('assets/images/defaultpp.png'),
+                        child: (imageLink == null || imageLink == '')
+                            ? Image.asset('assets/images/defaultpp.png',
+                                fit: BoxFit.cover)
+                            : Image.network(imageLink!, fit: BoxFit.cover),
                       ),
                 const SizedBox(width: 15),
                 const Text("Edit Profile Image",
@@ -147,8 +151,9 @@ class EditProfileState extends State<EditProfile> {
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter a username';
+                          } else {
+                            return null; // null means no error
                           }
-                          return null; // null means no error
                         },
                       ),
                       TextFormField(
@@ -180,7 +185,9 @@ class EditProfileState extends State<EditProfile> {
                       ),
                       const SizedBox(height: 30),
                       ElevatedButton(
-                          onPressed: handleSave,
+                          onPressed: () async {
+                            handleSave();
+                          },
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(
                                 const Color.fromARGB(255, 92, 110, 71),
@@ -196,6 +203,10 @@ class EditProfileState extends State<EditProfile> {
   }
 
   Future getImageFromGallery() async {
+    bool isGranted = await checkAndRequestPhotosPermission();
+    if (!isGranted) {
+      return;
+    }
     XFile? selectedImage = await picker.pickImage(source: ImageSource.gallery);
     if (selectedImage != null) {
       CroppedFile? croppedImage =
@@ -204,14 +215,15 @@ class EditProfileState extends State<EditProfile> {
         setState(() {
           selectedProfileImage = File(croppedImage.path);
         });
-        if (widget.onUpdateImage != null) {
-          widget.onUpdateImage!(selectedProfileImage!);
-        }
       }
     }
   }
 
   Future getImageFromCamera() async {
+    bool isGranted = await checkAndRequestCameraPermission();
+    if (!isGranted) {
+      return;
+    }
     XFile? newImage = await picker.pickImage(source: ImageSource.camera);
     if (newImage != null) {
       CroppedFile? croppedImage =
@@ -220,35 +232,84 @@ class EditProfileState extends State<EditProfile> {
         setState(() {
           selectedProfileImage = File(croppedImage.path);
         });
-        if (widget.onUpdateImage != null) {
-          widget.onUpdateImage!(selectedProfileImage!);
-        }
       }
     }
   }
 
   void handleSave() async {
+    if (await db.uniqueUsername(_usernameController.text, widget.prefs.getString("username")) == false) {
+      await showDialog<bool>(
+            context: context,
+            builder: (BuildContext context) {
+              return CupertinoAlertDialog(
+                content: const Text("Sorry, that username's taken!",
+                    style: TextStyle(fontSize: 14)),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text("Ok"),
+                    onPressed: () => Navigator.pop(context, true),
+                  ),
+                ],
+              );
+            },
+          ) ??
+          false;
+      return;
+    }
     if (_formKey.currentState!.validate()) {
       Database db = Database();
       await db.updateUserByUID(
-        uid: FirebaseAuth.instance.currentUser!.uid,
-        email: _emailController.text,
-        username: _usernameController.text,
-        bio: _bioController.text,
-        //pronouns: _pronounsController.text
-      );
+          uid: FirebaseAuth.instance.currentUser!.uid,
+          email: _emailController.text,
+          username: _usernameController.text,
+          bio: _bioController.text,
+          imgLink: imageLink
+          //pronouns: _pronounsController.text
+          );
       widget.prefs.setString('username', _usernameController.text);
       widget.prefs.setString('email', _emailController.text);
       widget.prefs.setString('bio', _bioController.text);
       //widget.prefs.setString('pronouns', _pronounsController.text);
-      // For the image, check both if the callback and the selected image are not null
-      if (selectedProfileImage != null && widget.onUpdateImage != null) {
-        widget.onUpdateImage!(selectedProfileImage!);
-        await db.uploadProfilePic(
+      if (selectedProfileImage != null) {
+        var imageLink = await db.uploadProfilePic(
             selectedProfileImage!.path, FirebaseAuth.instance.currentUser!.uid);
+        widget.prefs.setString('imagelink', imageLink);
       }
-      Navigator.pop(context, true);
+      if (widget.firstTimeSignin == true) {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const MapScreen()));
+      } else {
+        Navigator.pop(context, true);
+      }
     }
+  }
+
+  Future<bool> checkAndRequestPhotosPermission() async {
+    var status = await Permission.photos.status;
+    if (status.isGranted) {
+      return true;
+    } else if (status.isDenied) {
+      status = await Permission.photos.request();
+      return status.isGranted;
+    } else if (status.isPermanentlyDenied) {
+      openAppSettings(); // This can prompt the user to open app settings and change permission
+      return false;
+    }
+    return false;
+  }
+
+  Future<bool> checkAndRequestCameraPermission() async {
+    var status = await Permission.camera.status;
+    if (status.isGranted) {
+      return true;
+    } else if (status.isDenied) {
+      status = await Permission.photos.request();
+      return status.isGranted;
+    } else if (status.isPermanentlyDenied) {
+      openAppSettings(); // This can prompt the user to open app settings and change permission
+      return false;
+    }
+    return false;
   }
 
   @override
