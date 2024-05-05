@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -236,8 +237,24 @@ class EditProfileState extends State<EditProfile> {
   }
 
   void handleSave() async {
-    if (await db.uniqueUsername(_usernameController.text) == false) {
-      
+    if (await db.uniqueUsername(_usernameController.text, widget.prefs.getString("username")) == false) {
+      await showDialog<bool>(
+            context: context,
+            builder: (BuildContext context) {
+              return CupertinoAlertDialog(
+                content: const Text("Sorry, that username's taken!",
+                    style: TextStyle(fontSize: 14)),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text("Ok"),
+                    onPressed: () => Navigator.pop(context, true),
+                  ),
+                ],
+              );
+            },
+          ) ??
+          false;
+      return;
     }
     if (_formKey.currentState!.validate()) {
       Database db = Database();

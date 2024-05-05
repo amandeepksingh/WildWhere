@@ -194,9 +194,8 @@ class Database {
     return data['message'];
   }
 
-  Future<bool> uniqueUsername(String username) async {
-    var url = Uri.parse('$endpoint/users/selectUser?username=$username');
-
+  Future<bool> uniqueUsername(String newUsername, String? oldUsername) async {
+    var url = Uri.parse('$endpoint/users/selectUser?username=$newUsername');
     var response = await client.get(
       url,
       headers: <String, String>{
@@ -204,7 +203,8 @@ class Database {
       },
     );
     var data = jsonDecode(response.body);
-    return data['message'][0] == '';
+    return (data['message'].isEmpty ||
+        data['message'][0]['username'] == oldUsername);
   }
 
   void initializePrefs(String userId) async {
