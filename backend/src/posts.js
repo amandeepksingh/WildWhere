@@ -38,7 +38,7 @@ function selectPost(req, res, next) {
      *  starttime string (optional),
      *  endtime string (optional),
      *  coordinate (float,float) (optional)
-     *  animalNames []string (optional)
+     *  animalName []string (optional)
      *  quantity []int (optional)
      *  activity []string (optional)
      *  city []string (optional)
