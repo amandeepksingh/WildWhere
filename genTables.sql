@@ -22,7 +22,9 @@ CREATE TABLE posts (
     coordinate POINT NOT NULL,
     animalName TEXT,
     quantity INTEGER,
-    activity TEXT
+    activity TEXT,
+    city TEXT,
+    state TEXT
 );
 
 CREATE TABLE reports (
