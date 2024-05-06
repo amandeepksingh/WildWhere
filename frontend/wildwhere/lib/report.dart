@@ -1,7 +1,10 @@
+import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:wildwhere/location.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:wildwhere/database.dart';
@@ -22,7 +25,8 @@ class ReportPage extends StatefulWidget {
 class _ReportPageState extends State<ReportPage> {
   final _imagePicker = ImagePicker();
   String? uid = FirebaseAuth.instance.currentUser?.uid;
-  XFile? selectedImage;
+  File? selectedImage;
+  String? imageLink;
   String? animal;
   int? quantity;
   String? activity;
@@ -42,7 +46,6 @@ class _ReportPageState extends State<ReportPage> {
       return; // Stop further execution
     }
     resetErrorState();
-
     Location location = Location();
     Position position = await location.getCurrentLocation();
     Map<String, dynamic> coordinate = {
@@ -52,24 +55,25 @@ class _ReportPageState extends State<ReportPage> {
     String datetime = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
 
     Post newPost = Post(
-      uid: uid!,
-      datetime: datetime,
-      coordinate: coordinate,
-      animalName: animal!,
-      quantity: quantity!,
-      activity: activity!,
-    );
+        uid: uid!,
+        datetime: datetime,
+        coordinate: coordinate,
+        animalName: animal!,
+        quantity: quantity!,
+        activity: activity!,
+        imgLink: imageLink);
 
     try {
       Database db = Database();
       http.Response response =
           await db.createPost(newPost); //Pass post object to createPost
-
       if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = json.decode(response.body);
+        var responseData = json.decode(response.body);
+        var pid = responseData['pid'];
+        if (selectedImage != null) {
+          await db.uploadPostPic(selectedImage!.path, pid);
+        }
         widget.onPostCreated!(); // Update the map
-        print(
-            "Post created with ID: ${responseData['pid']}"); //Print created pid for development purposes
       } else {
         throw Exception('Failed to create post');
       }
@@ -98,19 +102,20 @@ class _ReportPageState extends State<ReportPage> {
                   borderRadius: BorderRadius.circular(20),
                   child: SizedBox(
                       width: MediaQuery.of(context).size.width * 0.85,
-                      height: MediaQuery.of(context).size.height * 0.63,
+                      height: MediaQuery.of(context).size.height * 0.55,
                       child: Scaffold(
                           appBar: AppBar(
                             leading: CloseButton(
                               onPressed: () {
                                 widget.controller.toggle();
                               },
-                              
                             ),
-                            title: const Text('Sighting Report'),
+                            title:
+                                const Text('New Sighting', style: TextStyle()),
                           ),
                           body: Column(
                             children: [
+                              SizedBox(height: 30),
                               if (showError) // Conditionally display the error message
                                 const Padding(
                                   padding: EdgeInsets.all(8.0),
@@ -122,27 +127,31 @@ class _ReportPageState extends State<ReportPage> {
                                     ),
                                   ),
                                 ),
-                              const Row(
-                                children: [
-                                  Icon(Icons.image, size: 70),
-                                  Text("Select an image to upload",
-                                      style: TextStyle(fontSize: 20)),
-                                ],
-                              ),
-                              const SizedBox(height: 15),
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const SizedBox(width: 10),
+                                  Container(
+                                      width: 90,
+                                      height: 90,
+                                      child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          child: selectedImage != null
+                                              ? Image.file(selectedImage!,
+                                                  fit: BoxFit.cover)
+                                              : const Icon(Icons.image_rounded,
+                                                  size: 90))),
+                                  SizedBox(width: 10),
                                   IntrinsicWidth(
                                       child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.stretch,
                                     children: [
-                                      OutlinedButton(
+                                      ElevatedButton(
                                           onPressed: getImageFromGallery,
                                           child: const Text(
                                               "Upload from library")),
-                                      OutlinedButton(
+                                      ElevatedButton(
                                           onPressed: getImageFromCamera,
                                           child: const Text("Take a photo")),
                                     ],
@@ -163,21 +172,76 @@ class _ReportPageState extends State<ReportPage> {
                                   child: Align(
                                       alignment: const FractionalOffset(.5, .9),
                                       child: ElevatedButton(
-                                          onPressed: () {
-                                            submitOnPressed();
+                                          onPressed: () async {
+                                            await submitOnPressed();
                                           },
-                                          child: const Text('Submit'))))
+                                          child: const Text('Submit')))),
+                              const SizedBox(height: 20),
                             ],
                           ))))))
     ]);
   }
 
   Future getImageFromGallery() async {
-    selectedImage = await _imagePicker.pickImage(source: ImageSource.gallery);
+    bool isGranted = await checkAndRequestPhotosPermission();
+    if (!isGranted) {
+      return;
+    }
+    XFile? newImage = await _imagePicker.pickImage(source: ImageSource.gallery);
+    if (newImage != null) {
+      CroppedFile? croppedImage =
+          await ImageCropper().cropImage(sourcePath: newImage.path);
+      if (croppedImage != null) {
+        setState(() {
+          selectedImage = File(croppedImage.path);
+        });
+      }
+    }
   }
 
   Future getImageFromCamera() async {
-    selectedImage = await _imagePicker.pickImage(source: ImageSource.camera);
+    bool isGranted = await checkAndRequestCameraPermission();
+    if (!isGranted) {
+      return;
+    }
+    XFile? newImage = await _imagePicker.pickImage(source: ImageSource.camera);
+    if (newImage != null) {
+      CroppedFile? croppedImage =
+          await ImageCropper().cropImage(sourcePath: newImage.path);
+      if (croppedImage != null) {
+        setState(() {
+          selectedImage = File(croppedImage.path);
+        });
+      }
+    }
+  }
+
+  Future<bool> checkAndRequestPhotosPermission() async {
+    var status = await Permission.photos.status;
+    if (status.isGranted) {
+      return true;
+    } else if (status.isDenied) {
+      status = await Permission.photos.request();
+      return status.isGranted;
+    } else if (status.isPermanentlyDenied) {
+      openAppSettings(); // This can prompt the user to open app settings and change permission
+      return false;
+    }
+    return false;
+  }
+
+  Future<bool> checkAndRequestCameraPermission() async {
+    var status = await Permission.camera.status;
+    if (status.isGranted) {
+      return true;
+    } else if (status.isDenied) {
+      status = await Permission.photos.request();
+      return status.isGranted;
+    } else if (status.isPermanentlyDenied) {
+      openAppSettings(); // This can prompt the user to open app settings and change permission
+      return false;
+    }
+    return false;
   }
 
   Widget animalTypeButton() {
@@ -279,3 +343,4 @@ class _ReportPageState extends State<ReportPage> {
     );
   }
 }
+
