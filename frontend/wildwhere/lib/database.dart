@@ -55,7 +55,6 @@ class Database {
   Future<http.Response> createPost(Post post) async {
     var url = Uri.parse('$endpoint/posts/createPost');
     var jsonData = jsonEncode(post);
-    print(jsonData);
     var response = await client.post(
       url,
       headers: <String, String>{
@@ -147,7 +146,7 @@ class Database {
       if (email != null) "email": email,
       if (username != null) "username": username,
       "bio": bio,
-      if (imgLink != null) "imgLink": imgLink,
+      if (imgLink != null) "imglink": imgLink,
       if (superUser != null) "superUser": superUser,
     };
     var data = jsonEncode(jsonBody);
@@ -173,18 +172,30 @@ class Database {
     }
   }
 
-  Future<String?> uploadProfilePic(String fileName, String uid) async {
+  Future<String> uploadProfilePic(String fileName, String uid) async {
     var request = http.MultipartRequest(
         'POST', Uri.parse('$endpoint/images/userProfilePic/upload'));
     request.fields['uid'] = uid;
     request.files.add(await http.MultipartFile.fromPath('img', fileName));
-    var res = await request.send();
-    return res.reasonPhrase;
+    var streamedResponse = await request.send();
+    var response = await http.Response.fromStream(streamedResponse);
+    var data = jsonDecode(response.body);
+    return data['message'];
   }
-  
-  Future<bool> uniqueUsername(String username) async {
-    var url = Uri.parse('$endpoint/users/selectUser?username=$username');
-    
+
+  Future<String> uploadPostPic(String fileName, String pid) async {
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('$endpoint/images/postPic/upload'));
+    request.fields['pid'] = pid;
+    request.files.add(await http.MultipartFile.fromPath('img', fileName));
+    var streamedResponse = await request.send();
+    var response = await http.Response.fromStream(streamedResponse);
+    var data = jsonDecode(response.body);
+    return data['message'];
+  }
+
+  Future<bool> uniqueUsername(String newUsername, String? oldUsername) async {
+    var url = Uri.parse('$endpoint/users/selectUser?username=$newUsername');
     var response = await client.get(
       url,
       headers: <String, String>{
@@ -192,7 +203,8 @@ class Database {
       },
     );
     var data = jsonDecode(response.body);
-    return data['message'][0] == '';
+    return (data['message'].isEmpty ||
+        data['message'][0]['username'] == oldUsername);
   }
 
   void initializePrefs(String userId) async {
@@ -200,11 +212,14 @@ class Database {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var user = await getCurrentUser(userId);
       prefs.setString('username', user['username'] ?? '');
+      prefs.setString('uid', user['uid']!);
       prefs.setString('bio', user['bio'] ?? '');
       prefs.setString('email', user['email'] ?? '');
-      prefs.setString('imgLink', user['imageLink'] ?? '');
+      prefs.setString('imagelink', user['imglink']);
+      prefs.setBool('superUser', user['superuser']);
     } catch (e) {
       throw Exception("Error initializing user data: $e");
     }
   }
 }
+
