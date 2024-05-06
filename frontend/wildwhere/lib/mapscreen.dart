@@ -10,6 +10,7 @@ import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:flutter/services.dart';
 import 'package:wildwhere/postslistpage.dart';
 import 'package:wildwhere/post.dart';
+import 'package:wildwhere/post_report.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -18,7 +19,7 @@ class MapScreen extends StatefulWidget {
   State<MapScreen> createState() => _MapState();
 }
 
-class _MapState extends State<MapScreen> with TickerProviderStateMixin{
+class _MapState extends State<MapScreen> with TickerProviderStateMixin {
   MapboxMapController?
       _controller; // Controller to manage Mapbox map interaction.
   Symbol? selectedSymbol; // Holds the currently selected map symbol, if any.
@@ -35,21 +36,21 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin{
   late AnimationController infoBoxAnimationController;
   late Animation<double> infoBoxOpacityAnimation;
   late Animation<Offset> infoBoxPositionAnimation;
-  
+
   var reportOverlayControl = OverlayPortalController();
 
   @override
   void initState() {
     super.initState();
-    
+
     reportanimationController = AnimationController(
-        duration: const Duration(milliseconds: 150),
-        vsync: this,
-      );
+      duration: const Duration(milliseconds: 150),
+      vsync: this,
+    );
     reportopacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(parent: reportanimationController, curve: Curves.easeIn)
-      );
-    
+        CurvedAnimation(
+            parent: reportanimationController, curve: Curves.easeIn));
+
     infoBoxAnimationController = AnimationController(
       duration: const Duration(milliseconds: 220),
       reverseDuration: const Duration(milliseconds: 160),
@@ -66,14 +67,13 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin{
     ));
 
     infoBoxPositionAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.12),  // Start slightly below the final position
+      begin: const Offset(0, 0.12), // Start slightly below the final position
       end: Offset.zero,
     ).animate(CurvedAnimation(
       parent: infoBoxAnimationController,
       curve: Curves.fastEaseInToSlowEaseOut,
       reverseCurve: Curves.easeInCubic,
     ));
-    
   }
 
   @override
@@ -143,20 +143,21 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin{
   }
 
   void _onSymbolTapped(Symbol symbol) async {
-      if (selectedSymbol != null && selectedSymbol!.id == symbol.id) {
-        // If the same symbol is tapped again, reverse the animation to hide the info box.
-        await infoBoxAnimationController.reverse();
-        setState(() {
-            selectedSymbol = null;
-            currentPostData = null;
-        });
+    if (selectedSymbol != null && selectedSymbol!.id == symbol.id) {
+      // If the same symbol is tapped again, reverse the animation to hide the info box.
+      await infoBoxAnimationController.reverse();
+      setState(() {
+        selectedSymbol = null;
+        currentPostData = null;
+      });
     } else {
-        setState(() {
-            selectedSymbol = symbol;
-            currentPostData = symbolDataMap[symbol.id];
-            _updateSymbolPosition();
-        });
-        infoBoxAnimationController.forward(from: 0.0);  // Start the animation from the beginning
+      setState(() {
+        selectedSymbol = symbol;
+        currentPostData = symbolDataMap[symbol.id];
+        _updateSymbolPosition();
+      });
+      infoBoxAnimationController.forward(
+          from: 0.0); // Start the animation from the beginning
     }
   }
 
@@ -187,8 +188,9 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin{
         body: Stack(
           children: [
             MapboxMap(
-              styleString:
-                  "mapbox://styles/mberezuns/clv1ba4fz019m01p61mdggons",
+              styleString: Theme.of(context).brightness == Brightness.dark
+                  ? "mapbox://styles/mapbox/dark-v11"
+                  : "mapbox://styles/mberezuns/clv1ba4fz019m01p61mdggons",
               accessToken:
                   "pk.eyJ1IjoibWJlcmV6dW5zIiwiYSI6ImNsdjA1MTk0djFlcDIybG14bHNtem1xeGEifQ.Xcg2SVacZ2TjY0zcKVKTig",
               myLocationEnabled: true,
@@ -203,8 +205,8 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin{
                 target: LatLng(42.381030, -72.529010),
                 zoom: 12,
               ),
-              onMapClick: (point, latLng) async{
-                if(selectedSymbol != null){
+              onMapClick: (point, latLng) async {
+                if (selectedSymbol != null) {
                   await infoBoxAnimationController.reverse();
                   setState(() {
                     selectedSymbol = null;
@@ -231,11 +233,9 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin{
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(15)),
                   ),
-                  color: Colors.white,
                   popUpAnimationStyle: AnimationStyle(
-                    curve: Curves.easeInOut,
-                    duration: const Duration( milliseconds: 330)
-                    ),
+                      curve: Curves.easeInOut,
+                      duration: const Duration(milliseconds: 330)),
                   onSelected: (item) => onSelected(context, item),
                   child: ClipOval(
                     child: Image.asset(
@@ -247,29 +247,30 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin{
                   ),
                   itemBuilder: (context) => [
                     const PopupMenuItem(
-                      value: 0, 
-                      child: ListTile(
-                        horizontalTitleGap: 12.0,
-                        leading: Icon(Icons.person, size: 28),
-                        title: Text('Profile',style: TextStyle(fontSize: 14)),
-                      )
-                    ),
+                        value: 0,
+                        child: ListTile(
+                          horizontalTitleGap: 12.0,
+                          leading: Icon(Icons.person, size: 28),
+                          title:
+                              Text('Profile', style: TextStyle(fontSize: 14)),
+                        )),
                     const PopupMenuItem(
-                      value: 1, 
-                      child: ListTile(
-                        horizontalTitleGap: 12.0,
-                        leading: Icon(Icons.settings, size: 28),
-                        title: Text('Settings',style: TextStyle(fontSize: 14)),
-                      )
-                    ),
+                        value: 1,
+                        child: ListTile(
+                          horizontalTitleGap: 12.0,
+                          leading: Icon(Icons.settings, size: 28),
+                          title:
+                              Text('Settings', style: TextStyle(fontSize: 14)),
+                        )),
                     const PopupMenuItem(
-                      value: 2, 
-                      child: ListTile(
-                        horizontalTitleGap: 12.0,
-                        leading: Icon(Icons.insert_chart_outlined_rounded, size: 28),
-                        title: Text('Data and Stats', style: TextStyle(fontSize: 14)),
-                      )
-                    ),
+                        value: 2,
+                        child: ListTile(
+                          horizontalTitleGap: 12.0,
+                          leading: Icon(Icons.insert_chart_outlined_rounded,
+                              size: 28),
+                          title: Text('Data and Stats',
+                              style: TextStyle(fontSize: 14)),
+                        )),
                   ],
                 ),
               ),
@@ -278,7 +279,6 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin{
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton.large(
-          backgroundColor: Colors.white,
           onPressed: () {
             setState(() {
               reportOverlayControl.toggle();
@@ -286,34 +286,34 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin{
               reportanimationController.forward();
             });
           },
+          heroTag: 'tag3',
           elevation: 10,
           shape: const CircleBorder(),
           child: OverlayPortal(
             controller: reportOverlayControl,
             overlayChildBuilder: (BuildContext context) {
               return FadeTransition(
-              opacity: reportopacityAnimation,
-              child: ReportPage(
-                  onPostCreated: () async{
-                    refreshMarkers();
-                    await reportanimationController.reverse();
-                    reportOverlayControl.toggle();
-                  },
-                  controller: reportOverlayControl
-                )
-              );
+                  opacity: reportopacityAnimation,
+                  child: ReportPage(
+                      onPostCreated: () async {
+                        refreshMarkers();
+                        await reportanimationController.reverse();
+                        reportOverlayControl.toggle();
+                      },
+                      controller: reportOverlayControl));
             },
-          child: const Icon(Icons.add_location_alt_outlined),
+            child: const Icon(Icons.add_location_alt_outlined),
+          ),
         ),
       ),
-    ),
       Positioned(
         bottom: 30,
         right: 20,
         child: Column(
           children: <Widget>[
+            const PostReport(),
             FloatingActionButton(
-              backgroundColor: Colors.white,
+              heroTag: 'tag',
               onPressed: () => currentLocation(_controller),
               shape: const CircleBorder(),
               elevation: 10,
@@ -321,7 +321,7 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin{
             ),
             const SizedBox(height: 10),
             FloatingActionButton(
-              backgroundColor: Colors.white,
+              heroTag: 'tag2',
               onPressed: _navigateToPostsPage,
               shape: const CircleBorder(),
               elevation: 10,
@@ -354,6 +354,7 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin{
     );
     refreshMarkers();
   }
+
   Widget _buildInfoBox() {
     // Generates informational box widget for currently selected marker.
     if (selectedSymbol == null || currentPostData == null) {
@@ -371,85 +372,95 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin{
     double screenHeight = MediaQuery.of(context).size.height;
 
     return AnimatedBuilder(
-      animation: infoBoxAnimationController, 
-      builder: (context, child){
-        if (infoBoxAnimationController.isDismissed) {
-                return SizedBox.shrink();  // This ensures that widget collapses when the animation is dismissed
-            }
+        animation: infoBoxAnimationController,
+        builder: (context, child) {
+          if (infoBoxAnimationController.isDismissed) {
+            return SizedBox
+                .shrink(); // This ensures that widget collapses when the animation is dismissed
+          }
           return SlideTransition(
-          position: infoBoxPositionAnimation,
-          child: FadeTransition(
-            opacity: infoBoxOpacityAnimation,
+            position: infoBoxPositionAnimation,
+            child: FadeTransition(
+                opacity: infoBoxOpacityAnimation,
                 child: Container(
-              width: screenWidth * 0.7,
-              height: screenHeight * 0.155,
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black26, 
-                      offset: Offset(0, 3),
-                      blurRadius: 3.0,
-                      spreadRadius: 0.1,
-                    )
-                  ]),
-              child: Row(
-                children: [
-                  // Image Container
-                  Expanded(
-                    flex: 1, // takes 1/2 of the space
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10.0),
-                      child: Image.network(
-                          data['imgLink'] ??
-                              'https://via.placeholder.com/150', // Placeholder if no imgLink is available
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                        // Fallback for when the image fails to load
-                        return const Icon(Icons.image_not_supported);
-                      }),
-                    ),
-                  ),
-
-                  // Text Container
-                  Expanded(
-                    flex: 1, // takes 1/2 of the space
-                    child: Container(
-                      padding: const EdgeInsets.only(left: 10),
-                      alignment: Alignment.topLeft,
-                      child: RichText(
-                        text:  TextSpan(
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 13,
-                            overflow: TextOverflow.ellipsis,
-                            fontFamily: 'CupertinoSystemText',
-                            letterSpacing: -0.45,
-                            height: 1.3,
-                          ),
-                          children: <TextSpan>[
-                            const TextSpan(text: 'PID: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                            TextSpan(text: "${data['pid']}\n"),
-                            const TextSpan(text: 'Animal: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                            TextSpan(text: "${data['animalName']}\n"),
-                            const TextSpan(text: 'Activity: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                            TextSpan(text: "${data['activity']}\n"),
-                            const TextSpan(text: 'Quantity: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                            TextSpan(text: "${data['quantity']}\n"),
-                          ]
+                  width: screenWidth * 0.7,
+                  height: screenHeight * 0.155,
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black26,
+                          offset: Offset(0, 3),
+                          blurRadius: 3.0,
+                          spreadRadius: 0.1,
+                        )
+                      ]),
+                  child: Row(
+                    children: [
+                      // Image Container
+                      Expanded(
+                        flex: 1, // takes 1/2 of the space
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10.0),
+                          child: Image.network(
+                              data['imglink'] ??
+                                  'https://via.placeholder.com/150', // Placeholder if no imgLink is available
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                            // Fallback for when the image fails to load
+                            return const Icon(Icons.image_not_supported);
+                          }),
                         ),
                       ),
-                    ),
-                  )
-                ],
-              ),
-            )
-          ),
-        );
-      }
-    );
+
+                      // Text Container
+                      Expanded(
+                        flex: 1, // takes 1/2 of the space
+                        child: Container(
+                          padding: const EdgeInsets.only(left: 10),
+                          alignment: Alignment.topLeft,
+                          child: RichText(
+                            text: TextSpan(
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 13,
+                                  overflow: TextOverflow.ellipsis,
+                                  fontFamily: 'CupertinoSystemText',
+                                  letterSpacing: -0.45,
+                                  height: 1.3,
+                                ),
+                                children: <TextSpan>[
+                                  const TextSpan(
+                                      text: 'PID: ',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold)),
+                                  TextSpan(text: "${data['pid']}\n"),
+                                  const TextSpan(
+                                      text: 'Animal: ',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold)),
+                                  TextSpan(text: "${data['animalName']}\n"),
+                                  const TextSpan(
+                                      text: 'Activity: ',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold)),
+                                  TextSpan(text: "${data['activity']}\n"),
+                                  const TextSpan(
+                                      text: 'Quantity: ',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold)),
+                                  TextSpan(text: "${data['quantity']}\n"),
+                                ]),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                )),
+          );
+        });
   }
 }
 
@@ -503,3 +514,4 @@ void currentLocation(var controller) async {
     ),
   );
 }
+
