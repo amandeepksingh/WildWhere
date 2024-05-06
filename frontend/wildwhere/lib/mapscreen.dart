@@ -95,6 +95,8 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin {
 
   void _onStyleLoaded() async {
     // Called when map style is fully loaded; we typically use this to add markers dynamically.
+    Position userPos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    _controller!.animateCamera(CameraUpdate.newLatLngZoom(LatLng(userPos.latitude, userPos.longitude), 11.0)); //moves camera to user location on startup
     _loadMarkers();
   }
 
@@ -203,7 +205,7 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin {
               trackCameraPosition: true,
               initialCameraPosition: const CameraPosition(
                 target: LatLng(42.381030, -72.529010),
-                zoom: 12,
+                zoom: 11,
               ),
               onMapClick: (point, latLng) async {
                 if (selectedSymbol != null) {
