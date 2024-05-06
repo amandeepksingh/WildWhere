@@ -13,7 +13,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await FirebaseAuth.instance.signOut();
+  //await FirebaseAuth.instance.signOut();
   UserController.init(); //refresh user token
   Database db = Database();
   if (UserController.user != null) {
