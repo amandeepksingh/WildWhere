@@ -38,11 +38,11 @@ function selectPost(req, res, next) {
      *  starttime string (optional),
      *  endtime string (optional),
      *  coordinate (float,float) (optional)
-     *  animalName string (optional)
-     *  quantity int (optional)
-     *  activity string (optional)
-     *  city string (optional)
-     *  state string (optional)
+     *  animalName []string (optional)
+     *  quantity []int (optional)
+     *  activity []string (optional)
+     *  city []string (optional)
+     *  state []string (optional)
      * @returns:
      *   message []{
      *      pid string,
@@ -99,27 +99,63 @@ function selectPost(req, res, next) {
         values.push(req.query.endTime)
     }
     if (req.query.animalname !== undefined) {
-        rawConditions.push(`animalname = $${i++}`)
-        values.push(req.query.animalname)
+        animalNames = req.query.animalname.split(",")
+        inStart = "animalname IN ("
+        for (const animalName of animalNames) {
+            inStart += `$${i++},`
+            values.push(animalName)
+        }
+        const animalNameCondit = inStart.substring(0,inStart.length - 1) + ")"
+        rawConditions.push(animalNameCondit)
     } else if (req.query.animalName) {
-        rawConditions.push(`animalname = $${i++}`)
-        values.push(req.query.animalName)
+        animalNames = req.query.animalName.split(",")
+        inStart = "animalname IN ("
+        for (const animalName of animalNames) {
+            inStart += `$${i++},`
+            values.push(animalName)
+        }
+        const animalNameCondit = inStart.substring(0,inStart.length - 1) + ")"
+        rawConditions.push(animalNameCondit)
     }
     if (req.query.quantity !== undefined) {
-        rawConditions.push(`quantity = $${i++}`)
-        values.push(req.query.quantity)
+        quantities = req.query.quantity.split(",")
+        inStart = "quantity IN ("
+        for (const quantity of quantities) {
+            inStart += `$${i++},`
+            values.push(quantity)
+        }
+        const quantityCondit = inStart.substring(0,inStart.length - 1) + ")"
+        rawConditions.push(quantityCondit)
     }
     if (req.query.activity !== undefined) {
-        rawConditions.push(`activity = $${i++}`)
-        values.push(req.query.activity)
+        activities = req.query.activity.split(",")
+        inStart = "activity IN ("
+        for (const activity of activities) {
+            inStart += `$${i++},`
+            values.push(activity)
+        }
+        const activityCondit = inStart.substring(0,inStart.length - 1) + ")"
+        rawConditions.push(activityCondit)
     }
     if (req.query.state !== undefined) {
-        rawConditions.push(`state = $${i++}`)
-        values.push(req.query.state)
+        states = req.query.state.split(",")
+        inStart = "state IN ("
+        for (const state of states) {
+            inStart += `$${i++},`
+            values.push(state)
+        }
+        const stateCondit = inStart.substring(0,inStart.length - 1) + ")"
+        rawConditions.push(stateCondit)
     }
     if (req.query.city !== undefined) {
-        rawConditions.push(`city = $${i++}`)
-        values.push(req.query.city)
+        cities = req.query.city.split(",")
+        inStart = "city IN ("
+        for (const city of cities) {
+            inStart += `$${i++},`
+            values.push(city)
+        }
+        const cityCondit = inStart.substring(0,inStart.length - 1) + ")"
+        rawConditions.push(cityCondit)
     }
     const conditionsAsString = rawConditions.join(' AND ')
     const query = rawConditions.length === 0 ? "SELECT * FROM posts" : {

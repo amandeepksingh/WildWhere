@@ -233,11 +233,11 @@ Requests accepted by URL-encoded query
 ||| starttime timestamp YYYY/MM/DD/HH24/MI/ss | optional || starttime timestamp
 ||| endtime timestamp YYYY/MM/DD/HH24/MI/ss | optional || endtime timestamp
 ||| coordinate point (longitude [-180, 180], latitude [-90, 90]) e.g. (-169.2, 25.0) | optional (required for non-null radius) || coordinate point
-||| animalName string | optional || animalname string
-||| quantity int | optional || quantity int
-||| activity string | optional || activity string
-||| city string | optional || city string
-||| state string | optional || state string
+||| animalName []string | optional || animalname string
+||| quantity []int | optional || quantity int
+||| activity []string | optional || activity string
+||| city []string | optional || city string
+||| state []string | optional || state string
 
 
 _creating posts_: Used to create post with attributes matching the input JSON body.  

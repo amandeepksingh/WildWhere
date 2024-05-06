@@ -418,6 +418,279 @@ describe("selecting posts", () => {
         assert.strictEqual(resp3.status,200)
         assert.deepStrictEqual(resp3.body.message, [])
     })
+
+    it("selecting with multiple animalNames", async () => {
+        await teardown()
+
+        const uid = 'testUID'
+        await request(app).post('/users/createUser').send(`uid=${uid}`)
+
+        const resp1 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("animalName=w")
+        const pid1 = resp1.body.pid
+        const resp2 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("animalName=x")
+        const pid2 = resp2.body.pid
+        const resp3 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("animalName=y")
+        const pid3 = resp3.body.pid
+        const resp4 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("animalName=z")
+        const pid4 = resp4.body.pid
+
+        const resp = await request(app).get(`/posts/selectPost?animalName=x,y,z`)
+        assert.strictEqual(resp.status,200)
+        assert.deepStrictEqual(resp.body.message, [
+            {
+                "pid": pid2,
+                "uid": uid,
+                "imglink": null,
+                "datetime": null,
+                "coordinate": {"x":0.0, "y":0.0},
+                "activity": null,
+                "animalname": "x",
+                "quantity": null,
+                "state": null,
+                "city": null
+            },
+            {
+                "pid": pid3,
+                "uid": uid,
+                "imglink": null,
+                "datetime": null,
+                "coordinate": {"x":0.0, "y":0.0},
+                "activity": null,
+                "animalname": "y",
+                "quantity": null,
+                "state": null,
+                "city": null
+            },
+            {
+                "pid": pid4,
+                "uid": uid,
+                "imglink": null,
+                "datetime": null,
+                "coordinate": {"x":0.0, "y":0.0},
+                "activity": null,
+                "animalname": "z",
+                "quantity": null,
+                "state": null,
+                "city": null
+            }
+        ])
+    })
+
+    it("selecting with multiple quantities", async () => {
+        await teardown()
+
+        const uid = 'testUID'
+        await request(app).post('/users/createUser').send(`uid=${uid}`)
+
+        const resp1 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("quantity=1")
+        const pid1 = resp1.body.pid
+        const resp2 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("quantity=2")
+        const pid2 = resp2.body.pid
+        const resp3 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("quantity=3")
+        const pid3 = resp3.body.pid
+        const resp4 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("quantity=4")
+        const pid4 = resp4.body.pid
+
+        const resp = await request(app).get(`/posts/selectPost?quantity=2,3`)
+        assert.strictEqual(resp.status,200)
+        assert.deepStrictEqual(resp.body.message, [
+            {
+                "pid": pid2,
+                "uid": uid,
+                "imglink": null,
+                "datetime": null,
+                "coordinate": {"x":0.0, "y":0.0},
+                "activity": null,
+                "animalname": null,
+                "quantity": 2,
+                "state": null,
+                "city": null
+            },
+            {
+                "pid": pid3,
+                "uid": uid,
+                "imglink": null,
+                "datetime": null,
+                "coordinate": {"x":0.0, "y":0.0},
+                "activity": null,
+                "animalname": null,
+                "quantity": 3,
+                "state": null,
+                "city": null
+            }
+        ])
+    })
+
+    it("selecting with multiple activities", async () => {
+        await teardown()
+
+        const uid = 'testUID'
+        await request(app).post('/users/createUser').send(`uid=${uid}`)
+
+        const resp1 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("activity=w")
+        const pid1 = resp1.body.pid
+        const resp2 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("activity=x")
+        const pid2 = resp2.body.pid
+        const resp3 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("activity=y")
+        const pid3 = resp3.body.pid
+        const resp4 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("activity=z")
+        const pid4 = resp4.body.pid
+
+        const resp = await request(app).get(`/posts/selectPost?activity=x,y,z`)
+        assert.strictEqual(resp.status,200)
+        assert.deepStrictEqual(resp.body.message, [
+            {
+                "pid": pid2,
+                "uid": uid,
+                "imglink": null,
+                "datetime": null,
+                "coordinate": {"x":0.0, "y":0.0},
+                "activity": "x",
+                "animalname": null,
+                "quantity": null,
+                "state": null,
+                "city": null
+            },
+            {
+                "pid": pid3,
+                "uid": uid,
+                "imglink": null,
+                "datetime": null,
+                "coordinate": {"x":0.0, "y":0.0},
+                "activity": "y",
+                "animalname": null,
+                "quantity": null,
+                "state": null,
+                "city": null
+            },
+            {
+                "pid": pid4,
+                "uid": uid,
+                "imglink": null,
+                "datetime": null,
+                "coordinate": {"x":0.0, "y":0.0},
+                "activity": "z",
+                "animalname": null,
+                "quantity": null,
+                "state": null,
+                "city": null
+            }
+        ])
+    })
+
+    it("selecting with multiple states", async () => {
+        await teardown()
+
+        const uid = 'testUID'
+        await request(app).post('/users/createUser').send(`uid=${uid}`)
+
+        const resp1 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("state=w")
+        const pid1 = resp1.body.pid
+        const resp2 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("state=x")
+        const pid2 = resp2.body.pid
+        const resp3 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("state=y")
+        const pid3 = resp3.body.pid
+        const resp4 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("state=z")
+        const pid4 = resp4.body.pid
+
+        const resp = await request(app).get(`/posts/selectPost?state=x,y,z`)
+        assert.strictEqual(resp.status,200)
+        assert.deepStrictEqual(resp.body.message, [
+            {
+                "pid": pid2,
+                "uid": uid,
+                "imglink": null,
+                "datetime": null,
+                "coordinate": {"x":0.0, "y":0.0},
+                "activity": null,
+                "animalname": null,
+                "quantity": null,
+                "state": "x",
+                "city": null
+            },
+            {
+                "pid": pid3,
+                "uid": uid,
+                "imglink": null,
+                "datetime": null,
+                "coordinate": {"x":0.0, "y":0.0},
+                "activity": null,
+                "animalname": null,
+                "quantity": null,
+                "state": "y",
+                "city": null
+            },
+            {
+                "pid": pid4,
+                "uid": uid,
+                "imglink": null,
+                "datetime": null,
+                "coordinate": {"x":0.0, "y":0.0},
+                "activity": null,
+                "animalname": null,
+                "quantity": null,
+                "state": "z",
+                "city": null
+            }
+        ])
+    })
+
+    it("selecting with multiple cities", async () => {
+        await teardown()
+
+        const uid = 'testUID'
+        await request(app).post('/users/createUser').send(`uid=${uid}`)
+
+        const resp1 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("city=w")
+        const pid1 = resp1.body.pid
+        const resp2 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("city=x")
+        const pid2 = resp2.body.pid
+        const resp3 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("city=y")
+        const pid3 = resp3.body.pid
+        const resp4 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("city=z")
+        const pid4 = resp4.body.pid
+
+        const resp = await request(app).get(`/posts/selectPost?city=x,y,z`)
+        assert.strictEqual(resp.status,200)
+        assert.deepStrictEqual(resp.body.message, [
+            {
+                "pid": pid2,
+                "uid": uid,
+                "imglink": null,
+                "datetime": null,
+                "coordinate": {"x":0.0, "y":0.0},
+                "activity": null,
+                "animalname": null,
+                "quantity": null,
+                "state": null,
+                "city": "x"
+            },
+            {
+                "pid": pid3,
+                "uid": uid,
+                "imglink": null,
+                "datetime": null,
+                "coordinate": {"x":0.0, "y":0.0},
+                "activity": null,
+                "animalname": null,
+                "quantity": null,
+                "state": null,
+                "city": "y"
+            },
+            {
+                "pid": pid4,
+                "uid": uid,
+                "imglink": null,
+                "datetime": null,
+                "coordinate": {"x":0.0, "y":0.0},
+                "activity": null,
+                "animalname": null,
+                "quantity": null,
+                "state": null,
+                "city": "z"
+            }
+        ])
+    })
 })
 
 describe("creating posts", () => {
