@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wildwhere/database.dart';
 import 'package:wildwhere/post.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:wildwhere/postpage.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -199,66 +200,76 @@ class _ProfilePageState extends State<Profile> {
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 Post post = snapshot.data![index];
-                return Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration: (
-                    const BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12,
-                          spreadRadius: 0,
-                          blurRadius: 5.0,
-                          offset: Offset(0, 3),
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PostPage(post: post),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: (
+                      const BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            spreadRadius: 0,
+                            blurRadius: 5.0,
+                            offset: Offset(0, 3),
+                          )
+                        ]
+                      )
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          margin: const EdgeInsets.only(left: 5, top: 5, bottom: 5),
+                          padding: const EdgeInsets.all(10),
+                          width: 130,
+                          height: 105,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: NetworkImage(post.imgLink ?? 'https://via.placeholder.com/150'),
+                              fit: BoxFit.cover,
+                            ),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child : Padding(
+                            padding: const EdgeInsets.only(top: 7),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(post.animalName ?? 'Unknown Animal', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                FutureBuilder<Placemark>(
+                                    future: getCityState(post.coordinate['y'], post.coordinate['x']),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState == ConnectionState.waiting) {
+                                        return const Text("Loading location...");
+                                      } else if (snapshot.hasData) {
+                                        Placemark place = snapshot.data!;
+                                        return Text("Location: ${place.locality}, ${place.administrativeArea}");
+                                      } else {
+                                        return const Text("Location unknown");
+                                      }
+                                    },
+                                  ),
+                                Text('Quantity: ${post.quantity}'),
+                                Text('Activity: ${post.activity}')
+                              ],
+                            )
+                          )
                         )
                       ]
                     )
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.only(left: 5, top: 5, bottom: 5),
-                        padding: const EdgeInsets.all(10),
-                        width: 130,
-                        height: 105,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: NetworkImage(post.imgLink ?? 'https://via.placeholder.com/150'),
-                            fit: BoxFit.cover,
-                          ),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child : Padding(
-                          padding: const EdgeInsets.only(top: 7),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(post.animalName ?? 'Unknown Animal', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                              FutureBuilder<Placemark>(
-                                  future: getCityState(post.coordinate['y'], post.coordinate['x']),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState == ConnectionState.waiting) {
-                                      return const Text("Loading location...");
-                                    } else if (snapshot.hasData) {
-                                      Placemark place = snapshot.data!;
-                                      return Text("Location: ${place.locality}, ${place.administrativeArea}");
-                                    } else {
-                                      return const Text("Location unknown");
-                                    }
-                                  },
-                                ),
-                              Text('Quantity: ${post.quantity}'),
-                              Text('Activity: ${post.activity}')
-                            ],
-                          )
-                        )
-                      )
-                    ]
                   )
                 );
               },
