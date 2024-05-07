@@ -86,14 +86,22 @@ class EditProfileState extends State<EditProfile> {
                         height: 120,
                         clipBehavior: Clip.antiAlias,
                         decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                        ),
+                            shape: BoxShape.circle,
+                            color: Colors.grey,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black38,
+                                blurRadius: 6.0,
+                                spreadRadius: 1.0,
+                                offset: Offset(0, 5),
+                              )
+                            ]),
                         child: (imageLink == null || imageLink == '')
                             ? Image.asset('assets/images/defaultpp.png',
                                 fit: BoxFit.cover)
                             : Image.network(imageLink!, fit: BoxFit.cover),
                       ),
-                const SizedBox(width: 15),
+                const SizedBox(width: 25),
                 IntrinsicWidth(
                     child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -101,28 +109,18 @@ class EditProfileState extends State<EditProfile> {
                   children: [
                     ElevatedButton(
                       onPressed: getImageFromGallery,
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                          const Color.fromARGB(255, 92, 110, 71),
-                        ),
-                      ),
+                      style:
+                          ButtonStyle(elevation: MaterialStateProperty.all(2)),
                       child: const Text(
                         "Upload from library",
-                        style: TextStyle(
-                            color: Color.fromARGB(255, 255, 255, 255)),
                       ),
                     ),
                     ElevatedButton(
                         onPressed: getImageFromCamera,
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                            const Color.fromARGB(255, 92, 110, 71),
-                          ),
-                        ),
+                            elevation: MaterialStateProperty.all(2)),
                         child: const Text(
                           "Take a photo",
-                          style: TextStyle(
-                              color: Color.fromARGB(255, 255, 255, 255)),
                         )),
                   ],
                 )),
@@ -190,12 +188,6 @@ class EditProfileState extends State<EditProfile> {
                           onPressed: () async {
                             handleSave();
                           },
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                const Color.fromARGB(255, 92, 110, 71),
-                              ),
-                              foregroundColor: MaterialStateProperty.all<Color>(
-                                  const Color.fromARGB(255, 255, 255, 255))),
                           child: const Text('Save Changes')),
                     ],
                   )))
