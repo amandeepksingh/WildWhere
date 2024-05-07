@@ -104,7 +104,6 @@ class _PostsListPageState extends State<PostsListPage> {
                                   ),
                                   const SizedBox(width: 10),
                                   Expanded(
-                                    // This should be here, wrapping the container that comes next
                                     child: Container(
                                       decoration: BoxDecoration(
                                         color: const Color.fromARGB(
