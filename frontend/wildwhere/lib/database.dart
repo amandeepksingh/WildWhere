@@ -74,7 +74,12 @@ class Database {
       },
     );
     if (response.statusCode == 200) {
-      return Post.fromJson(json.decode(response.body));
+      Map<String, dynamic> data = json.decode(response.body);
+      List<dynamic> messageList = data['message'];
+      Map<String, dynamic> post =
+          messageList.isNotEmpty ? messageList.first : {};
+
+      return Post.fromJson(post);
     }
     return null;
   }
