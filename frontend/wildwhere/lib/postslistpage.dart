@@ -71,17 +71,24 @@ class _PostsListPageState extends State<PostsListPage> {
                     itemBuilder: (context, index) {
                       Post post = snapshot.data![index];
                       return InkWell(
-                          onLongPress: () async {
-                            if (superUser) {
-                              HapticFeedback.heavyImpact();
-                              bool confirmed =
-                                  await _showConfirmationDialog(context);
-                              if (confirmed) {
-                                _deletePost(post.pid!, index);
-                              }
+                        onLongPress: () async {
+                          if (superUser) {
+                            HapticFeedback.heavyImpact();
+                            bool confirmed =
+                                await _showConfirmationDialog(context);
+                            if (confirmed) {
+                              _deletePost(post.pid!, index);
                             }
-                          },
-                          child: Padding(
+                          }
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(7),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Row(
                                 children: <Widget>[
@@ -90,55 +97,73 @@ class _PostsListPageState extends State<PostsListPage> {
                                     child: post.imgLink != null
                                         ? Image.network(post.imgLink!,
                                             width: 120,
-                                            height: 90,
+                                            height: 115,
                                             fit: BoxFit.cover)
                                         : const Icon(Icons.image_not_supported,
                                             size: 120),
                                   ),
                                   const SizedBox(width: 10),
                                   Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text(
-                                            post.animalName ?? 'Unknown Animal',
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.bold)),
-                                        FutureBuilder<Placemark>(
-                                          future: getCityState(
-                                              post.coordinate['y'],
-                                              post.coordinate['x']),
-                                          builder: (context, snapshot) {
-                                            if (snapshot.connectionState ==
-                                                ConnectionState.waiting) {
-                                              return const Text(
-                                                  "Loading location...");
-                                            } else if (snapshot.hasData) {
-                                              Placemark placemark =
-                                                  snapshot.data!;
-                                              DateTime dateTime =
-                                                  DateTime.parse(post.datetime);
-                                              String formattedDate =
-                                                  DateFormat('yyyy-MM-dd')
-                                                      .format(dateTime);
-                                              String formattedTime =
-                                                  DateFormat('kk:mm')
-                                                      .format(dateTime);
-                                              return Text(
-                                                  "${post.activity} observed at $formattedTime on $formattedDate\nLocation: ${placemark.locality}, ${placemark.administrativeArea}");
-                                            } else {
-                                              return const Text(
-                                                  "Failed to load location");
-                                            }
-                                          },
+                                    // This should be here, wrapping the container that comes next
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: const Color.fromARGB(
+                                            255, 243, 243, 243),
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Text(
+                                                post.animalName ??
+                                                    'Unknown Animal',
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                            FutureBuilder<Placemark>(
+                                              future: getCityState(
+                                                  post.coordinate['y'],
+                                                  post.coordinate['x']),
+                                              builder: (context, snapshot) {
+                                                if (snapshot.connectionState ==
+                                                    ConnectionState.waiting) {
+                                                  return const Text(
+                                                      "Loading location...");
+                                                } else if (snapshot.hasData) {
+                                                  Placemark placemark =
+                                                      snapshot.data!;
+                                                  DateTime dateTime =
+                                                      DateTime.parse(
+                                                          post.datetime);
+                                                  String formattedDate =
+                                                      DateFormat('yyyy-MM-dd')
+                                                          .format(dateTime);
+                                                  String formattedTime =
+                                                      DateFormat('kk:mm')
+                                                          .format(dateTime);
+                                                  return Text(
+                                                      "${post.activity} observed at\n$formattedTime on $formattedDate\nLocation: ${placemark.locality}, ${placemark.administrativeArea}");
+                                                } else {
+                                                  return const Text(
+                                                      "Failed to load location");
+                                                }
+                                              },
+                                            ),
+                                            Text("Quantity: ${post.quantity}"),
+                                          ],
                                         ),
-                                        Text("Quantity: ${post.quantity}"),
-                                      ],
+                                      ),
                                     ),
                                   ),
                                 ],
-                              )));
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
                     });
               }
             }));
@@ -172,4 +197,3 @@ class _PostsListPageState extends State<PostsListPage> {
     return placemarks[0];
   }
 }
-
