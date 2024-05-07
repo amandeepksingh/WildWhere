@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:wildwhere/data.dart';
 import 'package:wildwhere/profile.dart';
@@ -10,7 +11,6 @@ import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:flutter/services.dart';
 import 'package:wildwhere/postslistpage.dart';
 import 'package:wildwhere/post.dart';
-import 'package:wildwhere/post_report.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -95,8 +95,11 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin {
 
   void _onStyleLoaded() async {
     // Called when map style is fully loaded; we typically use this to add markers dynamically.
-    Position userPos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    _controller!.animateCamera(CameraUpdate.newLatLngZoom(LatLng(userPos.latitude, userPos.longitude), 11.0)); //moves camera to user location on startup
+    Position userPos = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    _controller!.animateCamera(CameraUpdate.newLatLngZoom(
+        LatLng(userPos.latitude, userPos.longitude),
+        11.0)); //moves camera to user location on startup
     _loadMarkers();
   }
 
@@ -197,6 +200,8 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin {
                   "pk.eyJ1IjoibWJlcmV6dW5zIiwiYSI6ImNsdjA1MTk0djFlcDIybG14bHNtem1xeGEifQ.Xcg2SVacZ2TjY0zcKVKTig",
               myLocationEnabled: true,
               attributionButtonPosition: AttributionButtonPosition.BottomLeft,
+              attributionButtonMargins: const Point(95, 14),
+              logoViewMargins: const Point(10, 15),
               compassEnabled: false,
               tiltGesturesEnabled: false,
               myLocationRenderMode: MyLocationRenderMode.NORMAL,
@@ -279,7 +284,7 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin {
             )
           ],
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton.large(
           onPressed: () {
             setState(() {
@@ -313,7 +318,6 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin {
         right: 20,
         child: Column(
           children: <Widget>[
-            const PostReport(),
             FloatingActionButton(
               heroTag: 'tag',
               onPressed: () => currentLocation(_controller),
@@ -516,4 +520,3 @@ void currentLocation(var controller) async {
     ),
   );
 }
-
