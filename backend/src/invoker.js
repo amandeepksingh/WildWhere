@@ -10,19 +10,21 @@ const config = {
     },
     region: 'us-east-2'
 };
-console.log(config);
 
 var client = new LambdaClient(config);
-const input = { // InvocationRequest
-    FunctionName: "arn:aws:lambda:us-east-2:339712976119:function:WW-NOTIFS", // required
-    InvocationType: "RequestResponse",
-    LogType: "Tail",
-    Payload: JSON.stringify({ key: 'value' }), // e.g. Buffer.from("") or new TextEncoder().encode("")
-};
-async function Linvoke() {
+
+async function inv(params) {
+    console.log("sending: \n" + JSON.stringify(params));
+    const input = { // InvocationRequest
+        FunctionName: "arn:aws:lambda:us-east-2:339712976119:function:WW-NOTIFS", // required
+        InvocationType: "RequestResponse",
+        LogType: "Tail",
+        Payload: JSON.stringify(params), // e.g. Buffer.from("") or new TextEncoder().encode("")
+    };
     const command = new InvokeCommand(input);
     const response = await client.send(command);
     console.log(response);    
 }
 
-Linvoke();
+inv({ ploc: 'value',  uid:'testuid', pid: 'testPID'});
+module.exports = {inv};
