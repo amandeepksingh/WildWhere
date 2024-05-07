@@ -71,22 +71,26 @@ function selectUser(req, res, next) {
             return res.status(responseStatus).json(responseJson)
         }
         logger.logDBsucc(result);
-        responseStatus = 200
-        responseJson = {message: result.rows}
-        logger.logResponse(responseStatus, responseJson)
-
+        
         if(result.rows && result.rows.length > 0) {
             //request a new signedurl
-            if(result.rows[0].imglink != null) {
-                const toks = result.rows[0].imglink.split("/");
-                if(toks.length === 3) {
-                    const url = await s3Helpers.s3GetSignedURL(toks[0], toks[1], toks[2]);
-                    result.rows[0].imglink = url;
+            for(let i = 0; i < result.rows.length; ++i) {
+                if(result.rows[i].imglink != null) {
+                    const toks = result.rows[i].imglink.split("/");
+                    if(toks.length === 3) {
+                        const url = await s3Helpers.s3GetSignedURL(toks[0], toks[1], toks[2]);
+                        result.rows[i].imglink = url;
+                    } else {
+                        logger.logInternalError("imgLink in s3 not matching strtok format")
+                    }
                 }
             }
         }
-        responseJson = {message: result.rows};
-        return res.status(200).json(responseJson);
+        
+        responseStatus = 200
+        responseJson = {message: result.rows}
+        logger.logResponse(responseStatus, responseJson);
+        return res.status(responseStatus).json(responseJson)
     })
 }
 
