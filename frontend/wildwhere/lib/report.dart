@@ -104,7 +104,9 @@ class _ReportPageState extends State<ReportPage> {
                       width: MediaQuery.of(context).size.width * 0.85,
                       height: MediaQuery.of(context).size.height * 0.55,
                       child: Scaffold(
+                          backgroundColor: Colors.white,
                           appBar: AppBar(
+                            backgroundColor: Colors.white,
                             leading: CloseButton(
                               onPressed: () {
                                 widget.controller.toggle();
@@ -343,4 +345,3 @@ class _ReportPageState extends State<ReportPage> {
     );
   }
 }
-
