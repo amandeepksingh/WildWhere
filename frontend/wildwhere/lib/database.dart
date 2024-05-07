@@ -207,7 +207,7 @@ class Database {
         data['message'][0]['username'] == oldUsername);
   }
 
-  void initializePrefs(String userId) async {
+  Future<void> initializePrefs(String userId) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var user = await getCurrentUser(userId);
@@ -215,11 +215,10 @@ class Database {
       prefs.setString('uid', user['uid']!);
       prefs.setString('bio', user['bio'] ?? '');
       prefs.setString('email', user['email'] ?? '');
-      prefs.setString('imagelink', user['imglink']);
-      prefs.setBool('superUser', user['superuser']);
+      prefs.setString('imagelink', user['imglink'] ?? '');
+      prefs.setBool('superUser', user['superuser'] ?? false);
     } catch (e) {
       throw Exception("Error initializing user data: $e");
     }
   }
 }
-
