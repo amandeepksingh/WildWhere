@@ -46,64 +46,66 @@ This README provides instructions on how to find the WildWhere project’s build
 - To run tests in the terminal:
   - Run the following command from the root of the project: `flutter test test/database_test.dart`
 
- 
-  
 
 ## Backend
 
 ### Backend Onboarding
-- install git: https://git-scm.com/downloads and follow the instructions to download'
-- go to an intended folder to place a repository, open the a shell and run ``` git clone https://github.com/amandeepksingh/WildWhere.git``` make sure you are logged in and have the necessary permissions.
-- run ```git log``` to see commit history (make sure you can see them and that they match to the commit numbers) then also run ```git branch -r``` to make sure you have cloned the repository and see all remote branches
-- run ```git branch -c main <your_onboarding_branch>``` to copy the main branch and make your own branch
-- run ```git switch <your_onboarding_branch>``` to switch to the branch you made
-- because your branch is not on the remote repository run ``` git push -u origin <your_onboarding_branch>``` to push to the remote and set the upstream branch, check to make sure that after it is successful that you can see your branch on the repository.
-- switch directories to the /WILDWHERE/backend
-- install nvm via the node version manager github repo: https://github.com/nvm-sh/nvm
-- once it is installed run ``` nvm install node ```
-- then install the required dependencies by running ```npm install --save```
-- You can now run the scripts indicated in the package.json such as ```npm run start ```
-- Edit and have fun! When you are done, ```git status``` will list changed files ```git commit -a``` will automatically stage and commit all changes. If you choose to only commit certain files ```git add <file>``` will stage the file for commit, you must manually write ```git commit``` to commit, write a commit message save the file and quit. To push to remote run ```git push```. <b>MAKE SURE</b> you do not have any aws secrets.
- - if you need to work on something else and the work is not complete you do not need to commit. Instead you may stash the changes to save for later by using ```git stash```. To reapply the changes run ```git stash apply```. To get rid of them ```git stash drop```
-- when you are done with the branch you can either submit a pull request, which will require review, or you can delete the branch
-  - to submit a pull request you must go through the github website
-  - to delete branch, first switch to another branch by running ```git checkout <another-branch>``` then ```git branch -d <your_onboarding_branch>```(if it chooses not to delete you can use the ```-D``` flag instead of ```-d```), which will only delete the branch locally. To delete on the remote run ```git push origin --delete <another-branch>``` 
 
-#### Naming conventions
-Other than your onboarding branch we require that the branch name correlates to the feature name or release or problem you are trying to fix.
+#### Setup
 
-#### Merging to main
-Unless special circumstances we NEVER edit and push directly on main. 
+1. ##### Installing prerequisites
+    - To install Git, see here: https://git-scm.com/downloads.
+    - To install Node.js:
+      - Download nvm by following the instructions here: https://github.com/nvm-sh/nvm.
+      - Run `nvm install node`.
+    - To install PostgreSQL, see here: https://www.postgresql.org/download/.
+
+2. ##### Local database setup
+    - Run `psql` to open the PostgreSQL command line.
+    - Run `CREATE DATABASE wildwhere;`. Then run `\c wildwhere` to connect to the new database.
+    - Copy and paste the contents of genTables.sql (located in this Github repository) into the command line and hit enter. This should create three tables, which you can view with `\dt`.
+    - Type `\q` to quit psql.
+
+3. ##### Local repository setup
+    - In a folder of your choice, run `git clone https://github.com/amandeepksingh/WildWhere.git`. Then run `cd Wildwhere`.
+    - Create a file called .env in the WildWhere directory containing the following:
+      ```bash
+      location="local"
+      dbUser="postgres"
+      dbPass="<postgres password>"
+      dbHost="localhost"
+      dbName="wildwhere"
+      dbPort="5432"
+      ec2port="80"
+      # Amazon S3 keys
+      accessPoint="<secret>"
+      accessKeyID="<secret>"
+      secretAccessKey="<secret>"
+      ```
+      If you don't know what your Postgres password is, you can reset it by running `ALTER USER postgres PASSWORD '<new password>';` within psql.\
+      The Amazon S3 keys are not totally necessary; they are required for the image-related endpoints, but not for the database-related endpoints. (If you are not part of the core WildWhere team and want to test the image-related endpoints locally, you will have to make your own [Amazon S3](https://aws.amazon.com/s3/) bucket or use something like [fake-s3](https://github.com/jubos/fake-s3).)
+    - Move to the backend directory with `cd backend`.
+    - Run `npm install --save` to install the dependencies.
+    - You can now run the scripts listed in the package.json, such as `npm run start` (to run the server locally) and `npm run test` (to test the backend code).
+
+#### Conventions
+- In general, we do _not_ commit directly to the main branch.
+- Branches should be named after the feature being added or the issue being fixed. 
 
 #### Server location
-The code will automatically detect that you are running on local and will resolve the server to localhost(127.0.0.1).
+The code will automatically detect that you are running on local and will resolve the server to localhost (or 127.0.0.1).
 
 #### Deploying to a server
 Normally ask a network admin and they will build your changes to a development server. Moreover, if your changes are merged into main the server should automatically deploy to development by the end of the day. However, if you are given access to the pipeline:
-- make sure your changes are merged to main, then manually build the pipeline. This will deploy to our development server. 
-- Unless explicitly given permission, do not build to our production server
-
-#### Testing
-To run the tests, we require postgresql to be installed on your local computer. If postgresql is not installed on your machine, we refer you to the very thorough documentation included at https://www.postgresql.org/download/. After you've successfully confirmed that postgresql is working on your local machine, move forward with the following steps:
-- please change the field 5th line of /WILDWHERE/.env to be the password associated with the user named postgres (this user is included in installation by default)
-- log into psql
-- create a database called wildwhere: run ```CREATE DATABASE Wildwhere;```
-- connect to Wildwhere: run ```\c wildwhere;```
-- add the necessary extensions: run ```CREATE EXTENSION IF NOT EXISTS cube;``` and ```CREATE EXTENSION IF NOT EXISTS earthdistance;```
-- create the users table: run ```CREATE TABLE users (uid varchar(50) PRIMARY KEY, email VARCHAR(50), username VARCHAR(50), bio VARCHAR(50), imgLink VARCHAR(5000), superUser BOOLEAN, locationPerm BOOLEAN, notificationPerm BOOLEAN, colorBlindRating INTEGER);```
-- create the posts table: run ```CREATE TABLE posts (pid varchar(50) PRIMARY KEY, uid VARCHAR(128) NOT NULL REFERENCES users(uid) ON DELETE CASCADE, imgLink TEXT, datetime TIMESTAMP, coordinate POINT NOT NULL, animalName TEXT, quantity INTEGER, activity TEXT);```
-- cd into the /WILDWHERE/backend directory
-- run tests: ```npm test```
-  - note that ```IMAGES: test user normal functionality```, ```IMAGES: test post normal functionality```, ```IMAGES: test user delete normal```, and ```IMAGES: test post delete normal``` require access to the s3 bucket to properly test. In the interest of security, we do not give these credentials to develops but have it stored in our aws instance so that these tests are run during build. As a result, these 4 tests will fail on the local run of ```npm test```
-
+- Make sure your changes are merged to main, then manually build the pipeline. This will deploy to our development server. 
+- Unless explicitly given permission, do not build to our production server.
 
 ### Backend API
-
 To run against the backend API, use the host listed for the EC2. This varies since it changes every time it's started up, but right now it is ec2-13-58-233-86.us-east-2.compute.amazonaws.com
 
 You can add endpoints such as _/users/createUser_ onto the end to reach different endpoints the backend has set up. Each endpoint will support some method (_Post_, _Get_, _Put_, or _Delete_) and accept some input JSON body. These are specified below.
 
-After sending a request to an endpoint with a method and input JSON body, you'll receive a response (most of the time. Unless we haven't hit that edge case yet).
+After sending a request to an endpoint with a method and input JSON body, you'll receive a response.
 
 #### Example
 
