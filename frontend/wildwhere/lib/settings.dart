@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -227,12 +225,12 @@ class _SettingsPageState extends State<SettingsPage> {
                     .infinity, // Ensures the container takes up all horizontal space
                 child: TextButton(
                   style: ButtonStyle(
-                    fixedSize: WidgetStateProperty.all(Size.fromHeight(MediaQuery.of(context).size.height * 0.065)),
-                    padding: WidgetStateProperty.all(
+                    fixedSize: MaterialStateProperty.all(Size.fromHeight(MediaQuery.of(context).size.height * 0.065)),
+                    padding: MaterialStateProperty.all(
                         EdgeInsets.zero), // Removes any intrinsic padding
-                    backgroundColor: WidgetStateProperty.all(
+                    backgroundColor: MaterialStateProperty.all(
                         Colors.white), // Optional: sets background color
-                    shape: WidgetStateProperty.all(RoundedRectangleBorder(
+                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(
                           15), // Keeps the rounded corners
                     )),

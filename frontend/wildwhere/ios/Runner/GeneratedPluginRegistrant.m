@@ -36,6 +36,12 @@
 @import flutter_splash_screen;
 #endif
 
+#if __has_include(<geocoding_ios/GeocodingPlugin.h>)
+#import <geocoding_ios/GeocodingPlugin.h>
+#else
+@import geocoding_ios;
+#endif
+
 #if __has_include(<geolocator_apple/GeolocatorPlugin.h>)
 #import <geolocator_apple/GeolocatorPlugin.h>
 #else
@@ -78,6 +84,12 @@
 @import path_provider_foundation;
 #endif
 
+#if __has_include(<permission_handler_apple/PermissionHandlerPlugin.h>)
+#import <permission_handler_apple/PermissionHandlerPlugin.h>
+#else
+@import permission_handler_apple;
+#endif
+
 #if __has_include(<shared_preferences_foundation/SharedPreferencesPlugin.h>)
 #import <shared_preferences_foundation/SharedPreferencesPlugin.h>
 #else
@@ -98,6 +110,7 @@
   [FlutterFacebookAuthPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterFacebookAuthPlugin"]];
   [FlutterSecureStoragePlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterSecureStoragePlugin"]];
   [FlutterSplashScreenPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterSplashScreenPlugin"]];
+  [GeocodingPlugin registerWithRegistrar:[registry registrarForPlugin:@"GeocodingPlugin"]];
   [GeolocatorPlugin registerWithRegistrar:[registry registrarForPlugin:@"GeolocatorPlugin"]];
   [FLTGoogleMapsPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTGoogleMapsPlugin"]];
   [FLTGoogleSignInPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTGoogleSignInPlugin"]];
@@ -105,6 +118,7 @@
   [FLTImagePickerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTImagePickerPlugin"]];
   [MapboxMapsPlugin registerWithRegistrar:[registry registrarForPlugin:@"MapboxMapsPlugin"]];
   [PathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"PathProviderPlugin"]];
+  [PermissionHandlerPlugin registerWithRegistrar:[registry registrarForPlugin:@"PermissionHandlerPlugin"]];
   [SharedPreferencesPlugin registerWithRegistrar:[registry registrarForPlugin:@"SharedPreferencesPlugin"]];
   [SignInWithApplePlugin registerWithRegistrar:[registry registrarForPlugin:@"SignInWithApplePlugin"]];
 }
