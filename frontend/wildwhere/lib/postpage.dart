@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wildwhere/post.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:wildwhere/database.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wildwhere/post_report.dart';
 import 'package:wildwhere/user.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -10,7 +10,7 @@ import 'dart:convert';
 class PostPage extends StatefulWidget {
   final Post post;
 
-  const PostPage({Key? key, required this.post}) : super(key: key);
+  const PostPage({super.key, required this.post});
 
   @override
   _PostPageState createState() => _PostPageState();
@@ -18,7 +18,7 @@ class PostPage extends StatefulWidget {
 
 class _PostPageState extends State<PostPage> {
   late Post post;
-  http.Response? response; 
+  http.Response? response;
   String? uid;
   Database db = Database();
   User? user;
@@ -38,11 +38,10 @@ class _PostPageState extends State<PostPage> {
       user = User.fromJson(data['message'][0]);
     });
   }
+
   Future<Placemark> getPlace() async {
     List<Placemark> placemarks = await placemarkFromCoordinates(
-      post.coordinate['y'],
-      post.coordinate['x']
-    );
+        post.coordinate['y'], post.coordinate['x']);
     return placemarks.first;
   }
 
@@ -50,23 +49,16 @@ class _PostPageState extends State<PostPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(post.animalName ?? 'Post'),
-        leading: const BackButton(color: Colors.black87),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.delete),
-            onPressed: () async {
-
-            }
-          )
-        ]
-      ),
+          title: Text(post.animalName ?? 'Post'),
+          leading: const BackButton(color: Colors.black87),
+          actions: <Widget>[PostReport(post: post)]),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             post.imgLink != null
-              ? Image.network(post.imgLink!)
-              : const Image(image: AssetImage('assets/images/placeholder.png')),
+                ? Image.network(post.imgLink!)
+                : const Image(
+                    image: AssetImage('assets/images/placeholder.png')),
             ListTile(
               title: Text('User:'),
               subtitle: Text(user?.username ?? 'Unknown'),
@@ -90,7 +82,8 @@ class _PostPageState extends State<PostPage> {
                     snapshot.hasData) {
                   return ListTile(
                     title: Text('Location'),
-                    subtitle: Text("${snapshot.data!.locality}, ${snapshot.data!.administrativeArea}"),
+                    subtitle: Text(
+                        "${snapshot.data!.locality}, ${snapshot.data!.administrativeArea}"),
                   );
                 } else {
                   return ListTile(

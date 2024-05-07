@@ -163,6 +163,27 @@ class Database {
     return response;
   }
 
+  Future<void> sendReport(String report, Post post) async {
+    var url = Uri.parse('$endpoint/reports/createReport');
+    Map<String, dynamic> jsonBody = {
+      "uid": post.uid,
+      "pid": post.pid,
+      "reason": report
+    };
+    var encoded = jsonEncode(jsonBody);
+    try {
+      await client.post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: encoded,
+      );
+    } catch (e) {
+      throw Exception('Error submitting post: $e');
+    }
+  }
+
   Future<Map<String, dynamic>> getCurrentUser(String uid) async {
     Database db = Database();
     var response = await db.getUserByUID(uid: uid);
