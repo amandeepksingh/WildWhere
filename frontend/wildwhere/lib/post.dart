@@ -2,7 +2,7 @@ class Post {
   final String? pid;
   final String uid;
   final String datetime;
-  final Map<String,dynamic> coordinate;
+  final Map<String, dynamic> coordinate;
   final String? animalName;
   final int quantity;
   final String activity;
@@ -21,15 +21,14 @@ class Post {
 
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
-      pid: json['pid'],
-      uid: json['uid'],
-      datetime: json['datetime'],
-      coordinate: json['coordinate'],
-      animalName: json['animalname'],
-      quantity: json['quantity'] as int,
-      activity: json['activity'],
-      imgLink: json['imglink']
-    );
+        pid: json['pid'],
+        uid: json['uid'],
+        datetime: json['datetime'],
+        coordinate: json['coordinate'],
+        animalName: json['animalname'],
+        quantity: json['quantity'] as int,
+        activity: json['activity'],
+        imgLink: json['imglink']);
   }
 
   Map<String, dynamic> toJson() {
@@ -46,4 +45,3 @@ class Post {
     };
   }
 }
-
