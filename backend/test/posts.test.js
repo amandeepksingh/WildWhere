@@ -691,6 +691,20 @@ describe("selecting posts", () => {
             }
         ])
     })
+
+    it("USER: test select with imagelink on multiple posts", async () => {
+        await teardown()
+        const uid = "testUID"
+        await request(app).post('/users/createUser').send(`uid=${uid}`)
+        const pid1 = (await request(app).post('/posts/createPost').send(`uid=${uid}`).send("coordinate=(0,0)")).body.pid
+        await request(app).post('/images/postPic/upload').field('pid', pid1).attach('img', 'test/testImages/test1.jpg')
+        const pid2 = (await request(app).post('/posts/createPost').send(`uid=${uid}`).send("coordinate=(0,0)")).body.pid
+        await request(app).post('/images/postPic/upload').field('pid', pid2).attach('img', 'test/testImages/test1.jpg')
+        const resp = await request(app).get(`/posts/selectPost`)
+        assert.strictEqual(resp.status, 200)
+        assert.ok(resp.body.message[0].imglink.includes('http'))
+        assert.ok(resp.body.message[1].imglink.includes('http'))
+    })
 })
 
 describe("creating posts", () => {

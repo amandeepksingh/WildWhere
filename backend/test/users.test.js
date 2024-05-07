@@ -3,6 +3,7 @@ const assert = require('assert');
 const { describe } = require('node:test');
 const Pool = require('pg').Pool;
 const app = require('../src/app');
+const logger = require('../src/logger');
 require('dotenv').config();
 
 //run tests with "npm test"
@@ -272,6 +273,20 @@ describe("creating users", () => {
         .send(`colorBlindRating=${testInput.colorBlindRating}`)
         assert.strictEqual(resp.body.message, `user created`)
         assert.strictEqual(resp.status, 200)
+    })
+
+    it("USER: test select with imagelink on multiple users", async () => {
+        await teardown()
+        const uid1 = "testUID1"
+        await request(app).post('/users/createUser').send(`uid=${uid1}`)
+        await request(app).post('/images/userProfilePic/upload').field('uid', uid1).attach('img', 'test/testImages/test1.jpg')
+        const uid2 = "testUID2"
+        await request(app).post('/users/createUser').send(`uid=${uid2}`)
+        await request(app).post('/images/userProfilePic/upload').field('uid', uid2).attach('img', 'test/testImages/test1.jpg')
+        const resp = await request(app).get(`/users/selectUser`)
+        assert.strictEqual(resp.status, 200)
+        assert.ok(resp.body.message[0].imglink.includes('http'))
+        assert.ok(resp.body.message[1].imglink.includes('http'))
     })
 })
 
