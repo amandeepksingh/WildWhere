@@ -11,6 +11,7 @@ import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:flutter/services.dart';
 import 'package:wildwhere/postslistpage.dart';
 import 'package:wildwhere/post.dart';
+import 'package:wildwhere/postpage.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -373,99 +374,127 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin {
         "Animal: ${data['animalName']}\n"
         "Activity: ${data['activity']}\n"
         "Quantity: ${data['quantity']}\n";*/
-
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-
-    return AnimatedBuilder(
-        animation: infoBoxAnimationController,
-        builder: (context, child) {
-          if (infoBoxAnimationController.isDismissed) {
-            return SizedBox
-                .shrink(); // This ensures that widget collapses when the animation is dismissed
-          }
-          return SlideTransition(
-            position: infoBoxPositionAnimation,
-            child: FadeTransition(
-                opacity: infoBoxOpacityAnimation,
-                child: Container(
-                  width: screenWidth * 0.7,
-                  height: screenHeight * 0.155,
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black26,
-                          offset: Offset(0, 3),
-                          blurRadius: 3.0,
-                          spreadRadius: 0.1,
-                        )
-                      ]),
-                  child: Row(
-                    children: [
-                      // Image Container
-                      Expanded(
-                        flex: 1, // takes 1/2 of the space
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10.0),
-                          child: Image.network(
-                              data['imglink'] ??
-                                  'https://via.placeholder.com/150', // Placeholder if no imgLink is available
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                            // Fallback for when the image fails to load
-                            return const Icon(Icons.image_not_supported);
-                          }),
+    return FutureBuilder<Post?>(
+        future: Database().getPostByPID(data['pid']),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else if (snapshot.data == null) {
+            return const Text("Couldn't find post!");
+          } else {
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => PostPage(post: snapshot.data!)),
+                );
+              },
+              child: AnimatedBuilder(
+                animation: infoBoxAnimationController,
+                builder: (context, child) {
+                  if (infoBoxAnimationController.isDismissed) {
+                    return const SizedBox
+                        .shrink(); // This ensures that widget collapses when the animation is dismissed
+                  }
+                  return SlideTransition(
+                    position: infoBoxPositionAnimation,
+                    child: FadeTransition(
+                      opacity: infoBoxOpacityAnimation,
+                      child: Container(
+                        width: screenWidth * 0.7,
+                        height: screenHeight * 0.155,
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black26,
+                              offset: Offset(0, 3),
+                              blurRadius: 3.0,
+                              spreadRadius: 0.1,
+                            )
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            // Image Container
+                            Expanded(
+                              flex: 1, // takes 1/2 of the space
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10.0),
+                                child: Image.network(
+                                  data['imglink'] ??
+                                      'https://via.placeholder.com/150', // Placeholder if no imgLink is available
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    // Fallback for when the image fails to load
+                                    return const Icon(
+                                        Icons.image_not_supported);
+                                  },
+                                ),
+                              ),
+                            ),
+                            // Text Container
+                            Expanded(
+                              flex: 1, // takes 1/2 of the space
+                              child: Container(
+                                padding: const EdgeInsets.only(left: 10),
+                                alignment: Alignment.topLeft,
+                                child: RichText(
+                                  text: TextSpan(
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 13,
+                                      overflow: TextOverflow.ellipsis,
+                                      fontFamily: 'CupertinoSystemText',
+                                      letterSpacing: -0.45,
+                                      height: 1.3,
+                                    ),
+                                    children: <TextSpan>[
+                                      const TextSpan(
+                                        text: 'PID: ',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      TextSpan(text: "${data['pid']}\n"),
+                                      const TextSpan(
+                                        text: 'Animal: ',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      TextSpan(text: "${data['animalName']}\n"),
+                                      const TextSpan(
+                                        text: 'Activity: ',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      TextSpan(text: "${data['activity']}\n"),
+                                      const TextSpan(
+                                        text: 'Quantity: ',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      TextSpan(text: "${data['quantity']}\n"),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-
-                      // Text Container
-                      Expanded(
-                        flex: 1, // takes 1/2 of the space
-                        child: Container(
-                          padding: const EdgeInsets.only(left: 10),
-                          alignment: Alignment.topLeft,
-                          child: RichText(
-                            text: TextSpan(
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 13,
-                                  overflow: TextOverflow.ellipsis,
-                                  fontFamily: 'CupertinoSystemText',
-                                  letterSpacing: -0.45,
-                                  height: 1.3,
-                                ),
-                                children: <TextSpan>[
-                                  const TextSpan(
-                                      text: 'PID: ',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold)),
-                                  TextSpan(text: "${data['pid']}\n"),
-                                  const TextSpan(
-                                      text: 'Animal: ',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold)),
-                                  TextSpan(text: "${data['animalName']}\n"),
-                                  const TextSpan(
-                                      text: 'Activity: ',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold)),
-                                  TextSpan(text: "${data['activity']}\n"),
-                                  const TextSpan(
-                                      text: 'Quantity: ',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold)),
-                                  TextSpan(text: "${data['quantity']}\n"),
-                                ]),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                )),
-          );
+                    ),
+                  );
+                },
+              ),
+            );
+          }
         });
   }
 }
