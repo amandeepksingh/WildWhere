@@ -225,7 +225,8 @@ class _SettingsPageState extends State<SettingsPage> {
                     .infinity, // Ensures the container takes up all horizontal space
                 child: TextButton(
                   style: ButtonStyle(
-                    fixedSize: MaterialStateProperty.all(Size.fromHeight(MediaQuery.of(context).size.height * 0.065)),
+                    fixedSize: MaterialStateProperty.all(Size.fromHeight(
+                        MediaQuery.of(context).size.height * 0.065)),
                     padding: MaterialStateProperty.all(
                         EdgeInsets.zero), // Removes any intrinsic padding
                     backgroundColor: MaterialStateProperty.all(
@@ -240,6 +241,8 @@ class _SettingsPageState extends State<SettingsPage> {
                     if (confirmed) {
                       await FirebaseAuth.instance.signOut();
                       await GoogleSignIn().signOut();
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.clear();
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
@@ -275,12 +278,12 @@ class _SettingsPageState extends State<SettingsPage> {
                   style: TextStyle(fontSize: 14)),
               actions: <Widget>[
                 TextButton(
-                  child: const Text("Yes"),
-                  onPressed: () => Navigator.of(context).pop(true),
-                ),
-                TextButton(
                   child: const Text("No"),
                   onPressed: () => Navigator.of(context).pop(false),
+                ),
+                TextButton(
+                  child: const Text("Yes"),
+                  onPressed: () => Navigator.of(context).pop(true),
                 ),
               ],
             );
