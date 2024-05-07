@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart'; // For haptic feedback
+import 'package:wildwhere/postpage.dart';
 
 class PostsListPage extends StatefulWidget {
   const PostsListPage({Key? key}) : super(key: key);
@@ -80,6 +81,14 @@ class _PostsListPageState extends State<PostsListPage> {
                               _deletePost(post.pid!, index);
                             }
                           }
+                        },
+                        onTap: () async {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => PostPage(
+                                        post: post,
+                                      )));
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(7),
