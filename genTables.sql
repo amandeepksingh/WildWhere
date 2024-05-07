@@ -31,4 +31,4 @@ CREATE TABLE reports (
     pid VARCHAR(50) NOT NULL REFERENCES posts(pid) ON DELETE CASCADE,
     uid VARCHAR(50) NOT NULL REFERENCES users(uid) ON DELETE CASCADE,
     reason TEXT
-)
+);
