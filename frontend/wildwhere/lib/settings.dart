@@ -45,15 +45,10 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 214, 249, 212),
       appBar: AppBar(
-        title: const Text('Settings',
-            style:
-                TextStyle(color: Colors.black87, fontWeight: FontWeight.w700)),
+        title: const Text('Settings'),
         leading: const BackButton(color: Colors.black87),
         centerTitle: true,
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.transparent,
         elevation: 0,
         shadowColor: Colors.transparent,
         forceMaterialTransparency: true,
@@ -72,8 +67,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
-                    color: Colors
-                        .black87, // Adjust color and font styling as needed
                   ),
                 ),
               ),
