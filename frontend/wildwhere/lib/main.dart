@@ -29,7 +29,7 @@ void main() async {
      * user can close the app during 
      * intial edit profile process,
      * resulting in an empty username
-     * on app startup.d
+     * on app startup
      */
     prefs.getString('username') == ''
         ? homeScreen = EditProfile(prefs: prefs, firstTimeSignin: true)

@@ -173,8 +173,9 @@ class _ReportPageState extends State<ReportPage> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               TextButton.icon(
-                                                  icon: const Icon(CupertinoIcons
-                                                      .photo_on_rectangle),
+                                                  icon: const Icon(
+                                                      CupertinoIcons
+                                                          .photo_on_rectangle),
                                                   onPressed:
                                                       getImageFromGallery,
                                                   label: const Text(

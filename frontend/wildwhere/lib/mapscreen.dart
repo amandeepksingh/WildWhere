@@ -14,6 +14,7 @@ import 'package:flutter/services.dart';
 import 'package:wildwhere/postslistpage.dart';
 import 'package:wildwhere/post.dart';
 import 'package:wildwhere/postpage.dart';
+import 'package:wildwhere/user.dart' as localuser;
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -39,14 +40,18 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin {
   late AnimationController infoBoxAnimationController;
   late Animation<double> infoBoxOpacityAnimation;
   late Animation<Offset> infoBoxPositionAnimation;
+  bool isLoadingUser = true;
   String uid = FirebaseAuth.instance.currentUser!.uid;
+  localuser.User? user;
 
   var reportOverlayControl = OverlayPortalController();
 
   @override
   void initState() {
     super.initState();
-
+    _fetchUserProfile();
+    Timer.periodic(
+        const Duration(minutes: 55), (Timer t) => _fetchUserProfile());
     reportanimationController = AnimationController(
       duration: const Duration(milliseconds: 150),
       vsync: this,
@@ -78,6 +83,24 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin {
       curve: Curves.fastEaseInToSlowEaseOut,
       reverseCurve: Curves.easeInCubic,
     ));
+  }
+
+  void _fetchUserProfile() async {
+    try {
+      localuser.User? newUser = await Database().getUser(uid: uid);
+      if (newUser != null) {
+        setState(() {
+          user = newUser;
+          isLoadingUser =
+              false; // Set isLoadingUser to false when data is loaded
+        });
+      }
+    } catch (e) {
+      print('Failed to fetch user data: $e');
+      setState(() {
+        isLoadingUser = false; // Set isLoadingUser to false on error
+      });
+    }
   }
 
   @override
@@ -256,33 +279,17 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin {
                               duration: const Duration(milliseconds: 330)),
                           onSelected: (item) => onSelected(context, item),
                           child: ClipOval(
-                              child: FutureBuilder(
-                                  future: Database().getUser(uid: uid),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return const Center(
-                                          child: CircularProgressIndicator());
-                                    } else if (snapshot.hasError) {
-                                      return Center(
-                                          child:
-                                              Text("Error: ${snapshot.error}"));
-                                    } else if (snapshot.data == null) {
-                                      return const Center(
-                                          child: Text("No user found"));
-                                    } else {
-                                      return snapshot.data?.imgLink == ''
-                                          ? Image.asset(
-                                              'assets/images/profile.png',
-                                              width: 50,
-                                              height: 50,
-                                              fit: BoxFit.cover)
-                                          : Image.network(
-                                              snapshot.data!.imgLink!,
-                                              fit: BoxFit.cover,
-                                            );
-                                    }
-                                  })),
+                              child: isLoadingUser
+                                  ? CircularProgressIndicator()
+                                  : (user?.imgLink == '')
+                                      ? Image.asset('assets/images/profile.png',
+                                          width: 50,
+                                          height: 50,
+                                          fit: BoxFit.cover)
+                                      : Image.network(
+                                          user!.imgLink!,
+                                          fit: BoxFit.cover,
+                                        )),
                           itemBuilder: (context) => [
                             const PopupMenuItem(
                                 value: 0,
