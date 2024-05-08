@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -104,9 +105,7 @@ class _ReportPageState extends State<ReportPage> {
                       width: MediaQuery.of(context).size.width * 0.85,
                       height: MediaQuery.of(context).size.height * 0.55,
                       child: Scaffold(
-                          backgroundColor: Colors.white,
                           appBar: AppBar(
-                            backgroundColor: Colors.white,
                             leading: CloseButton(
                               onPressed: () {
                                 widget.controller.toggle();
@@ -129,43 +128,63 @@ class _ReportPageState extends State<ReportPage> {
                                     ),
                                   ),
                                 ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                      width: 90,
-                                      height: 90,
-                                      child: ClipRRect(
+                              Padding(
+                                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                  child: Container(
+                                      decoration: BoxDecoration(
                                           borderRadius:
-                                              BorderRadius.circular(20),
-                                          child: selectedImage != null
-                                              ? Image.file(selectedImage!,
-                                                  fit: BoxFit.cover)
-                                              : const Icon(Icons.image_rounded,
-                                                  size: 90))),
-                                  SizedBox(width: 10),
-                                  IntrinsicWidth(
-                                      child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: [
-                                      ElevatedButton(
-                                          onPressed: getImageFromGallery,
-                                          child: const Text(
-                                              "Upload from library")),
-                                      ElevatedButton(
-                                          onPressed: getImageFromCamera,
-                                          child: const Text("Take a photo")),
-                                    ],
-                                  ))
-                                ],
-                              ),
+                                              BorderRadius.circular(10),
+                                          color: Colors.grey.shade700),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                              width: 90,
+                                              height: 90,
+                                              child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  child: selectedImage != null
+                                                      ? Image.file(
+                                                          selectedImage!,
+                                                          fit: BoxFit.cover)
+                                                      : const Icon(
+                                                          Icons
+                                                              .image_not_supported,
+                                                          size: 90,
+                                                          color: Colors.grey,
+                                                        ))),
+                                          SizedBox(width: 10),
+                                          IntrinsicWidth(
+                                              child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              TextButton.icon(
+                                                  icon: Icon(CupertinoIcons
+                                                      .photo_on_rectangle),
+                                                  onPressed:
+                                                      getImageFromGallery,
+                                                  label: const Text(
+                                                      "Upload from library")),
+                                              TextButton.icon(
+                                                  icon: Icon(
+                                                      CupertinoIcons.camera),
+                                                  onPressed: getImageFromCamera,
+                                                  label: const Text(
+                                                      "Take a photo")),
+                                            ],
+                                          ))
+                                        ],
+                                      ))),
                               const SizedBox(height: 40),
                               IntrinsicWidth(
                                   child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  animalTypeButton(),
+                                  Container(child: animalTypeButton()),
+                                  SizedBox(height: 10),
                                   animalQuantityButton(),
                                   animalActivityButton()
                                 ],
