@@ -50,7 +50,6 @@ class _PostPageState extends State<PostPage> {
     return Scaffold(
       appBar: AppBar(
           title: Text(post.animalName ?? 'Post'),
-          leading: const BackButton(color: Colors.black87),
           actions: <Widget>[PostReport(post: post)]),
       body: SingleChildScrollView(
         child: Column(

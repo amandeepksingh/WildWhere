@@ -44,7 +44,7 @@ class PostReportState extends State<PostReport> {
                           topRight: Radius.circular(20)),
                       child: Container(
                         padding: const EdgeInsets.all(20),
-                        color: Color.fromARGB(255, 233, 233, 233),
+                        //color: Color.fromARGB(255, 233, 233, 233),
                         child: Center(
                           child: Column(
                             mainAxisSize:
@@ -53,17 +53,18 @@ class PostReportState extends State<PostReport> {
                               Container(
                                 height: 10,
                                 width: 130,
-                                decoration: const BoxDecoration(
-                                  color: Color.fromARGB(255, 208, 208, 208),
-                                  borderRadius: BorderRadius.all(
-                                      Radius.elliptical(90, 45)),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.grey.shade600
+                                  : const Color.fromARGB(255, 208, 208, 208),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.elliptical(90, 20)),
                                 ),
                               ),
                               const SizedBox(height: 20),
                               const Text("Tell us about the issue."),
                               Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 16),
+                                padding: const EdgeInsets.fromLTRB(5, 8, 5, 2),
                                 child: TextField(
                                   maxLines: 5,
                                   controller: controller,
@@ -76,7 +77,7 @@ class PostReportState extends State<PostReport> {
                                   ),
                                 ),
                               ),
-                              ElevatedButton(
+                              TextButton(
                                 style: const ButtonStyle(
                                     elevation: MaterialStatePropertyAll(5)),
                                 onPressed: () async {
@@ -94,7 +95,7 @@ class PostReportState extends State<PostReport> {
                                     Navigator.pop(context);
                                   }
                                 },
-                                child: Text('Report Post'),
+                                child: const Text('Report Post'),
                               ),
                             ],
                           ),

@@ -64,69 +64,71 @@ class EditProfileState extends State<EditProfile> {
           child: Center(
         child: Column(children: [
           Padding(
-            padding: const EdgeInsets.all(25.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                selectedProfileImage != null
-                    ? Container(
-                        width: 120,
-                        height: 120,
-                        clipBehavior: Clip.antiAlias,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                        ),
-                        child: Image.file(
-                          File(selectedProfileImage!.path),
-                          fit: BoxFit.cover,
-                        ),
-                      )
-                    : Container(
-                        width: 120,
-                        height: 120,
-                        clipBehavior: Clip.antiAlias,
-                        decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.grey,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black38,
-                                blurRadius: 6.0,
-                                spreadRadius: 1.0,
-                                offset: Offset(0, 5),
+              padding: const EdgeInsets.all(25.0),
+              child: Padding(
+                  padding: EdgeInsets.all(5),
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * .17,
+                    decoration: BoxDecoration(
+                        color: Colors.grey.shade800,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        selectedProfileImage != null
+                            ? Container(
+                                width: 120,
+                                height: 120,
+                                clipBehavior: Clip.antiAlias,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Image.file(
+                                  File(selectedProfileImage!.path),
+                                  fit: BoxFit.cover,
+                                ),
                               )
-                            ]),
-                        child: (imageLink == null || imageLink == '')
-                            ? Image.asset('assets/images/defaultpp.png',
-                                fit: BoxFit.cover)
-                            : Image.network(imageLink!, fit: BoxFit.cover),
-                      ),
-                const SizedBox(width: 25),
-                IntrinsicWidth(
-                    child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    ElevatedButton(
-                      onPressed: getImageFromGallery,
-                      style:
-                          ButtonStyle(elevation: MaterialStateProperty.all(2)),
-                      child: const Text(
-                        "Upload from library",
-                      ),
-                    ),
-                    ElevatedButton(
-                        onPressed: getImageFromCamera,
-                        style: ButtonStyle(
-                            elevation: MaterialStateProperty.all(2)),
-                        child: const Text(
-                          "Take a photo",
+                            : Container(
+                                width: 120,
+                                height: 120,
+                                clipBehavior: Clip.antiAlias,
+                                decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.grey,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black38,
+                                        blurRadius: 6.0,
+                                        spreadRadius: 1.0,
+                                        offset: Offset(0, 5),
+                                      )
+                                    ]),
+                                child: (imageLink == null || imageLink == '')
+                                    ? Image.asset('assets/images/defaultpp.png',
+                                        fit: BoxFit.cover)
+                                    : Image.network(imageLink!,
+                                        fit: BoxFit.cover),
+                              ),
+                        const SizedBox(width: 25),
+                        IntrinsicWidth(
+                            child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextButton.icon(
+                                icon: const Icon(
+                                    CupertinoIcons.photo_on_rectangle),
+                                onPressed: getImageFromGallery,
+                                label: const Text("Upload from library")),
+                            TextButton.icon(
+                                icon: const Icon(CupertinoIcons.camera),
+                                onPressed: getImageFromCamera,
+                                label: const Text("Take a photo")),
+                          ],
                         )),
-                  ],
-                )),
-              ],
-            ),
-          ),
+                      ],
+                    ),
+                  ))),
           const SizedBox(height: 10),
           Divider(
             color: Theme.of(context).brightness == Brightness.dark
@@ -184,11 +186,12 @@ class EditProfileState extends State<EditProfile> {
                         ),
                       ),
                       const SizedBox(height: 30),
-                      ElevatedButton(
+                      TextButton(
+                         
                           onPressed: () async {
                             handleSave();
                           },
-                          child: const Text('Save Changes')),
+                          child: const Text("Save changes")),
                     ],
                   )))
         ]),

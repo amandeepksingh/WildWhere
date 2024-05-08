@@ -47,7 +47,6 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
-        leading: const BackButton(color: Colors.black87),
         centerTitle: true,
         elevation: 0,
         shadowColor: Colors.transparent,
@@ -77,16 +76,21 @@ class _SettingsPageState extends State<SettingsPage> {
                       left: 0, top: 7, bottom: 4, right: 5),
                   margin: const EdgeInsets.only(
                       top: 7), // Give some space between the title and the box
-                  decoration: const BoxDecoration(
-                    color: Color.fromARGB(255, 255, 255, 255),
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.grey.shade500
+                        : const Color.fromARGB(255, 255, 255, 255),
+                    borderRadius: const BorderRadius.all(Radius.circular(15)),
                   ),
                   child: Column(children: [
                     CupertinoListTile(
                         title: const Text('Color Blind Mode'),
                         trailing: CupertinoSwitch(
                             value: colorBlindToggle,
-                            activeColor: const Color(0xFF5E9040),
+                            activeColor:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.green.shade200
+                                    : const Color(0xFF5E9040),
                             onChanged: (value) {
                               setState(() {
                                 colorBlindToggle = value;
@@ -101,8 +105,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
-                    color: Colors
-                        .black87, // Adjust color and font styling as needed
+                    // Adjust color and font styling as needed
                   ),
                 ),
               ),
@@ -113,8 +116,10 @@ class _SettingsPageState extends State<SettingsPage> {
                     const EdgeInsets.only(left: 0, top: 7, bottom: 7, right: 5),
                 margin: const EdgeInsets.only(
                     top: 7), // Give some space between the title and the box
-                decoration: const BoxDecoration(
-                  color: Color.fromARGB(255, 255, 255, 255),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.grey.shade500
+                      : const Color.fromARGB(255, 255, 255, 255),
                   borderRadius: BorderRadius.all(Radius.circular(15)),
                 ),
                 child: Column(
@@ -123,7 +128,10 @@ class _SettingsPageState extends State<SettingsPage> {
                         title: const Text('Allow Notifications'),
                         trailing: CupertinoSwitch(
                             value: notificationToggle,
-                            activeColor: const Color(0xFF5E9040),
+                            activeColor:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.green.shade200
+                                    : const Color(0xFF5E9040),
                             onChanged: (bool value) {
                               setState(() {
                                 notificationToggle = value;
@@ -147,8 +155,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         children: [
                           SliderTheme(
                             data: SliderTheme.of(context).copyWith(
-                              activeTrackColor: const Color(0xFF5E9040),
-                              inactiveTrackColor: CupertinoColors.inactiveGray,
+                              
                               showValueIndicator: ShowValueIndicator.always,
                               valueIndicatorColor:
                                   CupertinoColors.lightBackgroundGray,
@@ -222,8 +229,11 @@ class _SettingsPageState extends State<SettingsPage> {
                         MediaQuery.of(context).size.height * 0.065)),
                     padding: MaterialStateProperty.all(
                         EdgeInsets.zero), // Removes any intrinsic padding
-                    backgroundColor: MaterialStateProperty.all(
-                        Colors.white), // Optional: sets background color
+                    backgroundColor: Theme.of(context).brightness ==
+                            Brightness.dark
+                        ? MaterialStateProperty.all(Colors.grey.shade700)
+                        : MaterialStateProperty.all(
+                            Colors.white), // Optional: sets background color
                     shape: MaterialStateProperty.all(RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(
                           15), // Keeps the rounded corners
@@ -242,14 +252,18 @@ class _SettingsPageState extends State<SettingsPage> {
                               builder: (context) => const Login()));
                     }
                   },
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
                         vertical:
                             10.0), // Adjustable padding for button content
                     child: Text(
                       'Sign Out',
                       style: TextStyle(
-                        color: Colors.red,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.red.shade300
+                            : Colors.red,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
                       ),
                     ),
                   ),

@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -50,7 +51,7 @@ class MyApp extends StatelessWidget {
             //settings for light mode
             brightness: Brightness.light,
             fontFamily: 'Open Sans',
-            scaffoldBackgroundColor: Color.fromARGB(255, 214, 249, 212),
+            scaffoldBackgroundColor: const Color.fromARGB(255, 214, 249, 212),
             appBarTheme: const AppBarTheme(
                 titleTextStyle: TextStyle(
                     color: Colors.black87,
@@ -64,30 +65,48 @@ class MyApp extends StatelessWidget {
             elevatedButtonTheme: ElevatedButtonThemeData(
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Color.fromARGB(255, 243, 243, 243),
-                    foregroundColor: Colors.black))),
+                    foregroundColor: Colors.black)),
+            sliderTheme: const SliderThemeData(
+              activeTrackColor: Color(0xFF5E9040),
+              valueIndicatorColor: CupertinoColors.lightBackgroundGray,
+              thumbColor: CupertinoColors.white,
+              inactiveTrackColor: CupertinoColors.inactiveGray,
+            )),
         darkTheme: ThemeData(
-            //settings for dark mode
-            brightness: Brightness.dark,
-            fontFamily: 'Open Sans',
-            appBarTheme: AppBarTheme(
-                color: Colors.grey.shade900, foregroundColor: Colors.white),
-            floatingActionButtonTheme: FloatingActionButtonThemeData(
-                backgroundColor: Colors.grey.shade800,
-                foregroundColor: Colors.green.shade200),
-            elevatedButtonTheme: ElevatedButtonThemeData(
-                style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green.shade300,
-              foregroundColor: Colors.grey.shade900,
-            )),
-            dropdownMenuTheme: const DropdownMenuThemeData(
-                menuStyle: MenuStyle(
-              backgroundColor: MaterialStatePropertyAll(Colors.white),
-            )),
-            scaffoldBackgroundColor: Colors.grey.shade900,
-            textButtonTheme: const TextButtonThemeData(
-                style: ButtonStyle(
-                    foregroundColor: MaterialStatePropertyAll(Colors.grey)))),
-        themeMode: ThemeMode.dark,
+          //settings for dark mode
+          brightness: Brightness.dark,
+          fontFamily: 'Open Sans',
+  
+          appBarTheme: AppBarTheme(
+              
+              titleTextStyle: TextStyle(
+                  color: Colors.green.shade200,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700),
+              color: Colors.grey.shade900,
+              foregroundColor: Colors.green.shade200),
+          floatingActionButtonTheme: FloatingActionButtonThemeData(
+              backgroundColor: Colors.grey.shade800,
+              foregroundColor: Colors.green.shade200),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.green.shade300,
+            foregroundColor: Colors.grey.shade900,
+          )),
+          dropdownMenuTheme: const DropdownMenuThemeData(
+              menuStyle: MenuStyle(
+            backgroundColor: MaterialStatePropertyAll(Colors.white),
+          )),
+          scaffoldBackgroundColor: Colors.grey.shade900,
+          textButtonTheme: const TextButtonThemeData(
+              style: ButtonStyle(
+                  foregroundColor: MaterialStatePropertyAll(Colors.grey))),
+          sliderTheme: SliderThemeData(
+              inactiveTrackColor: Colors.black,
+              activeTrackColor: Colors.green.shade200,
+              valueIndicatorColor: Colors.grey.shade800),
+        ),
+        themeMode: ThemeMode.light,
         /* 
          ThemeMode.system to follow system theme, 
          ThemeMode.light for light theme, 

@@ -445,7 +445,7 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin {
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           color: Theme.of(context).brightness == Brightness.dark
-                              ? Color.fromARGB(118, 0, 0, 0)
+                              ? Color.fromARGB(255, 26, 26, 26)
                               : Colors.white,
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: const [

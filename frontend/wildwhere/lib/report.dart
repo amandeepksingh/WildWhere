@@ -202,7 +202,7 @@ class _ReportPageState extends State<ReportPage> {
                               Expanded(
                                   child: Align(
                                       alignment: const FractionalOffset(.5, .9),
-                                      child: ElevatedButton(
+                                      child: TextButton(
                                           onPressed: () async {
                                             await submitOnPressed();
                                           },

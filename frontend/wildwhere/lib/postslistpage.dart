@@ -111,8 +111,15 @@ class _PostsListPageState extends State<PostsListPage> {
                                             width: 120,
                                             height: 115,
                                             fit: BoxFit.cover)
-                                        : const Icon(Icons.image_not_supported,
-                                            size: 120),
+                                        : Icon(
+                                            Icons.image_not_supported,
+                                            size: 120,
+                                            color:
+                                                Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? Colors.grey.shade300
+                                                    : Colors.white,
+                                          ),
                                   ),
                                   const SizedBox(width: 10),
                                   Expanded(

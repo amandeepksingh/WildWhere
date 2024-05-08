@@ -58,18 +58,13 @@ class _ProfilePageState extends State<Profile> {
     }
     return Scaffold(
       //creates the top bar format of the user's profile
-      backgroundColor: const Color.fromARGB(255, 214, 249, 212),
       appBar: AppBar(
         title: Text('$username'),
-        titleTextStyle: const TextStyle(
-            color: Colors.black87, fontSize: 22, fontWeight: FontWeight.w700),
-        leading: const BackButton(color: Colors.black87),
         actions: [
           IconButton(
             padding: const EdgeInsets.only(right: 10.0),
             icon: const Icon(Icons.edit_outlined),
             iconSize: 30.0,
-            color: Colors.black87,
             onPressed: () async {
               bool? result = await Navigator.push(
                 context,
@@ -84,8 +79,6 @@ class _ProfilePageState extends State<Profile> {
           )
         ],
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 214, 249, 212),
-        foregroundColor: const Color.fromARGB(255, 214, 249, 212),
         elevation: 0.0,
         shadowColor: Colors.black54,
         surfaceTintColor: Colors.transparent,
@@ -135,12 +128,19 @@ class _ProfilePageState extends State<Profile> {
                     child: Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.grey.shade600
+                            : Colors.white,
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: Text(
                         "$bio",
-                        style: const TextStyle(fontSize: 15),
+                        style: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                            fontSize: 15),
                       ),
                     ),
                   ),
@@ -151,12 +151,11 @@ class _ProfilePageState extends State<Profile> {
             //line dividing the user image/bio and the user's posts
             Divider(
               color: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.white // Color for dark theme
+                  ? const Color.fromARGB(255, 255, 255, 255) // Color for dark theme
                   : const Color.fromARGB(
                       255, 126, 126, 126), // Color for light theme
-              thickness: 0.25,
-              indent: 15.0,
-              endIndent: 15.0,
+              thickness: 1,
+             
             ),
             const SizedBox(height: 5),
             Padding(
@@ -165,13 +164,7 @@ class _ProfilePageState extends State<Profile> {
                   "$username's Posts",
                   style: const TextStyle(fontSize: 18),
                 )),
-            Divider(
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.white // Color for dark theme
-                  : const Color.fromARGB(
-                      255, 126, 126, 126), // Color for light theme
-              thickness: 0.25,
-            ),
+           
             Padding(
               padding: const EdgeInsets.only(top: 7.0, bottom: 1.0),
               child: userPostsSection(),
@@ -183,107 +176,117 @@ class _ProfilePageState extends State<Profile> {
   }
 
   Widget userPostsSection() {
-    if (prefs == null) return const CircularProgressIndicator();
-    var uid = prefs!.getString('uid')!;
-    return FutureBuilder<List<Post>>(
-      future: db.getAllUserPosts(uid),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        } else if (snapshot.data == null || snapshot.data!.isEmpty) {
-          return const Text('No Posts Yet');
-        } else {
-          return ListView.separated(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: snapshot.data!.length,
-            itemBuilder: (context, index) {
-              Post post = snapshot.data![index];
-              return InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PostPage(post: post),
+  if (prefs == null) return const CircularProgressIndicator();
+  var uid = prefs!.getString('uid')!;
+  return FutureBuilder<List<Post>>(
+    future: db.getAllUserPosts(uid),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const CircularProgressIndicator();
+      } else if (snapshot.hasError) {
+        return Text('Error: ${snapshot.error}');
+      } else if (snapshot.data == null || snapshot.data!.isEmpty) {
+        return const Text('No Posts Yet');
+      } else {
+        return ListView.separated(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: snapshot.data!.length,
+          itemBuilder: (context, index) {
+            Post post = snapshot.data![index];
+            return InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PostPage(post: post),
+                  ),
+                );
+              },
+              child: Container(
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.grey.shade800
+                      : Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                  
+                  
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                     // margin: const EdgeInsets.only(left: 5, top: 5, bottom: 5),
+                      padding: const EdgeInsets.all(10),
+                      width: 130,
+                      height: 105,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(
+                            post.imgLink ??
+                                'https://via.placeholder.com/150',
+                          ),
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius: BorderRadius.circular(15),
                       ),
-                    );
-                  },
-                  child: Container(
-                      padding: const EdgeInsets.all(5),
-                      decoration:
-                          (const BoxDecoration(color: Colors.white, boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12,
-                          spreadRadius: 0,
-                          blurRadius: 5.0,
-                          offset: Offset(0, 3),
-                        )
-                      ])),
-                      child: Row(
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.grey.shade700
+                              : Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Container(
-                              margin: const EdgeInsets.only(
-                                  left: 5, top: 5, bottom: 5),
-                              padding: const EdgeInsets.all(10),
-                              width: 130,
-                              height: 105,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: NetworkImage(post.imgLink ??
-                                      'https://via.placeholder.com/150'),
-                                  fit: BoxFit.cover,
-                                ),
-                                borderRadius: BorderRadius.circular(15),
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              post.animalName ?? 'Unknown Animal',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                                child: Padding(
-                                    padding: const EdgeInsets.only(top: 7),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                            post.animalName ?? 'Unknown Animal',
-                                            style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold)),
-                                        FutureBuilder<Placemark>(
-                                          future: getCityState(
-                                              post.coordinate['y'],
-                                              post.coordinate['x']),
-                                          builder: (context, snapshot) {
-                                            if (snapshot.connectionState ==
-                                                ConnectionState.waiting) {
-                                              return const Text(
-                                                  "Loading location...");
-                                            } else if (snapshot.hasData) {
-                                              Placemark place = snapshot.data!;
-                                              return Text(
-                                                  "Location: ${place.locality}, ${place.administrativeArea}");
-                                            } else {
-                                              return const Text(
-                                                  "Location unknown");
-                                            }
-                                          },
-                                        ),
-                                        Text('Quantity: ${post.quantity}'),
-                                        Text('Activity: ${post.activity}')
-                                      ],
-                                    )))
-                          ])));
-            },
-            separatorBuilder: (context, index) => const SizedBox(height: 13),
-          );
-        }
-      },
-    );
-  }
+                            const SizedBox(height: 5),
+                            FutureBuilder<Placemark>(
+                              future: getCityState(post.coordinate['y'], post.coordinate['x']),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return const Text("Loading location...");
+                                } else if (snapshot.hasData) {
+                                  Placemark place = snapshot.data!;
+                                  return Text(
+                                    "Location: ${place.locality}, ${place.administrativeArea}",
+                                  );
+                                } else {
+                                  return const Text("Location unknown");
+                                }
+                              },
+                            ),
+                            Text('Quantity: ${post.quantity}'),
+                            Text('Activity: ${post.activity}')
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+          separatorBuilder: (context, index) => const SizedBox(height: 13),
+        );
+      }
+    },
+  );
+}
+
 
   Future<Placemark> getCityState(double lat, double long) async {
     List<Placemark> placemarks = await placemarkFromCoordinates(lat, long);
