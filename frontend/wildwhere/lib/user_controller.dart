@@ -12,23 +12,26 @@ class UserController {
   }
 
   static Future<User?> loginWithGoogle() async {
-    final googleAccount = await GoogleSignIn().signIn();
+    try {
+      final googleAccount = await GoogleSignIn().signIn();
 
-    final googleAuth = await googleAccount?.authentication;
+      final googleAuth = await googleAccount?.authentication;
 
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
 
-    final userCredential = await FirebaseAuth.instance.signInWithCredential(
-      credential,
-    );
-    return userCredential.user;
+      final userCredential = await FirebaseAuth.instance.signInWithCredential(
+        credential,
+      );
+      return userCredential.user;
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 
   static Future<User?> loginWithApple() async {
-
     // Request credentials from Apple Sign In
     final credential = await SignInWithApple.getAppleIDCredential(
       scopes: [
@@ -46,7 +49,7 @@ class UserController {
 
     // Sign in to Firebase using Apple credentials
     final UserCredential userCredential =
-      await FirebaseAuth.instance.signInWithCredential(authCredential);
+        await FirebaseAuth.instance.signInWithCredential(authCredential);
 
     // Return the authenticated user
     return userCredential.user;
