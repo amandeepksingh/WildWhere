@@ -5,8 +5,7 @@ class User {
   final String? bio;
   final bool? superUser;
   final String? imgLink;
-  
-  
+
   User({
     required this.uid,
     this.email,
@@ -17,14 +16,17 @@ class User {
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      uid: json['uid'],
-      email: json['email'],
-      username: json['username'],
-      bio: json['bio'],
-      superUser: json['superUser'],
-      imgLink: json['imglink']
-    );
+    try {
+      return User(
+          uid: json['uid'],
+          email: json['email'],
+          username: json['username'],
+          bio: json['bio'],
+          superUser: json['superUser'],
+          imgLink: json['imglink']);
+    } catch (e) {
+      throw ArgumentError(e);
+    }
   }
 
   Map<String, dynamic> toJson() {

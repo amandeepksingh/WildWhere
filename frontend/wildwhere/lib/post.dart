@@ -20,15 +20,19 @@ class Post {
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
-    return Post(
-        pid: json['pid'],
-        uid: json['uid'],
-        datetime: json['datetime'],
-        coordinate: json['coordinate'],
-        animalName: json['animalname'],
-        quantity: json['quantity'] as int,
-        activity: json['activity'],
-        imgLink: json['imglink']);
+    try {
+      return Post(
+          pid: json['pid'],
+          uid: json['uid'],
+          datetime: json['datetime'],
+          coordinate: json['coordinate'],
+          animalName: json['animalname'],
+          quantity: json['quantity'] as int,
+          activity: json['activity'],
+          imgLink: json['imglink']);
+    } catch (e) {
+      throw ArgumentError(e);
+    }
   }
 
   Map<String, dynamic> toJson() {
