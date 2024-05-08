@@ -183,8 +183,7 @@ class _ReportPageState extends State<ReportPage> {
                                   child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  Container(child: animalTypeButton()),
-                                  SizedBox(height: 10),
+                                  animalTypeButton(),
                                   animalQuantityButton(),
                                   animalActivityButton()
                                 ],
