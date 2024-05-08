@@ -94,7 +94,10 @@ class _PostsListPageState extends State<PostsListPage> {
                           padding: const EdgeInsets.all(7),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.grey.shade800
+                                  : Colors.white,
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Padding(
@@ -115,8 +118,11 @@ class _PostsListPageState extends State<PostsListPage> {
                                   Expanded(
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        color: const Color.fromARGB(
-                                            255, 243, 243, 243),
+                                        color: Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Colors.grey.shade700
+                                            : const Color.fromARGB(
+                                                255, 243, 243, 243),
                                         borderRadius: BorderRadius.circular(5),
                                       ),
                                       child: Padding(
