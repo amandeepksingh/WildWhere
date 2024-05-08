@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:wildwhere/data.dart';
 import 'package:wildwhere/profile.dart';
 import 'package:wildwhere/database.dart';
@@ -37,6 +39,7 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin {
   late AnimationController infoBoxAnimationController;
   late Animation<double> infoBoxOpacityAnimation;
   late Animation<Offset> infoBoxPositionAnimation;
+  String uid = FirebaseAuth.instance.currentUser!.uid;
 
   var reportOverlayControl = OverlayPortalController();
 
@@ -225,64 +228,92 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin {
             ),
             if (symbolWidgetPosition != null)
               Positioned(
-                left: symbolWidgetPosition!.dx - 25,
-                top: symbolWidgetPosition!.dy - 25,
+                left: symbolWidgetPosition!.dx -
+                    MediaQuery.of(context).size.width * .12,
+                top: symbolWidgetPosition!.dy -
+                    MediaQuery.of(context).size.height * .02,
                 child: _buildInfoBox(),
               ),
             Positioned(
-              right: 10,
-              top: 67,
-              child: SizedBox(
-                height: 65,
-                width: 65,
-                child: PopupMenuButton<int>(
-                  elevation: 10,
-                  offset: const Offset(-5, 63),
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                  ),
-                  popUpAnimationStyle: AnimationStyle(
-                      curve: Curves.easeInOut,
-                      duration: const Duration(milliseconds: 330)),
-                  onSelected: (item) => onSelected(context, item),
-                  child: ClipOval(
-                    child: Image.asset(
-                      'assets/images/profile.png',
-                      width: 50,
-                      height: 50,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  itemBuilder: (context) => [
-                    const PopupMenuItem(
-                        value: 0,
-                        child: ListTile(
-                          horizontalTitleGap: 12.0,
-                          leading: Icon(Icons.person, size: 28),
-                          title:
-                              Text('Profile', style: TextStyle(fontSize: 14)),
-                        )),
-                    const PopupMenuItem(
-                        value: 1,
-                        child: ListTile(
-                          horizontalTitleGap: 12.0,
-                          leading: Icon(Icons.settings, size: 28),
-                          title:
-                              Text('Settings', style: TextStyle(fontSize: 14)),
-                        )),
-                    const PopupMenuItem(
-                        value: 2,
-                        child: ListTile(
-                          horizontalTitleGap: 12.0,
-                          leading: Icon(Icons.insert_chart_outlined_rounded,
-                              size: 28),
-                          title: Text('Data and Stats',
-                              style: TextStyle(fontSize: 14)),
-                        )),
-                  ],
-                ),
-              ),
-            )
+                right: 10,
+                top: 67,
+                child: SizedBox(
+                    height: 75,
+                    width: 75,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(30),
+                      child: Material(
+                        elevation: 8,
+                        shape: const CircleBorder(),
+                        child: PopupMenuButton<int>(
+                          elevation: 10,
+                          offset: const Offset(-5, 63),
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                          ),
+                          popUpAnimationStyle: AnimationStyle(
+                              curve: Curves.easeInOut,
+                              duration: const Duration(milliseconds: 330)),
+                          onSelected: (item) => onSelected(context, item),
+                          child: ClipOval(
+                              child: FutureBuilder(
+                                  future: Database().getUser(uid: uid),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return const Center(
+                                          child: CircularProgressIndicator());
+                                    } else if (snapshot.hasError) {
+                                      return Center(
+                                          child:
+                                              Text("Error: ${snapshot.error}"));
+                                    } else if (snapshot.data == null) {
+                                      return const Center(
+                                          child: Text("No user found"));
+                                    } else {
+                                      return snapshot.data?.imgLink == ''
+                                          ? Image.asset(
+                                              'assets/images/profile.png',
+                                              width: 50,
+                                              height: 50,
+                                              fit: BoxFit.cover)
+                                          : Image.network(
+                                              snapshot.data!.imgLink!,
+                                              fit: BoxFit.cover,
+                                            );
+                                    }
+                                  })),
+                          itemBuilder: (context) => [
+                            const PopupMenuItem(
+                                value: 0,
+                                child: ListTile(
+                                  horizontalTitleGap: 12.0,
+                                  leading: Icon(Icons.person, size: 28),
+                                  title: Text('Profile',
+                                      style: TextStyle(fontSize: 14)),
+                                )),
+                            const PopupMenuItem(
+                                value: 1,
+                                child: ListTile(
+                                  horizontalTitleGap: 12.0,
+                                  leading: Icon(Icons.settings, size: 28),
+                                  title: Text('Settings',
+                                      style: TextStyle(fontSize: 14)),
+                                )),
+                            const PopupMenuItem(
+                                value: 2,
+                                child: ListTile(
+                                  horizontalTitleGap: 12.0,
+                                  leading: Icon(
+                                      Icons.insert_chart_outlined_rounded,
+                                      size: 28),
+                                  title: Text('Data and Stats',
+                                      style: TextStyle(fontSize: 14)),
+                                )),
+                          ],
+                        ),
+                      ),
+                    )))
           ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -376,11 +407,14 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin {
         "Quantity: ${data['quantity']}\n";*/
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    return FutureBuilder<Post?>(
-        future: Database().getPostByPID(data['pid']),
-        builder: (context, snapshot) {
+    return FutureBuilder(
+        future: Future.wait([
+          Database().getPostByPID(data['pid']),
+          Database().getUser(uid: data['uid'])
+        ]),
+        builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator.adaptive());
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else if (snapshot.data == null) {
@@ -391,7 +425,7 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => PostPage(post: snapshot.data!)),
+                      builder: (context) => PostPage(post: snapshot.data![0])),
                 );
               },
               child: AnimatedBuilder(
@@ -410,11 +444,13 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin {
                         height: screenHeight * 0.155,
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Color.fromARGB(118, 0, 0, 0)
+                              : Colors.white,
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: const [
                             BoxShadow(
-                              color: Colors.black26,
+                              color: Color.fromARGB(255, 29, 29, 29),
                               offset: Offset(0, 3),
                               blurRadius: 3.0,
                               spreadRadius: 0.1,
@@ -448,8 +484,11 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin {
                                 alignment: Alignment.topLeft,
                                 child: RichText(
                                   text: TextSpan(
-                                    style: const TextStyle(
-                                      color: Colors.black,
+                                    style: TextStyle(
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Color.fromARGB(255, 255, 255, 255)
+                                          : Colors.black,
                                       fontSize: 13,
                                       overflow: TextOverflow.ellipsis,
                                       fontFamily: 'CupertinoSystemText',
@@ -458,11 +497,13 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin {
                                     ),
                                     children: <TextSpan>[
                                       const TextSpan(
-                                        text: 'PID: ',
+                                        text: 'User: ',
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold),
                                       ),
-                                      TextSpan(text: "${data['pid']}\n"),
+                                      TextSpan(
+                                          text:
+                                              "${snapshot.data![1].username}\n"),
                                       const TextSpan(
                                         text: 'Animal: ',
                                         style: TextStyle(
@@ -481,6 +522,14 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin {
                                             fontWeight: FontWeight.bold),
                                       ),
                                       TextSpan(text: "${data['quantity']}\n"),
+                                      const TextSpan(
+                                        text: 'Date: ',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      TextSpan(
+                                          text: DateFormat('yyyy-MM-dd').format(
+                                              DateTime.parse(data['datetime'])))
                                     ],
                                   ),
                                 ),
