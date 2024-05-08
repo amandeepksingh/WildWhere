@@ -38,7 +38,7 @@ class EditProfileState extends State<EditProfile> {
       _usernameController.text = widget.prefs.getString('username') ?? '';
       _emailController.text = widget.prefs.getString('email') ?? '';
       _bioController.text = widget.prefs.getString('bio') ?? '';
-      imageLink = widget.prefs.getString('imagelink');
+      imageLink = widget.prefs.getString('imagelink') ?? '';
       //_pronounsController.text = widget.prefs.getString('pronouns') ?? ''
     });
   }
