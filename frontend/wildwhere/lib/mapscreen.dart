@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:wildwhere/data.dart';
+import 'package:wildwhere/query.dart';
 import 'package:wildwhere/profile.dart';
 import 'package:wildwhere/database.dart';
 import 'package:wildwhere/report.dart';
@@ -86,22 +86,21 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin {
   }
 
   void _fetchUserProfile() async {
-    try {
-      localuser.User? newUser = await Database().getUser(uid: uid);
-      if (newUser != null) {
-        setState(() {
-          user = newUser;
-          isLoadingUser =
-              false; // Set isLoadingUser to false when data is loaded
-        });
-      }
-    } catch (e) {
-      print('Failed to fetch user data: $e');
+  try {
+    localuser.User? newUser = await Database().getUser(uid: uid);
+    if (newUser != null) {
       setState(() {
-        isLoadingUser = false; // Set isLoadingUser to false on error
+        user = newUser;
+        isLoadingUser = false; // Set isLoadingUser to false when data is loaded
       });
     }
+  } catch (e) {
+    print('Failed to fetch user data: $e');
+    setState(() {
+      isLoadingUser = false; // Set isLoadingUser to false on error
+    });
   }
+}
 
   @override
   void dispose() {
@@ -570,7 +569,7 @@ void onSelected(BuildContext context, int item) {
 
     case 2:
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const Data()));
+          context, MaterialPageRoute(builder: (context) => const Query()));
       break;
   }
 }

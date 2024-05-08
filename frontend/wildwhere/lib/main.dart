@@ -71,7 +71,14 @@ class MyApp extends StatelessWidget {
               valueIndicatorColor: CupertinoColors.lightBackgroundGray,
               thumbColor: CupertinoColors.white,
               inactiveTrackColor: CupertinoColors.inactiveGray,
-            )),
+            ),
+            textButtonTheme: const TextButtonThemeData(
+              style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(Colors.black),
+              )
+            )
+            
+            ),
         darkTheme: ThemeData(
           //settings for dark mode
           brightness: Brightness.dark,

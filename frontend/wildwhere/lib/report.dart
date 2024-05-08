@@ -116,7 +116,7 @@ class _ReportPageState extends State<ReportPage> {
                           ),
                           body: Column(
                             children: [
-                              SizedBox(height: 30),
+                              const SizedBox(height: 30),
                               if (showError) // Conditionally display the error message
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),

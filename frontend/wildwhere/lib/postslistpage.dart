@@ -118,7 +118,8 @@ class _PostsListPageState extends State<PostsListPage> {
                                                 Theme.of(context).brightness ==
                                                         Brightness.dark
                                                     ? Colors.grey.shade300
-                                                    : Colors.white,
+                                                    : const Color.fromARGB(
+                                                        255, 49, 49, 49),
                                           ),
                                   ),
                                   const SizedBox(width: 10),
