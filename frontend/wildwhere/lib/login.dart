@@ -16,9 +16,12 @@ class _LoginState extends State<Login> {
       children: [
         Container(
           //sets the background image
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/image.png"),
+          decoration: BoxDecoration(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Color.fromARGB(255, 33, 33, 33)
+                : Colors.white,
+            image: const DecorationImage(
+              image: AssetImage("assets/images/transparent.png"),
               fit: BoxFit.cover,
             ),
           ),
@@ -43,7 +46,6 @@ class _LoginState extends State<Login> {
       ],
     );
   }
-
 }
 
   /*

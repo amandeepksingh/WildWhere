@@ -69,18 +69,25 @@ class MyApp extends StatelessWidget {
             //settings for dark mode
             brightness: Brightness.dark,
             fontFamily: 'Open Sans',
-            appBarTheme: const AppBarTheme(
-                color: Color.fromARGB(255, 92, 110, 71),
-                foregroundColor: Colors.white),
-            floatingActionButtonTheme: const FloatingActionButtonThemeData(
-                backgroundColor: Color.fromARGB(255, 92, 110, 71),
-                foregroundColor: Color.fromARGB(255, 206, 206, 206)),
+            appBarTheme: AppBarTheme(
+                color: Colors.grey.shade900, foregroundColor: Colors.white),
+            floatingActionButtonTheme: FloatingActionButtonThemeData(
+                backgroundColor: Colors.grey.shade800,
+                foregroundColor: Colors.green.shade200),
             elevatedButtonTheme: ElevatedButtonThemeData(
                 style: ElevatedButton.styleFrom(
-              backgroundColor: Color.fromARGB(255, 92, 110, 71),
-              foregroundColor: Color.fromARGB(255, 206, 206, 206),
-            ))),
-        themeMode: ThemeMode.light,
+              backgroundColor: Colors.green.shade300,
+              foregroundColor: Colors.grey.shade900,
+            )),
+            dropdownMenuTheme: const DropdownMenuThemeData(
+                menuStyle: MenuStyle(
+              backgroundColor: MaterialStatePropertyAll(Colors.white),
+            )),
+            scaffoldBackgroundColor: Colors.grey.shade900,
+            textButtonTheme: const TextButtonThemeData(
+                style: ButtonStyle(
+                    foregroundColor: MaterialStatePropertyAll(Colors.grey)))),
+        themeMode: ThemeMode.dark,
         /* 
          ThemeMode.system to follow system theme, 
          ThemeMode.light for light theme, 
