@@ -44,7 +44,7 @@ class PostReportState extends State<PostReport> {
                           topRight: Radius.circular(20)),
                       child: Container(
                         padding: const EdgeInsets.all(20),
-                        color: const Color.fromARGB(255, 206, 206, 205),
+                        color: Color.fromARGB(255, 233, 233, 233),
                         child: Center(
                           child: Column(
                             mainAxisSize:
@@ -54,7 +54,7 @@ class PostReportState extends State<PostReport> {
                                 height: 10,
                                 width: 130,
                                 decoration: const BoxDecoration(
-                                  color: Color.fromARGB(255, 168, 168, 168),
+                                  color: Color.fromARGB(255, 208, 208, 208),
                                   borderRadius: BorderRadius.all(
                                       Radius.elliptical(90, 45)),
                                 ),
@@ -69,7 +69,7 @@ class PostReportState extends State<PostReport> {
                                   controller: controller,
                                   decoration: InputDecoration(
                                     border: const OutlineInputBorder(),
-                                    hintText: '',
+                                    hintText: 'Provide a brief description',
                                     errorText: (_validator == true)
                                         ? 'Description cannot be empty'
                                         : null,
@@ -77,7 +77,8 @@ class PostReportState extends State<PostReport> {
                                 ),
                               ),
                               ElevatedButton(
-                                child: const Text('Submit Report'),
+                                style: const ButtonStyle(
+                                    elevation: MaterialStatePropertyAll(5)),
                                 onPressed: () async {
                                   if (controller.text.isEmpty) {
                                     setModalState(() {
@@ -93,6 +94,7 @@ class PostReportState extends State<PostReport> {
                                     Navigator.pop(context);
                                   }
                                 },
+                                child: Text('Report Post'),
                               ),
                             ],
                           ),
@@ -110,7 +112,7 @@ class PostReportState extends State<PostReport> {
           });
         });
       },
-      icon: const Icon(Icons.report_outlined),
+      icon: const Icon(Icons.flag_rounded),
     );
   }
 }

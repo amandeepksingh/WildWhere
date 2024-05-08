@@ -45,7 +45,6 @@ class AppleSignInButtonState extends State<AppleSignInButton> {
       style: OutlinedButton.styleFrom(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-          foregroundColor: const Color.fromARGB(255, 0, 0, 0),
           elevation: 5),
     );
   }
