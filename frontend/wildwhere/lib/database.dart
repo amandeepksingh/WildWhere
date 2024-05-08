@@ -125,6 +125,24 @@ class Database {
     return response;
   }
 
+  Future<User?> getUser({required String uid}) async {
+    var url = Uri.parse('$endpoint/users/selectUser?uid=$uid');
+    var response = await client.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200) {
+      Map<String, dynamic> data = json.decode(response.body);
+      List<dynamic> messageList = data['message'];
+      Map<String, dynamic> user =
+          messageList.isNotEmpty ? messageList.first : {};
+      return User.fromJson(user);
+    }
+    return null;
+  }
+
   Future<http.Response> createUser(User user) async {
     var url = Uri.parse('$endpoint/users/createUser');
     var jsonData = jsonEncode(user);
