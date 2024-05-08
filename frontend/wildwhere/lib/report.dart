@@ -118,13 +118,16 @@ class _ReportPageState extends State<ReportPage> {
                             children: [
                               SizedBox(height: 30),
                               if (showError) // Conditionally display the error message
-                                const Padding(
-                                  padding: EdgeInsets.all(8.0),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
                                   child: Text(
                                     'Please fill out all selections.',
                                     style: TextStyle(
-                                      color: Colors.red,
-                                      backgroundColor: Colors.white,
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.red.shade800
+                                          : Colors.red,
+                                      backgroundColor: Colors.transparent,
                                     ),
                                   ),
                                 ),
@@ -134,7 +137,10 @@ class _ReportPageState extends State<ReportPage> {
                                       decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(10),
-                                          color: Colors.grey.shade700),
+                                          color: Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Colors.grey.shade700
+                                              : Colors.grey.shade700),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
@@ -149,27 +155,32 @@ class _ReportPageState extends State<ReportPage> {
                                                       ? Image.file(
                                                           selectedImage!,
                                                           fit: BoxFit.cover)
-                                                      : const Icon(
+                                                      : Icon(
                                                           Icons
                                                               .image_not_supported,
                                                           size: 90,
-                                                          color: Colors.grey,
+                                                          color: Theme.of(context)
+                                                                      .brightness ==
+                                                                  Brightness
+                                                                      .dark
+                                                              ? Colors.grey
+                                                              : Colors.grey,
                                                         ))),
-                                          SizedBox(width: 10),
+                                          const SizedBox(width: 10),
                                           IntrinsicWidth(
                                               child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
                                               TextButton.icon(
-                                                  icon: Icon(CupertinoIcons
+                                                  icon: const Icon(CupertinoIcons
                                                       .photo_on_rectangle),
                                                   onPressed:
                                                       getImageFromGallery,
                                                   label: const Text(
                                                       "Upload from library")),
                                               TextButton.icon(
-                                                  icon: Icon(
+                                                  icon: const Icon(
                                                       CupertinoIcons.camera),
                                                   onPressed: getImageFromCamera,
                                                   label: const Text(
