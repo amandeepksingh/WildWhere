@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wildwhere/post.dart';
 import 'package:wildwhere/user.dart';
+import 'package:intl/intl.dart';
 
 class Database {
   String endpoint = 'http://ec2-3-23-98-233.us-east-2.compute.amazonaws.com:80';
@@ -123,6 +124,31 @@ class Database {
       },
     );
     return response;
+  }
+
+  Future<List<dynamic>> getQuery(List<String> selectedAnimals, DateTime? startDate,
+      DateTime? endDate) async {
+    String query = '$endpoint/posts/selectPost';
+    if (selectedAnimals.isNotEmpty) {
+      query += '?animalname=';
+      for (var i = 0; i < selectedAnimals.length; i++) {
+        query += '${selectedAnimals[i]},';
+      }
+    }
+    if (startDate != null) {
+      String formattedDate =
+          DateFormat('yyyy/MM/dd/HH/mm/ss').format(startDate);
+      query += '&starttime=$formattedDate';
+    }
+    if (endDate != null) {
+      String formattedDate = DateFormat('yyyy/MM/dd/HH/mm/ss').format(endDate);
+      query += '&endtime=$formattedDate';
+    }
+    var url = Uri.parse(query);
+    var response = await client.get(url, headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    });
+    return jsonDecode(response.body)['message'];
   }
 
   Future<User?> getUser({required String uid}) async {
