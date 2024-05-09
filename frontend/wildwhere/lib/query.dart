@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:io';
 import 'package:wildwhere/stats_page.dart';
 import 'package:flutter/cupertino.dart';
@@ -185,22 +184,22 @@ class QueryState extends State<Query> {
                         ],
                       ),
                     ),
+                    FloatingActionButton(
+                      onPressed: () async {
+                        var query = await Database()
+                            .getQuery(selectedAnimals, startDate, endDate);
+                        var formattedQuery = formatQuery(query);
+                        String filePath = await saveToFile(formattedQuery);
+                        shareFile(filePath);
+                      },
+                      child: const Icon(Icons.send),
+                    ),
                   ],
                 ),
               ),
             ),
             StatsPage(),
           ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            var query =
-                await Database().getQuery(selectedAnimals, startDate, endDate);
-            var formattedQuery = formatQuery(query);
-            String filePath = await saveToFile(formattedQuery);
-            shareFile(filePath);
-          },
-          child: const Icon(Icons.send),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       ),
