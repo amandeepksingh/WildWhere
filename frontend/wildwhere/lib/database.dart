@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wildwhere/post.dart';
