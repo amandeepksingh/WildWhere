@@ -17,50 +17,44 @@ class _StatsPageState extends State<StatsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Data & Statistics'),
-          leading: BackButton(
-            onPressed: () {},
-          ),
-        ),
         body: SingleChildScrollView(
-          child: Center(
-              child: Column(
-            children: [
-              const SizedBox(height: 10),
-              //page title
-              const Text(
-                'Your Local Sighting Statistics',
-                style: TextStyle(fontSize: 20, fontFamily: 'Open Sans'),
-              ),
-              const SizedBox(height: 10),
-              //pie chart of animal activity
-              SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  height: MediaQuery.of(context).size.height * 0.35,
-                  child: pieChart('activity')),
-              const SizedBox(height: 10),
-              const Text("Activity Chart"),
-              const SizedBox(height: 20),
-              //pie chart of all animals observed
-              SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  height: MediaQuery.of(context).size.height * 0.35,
-                  child: pieChart('animalName')),
-              const SizedBox(height: 10),
-              const Text("Animals Observed"),
-              const SizedBox(height: 30),
-              //bar chart of sightings each month
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                height: MediaQuery.of(context).size.height * 0.35,
-                child: barChart(),
-              ),
-              const SizedBox(height: 20),
-              const Text("Number of Sightings Each Month"),
-            ],
-          )),
-        ));
+      child: Center(
+          child: Column(
+        children: [
+          const SizedBox(height: 10),
+          //page title
+          const Text(
+            'Your Local Sighting Statistics',
+            style: TextStyle(fontSize: 20, fontFamily: 'Open Sans'),
+          ),
+          const SizedBox(height: 10),
+          //pie chart of animal activity
+          SizedBox(
+              width: MediaQuery.of(context).size.width * 0.7,
+              height: MediaQuery.of(context).size.height * 0.35,
+              child: pieChart('activity')),
+          const SizedBox(height: 10),
+          const Text("Activity Chart"),
+          const SizedBox(height: 20),
+          //pie chart of all animals observed
+          SizedBox(
+              width: MediaQuery.of(context).size.width * 0.7,
+              height: MediaQuery.of(context).size.height * 0.35,
+              child: pieChart('animalName')),
+          const SizedBox(height: 10),
+          const Text("Animals Observed"),
+          const SizedBox(height: 30),
+          //bar chart of sightings each month
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.8,
+            height: MediaQuery.of(context).size.height * 0.35,
+            child: barChart(),
+          ),
+          const SizedBox(height: 20),
+          const Text("Number of Sightings Each Month"),
+        ],
+      )),
+    ));
   }
 
   FutureBuilder<List<Post>> pieChart(String field) {
@@ -118,13 +112,13 @@ class _StatsPageState extends State<StatsPage> {
             ),
             sections: sectionData.map((data) {
               //make pie chart more readable with ellipses
-              String title = data.title.length > 19
-                  ? '${data.title.substring(0, 19)}...'
+              String title = data.title.length > 13
+                  ? '${data.title.substring(0, 13)}...'
                   : data.title;
               return data.copyWith(title: title);
             }).toList(),
-            sectionsSpace: 10,
-            centerSpaceRadius: 75,
+            sectionsSpace: 15,
+            centerSpaceRadius: 130,
             startDegreeOffset: 150,
           ),
         );
@@ -169,7 +163,8 @@ class _StatsPageState extends State<StatsPage> {
           return BarChart(BarChartData(
             barGroups: barData,
             alignment: BarChartAlignment.spaceAround,
-            maxY: monthCount.values.reduce((a, b) => a > b ? a : b).toDouble(),
+            //max y val rounded to closest (higher) multiple of five
+            maxY: (monthCount.values.reduce((a, b) => a > b ? a : b)/5).ceil() * 5).toDouble(),
             groupsSpace: 11,
             titlesData: FlTitlesData(
                 show: true,
@@ -223,7 +218,7 @@ class _StatsPageState extends State<StatsPage> {
       style: const TextStyle(
         color: Colors.black,
         fontWeight: FontWeight.bold,
-        fontSize: 13,
+        fontSize: MediaQuery.of(context).size.width * 0.025,
       ),
     );
 
@@ -237,9 +232,7 @@ class _StatsPageState extends State<StatsPage> {
 //y-axis labels
   Widget quantityTitles(double value, TitleMeta meta) {
     final Widget text = Text(
-      value
-          .toInt()
-          .toString(), 
+      value.toInt().toString(),
       style: const TextStyle(
         color: Colors.black,
         fontWeight: FontWeight.bold,
