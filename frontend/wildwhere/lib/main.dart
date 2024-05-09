@@ -73,19 +73,15 @@ class MyApp extends StatelessWidget {
               inactiveTrackColor: CupertinoColors.inactiveGray,
             ),
             textButtonTheme: const TextButtonThemeData(
-              style: ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll(Colors.black),
-              )
-            )
-            
-            ),
+                style: ButtonStyle(
+              backgroundColor: MaterialStatePropertyAll(Colors.black),
+            ))),
         darkTheme: ThemeData(
           //settings for dark mode
           brightness: Brightness.dark,
           fontFamily: 'Open Sans',
-  
+
           appBarTheme: AppBarTheme(
-              
               titleTextStyle: TextStyle(
                   color: Colors.green.shade200,
                   fontSize: 22,
