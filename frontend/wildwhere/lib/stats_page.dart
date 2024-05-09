@@ -112,12 +112,12 @@ class _StatsPageState extends State<StatsPage> {
             ),
             sections: sectionData.map((data) {
               //make pie chart more readable with ellipses
-              String title = data.title.length > 19
-                  ? '${data.title.substring(0, 19)}...'
+              String title = data.title.length > 13
+                  ? '${data.title.substring(0, 13)}...'
                   : data.title;
               return data.copyWith(title: title);
             }).toList(),
-            sectionsSpace: 10,
+            sectionsSpace: 15,
             centerSpaceRadius: 130,
             startDegreeOffset: 150,
           ),
@@ -163,7 +163,8 @@ class _StatsPageState extends State<StatsPage> {
           return BarChart(BarChartData(
             barGroups: barData,
             alignment: BarChartAlignment.spaceAround,
-            maxY: monthCount.values.reduce((a, b) => a > b ? a : b).toDouble(),
+            //max y val rounded to closest (higher) multiple of five
+            maxY: (monthCount.values.reduce((a, b) => a > b ? a : b)/5).ceil() * 5).toDouble(),
             groupsSpace: 11,
             titlesData: FlTitlesData(
                 show: true,
@@ -217,7 +218,7 @@ class _StatsPageState extends State<StatsPage> {
       style: const TextStyle(
         color: Colors.black,
         fontWeight: FontWeight.bold,
-        fontSize: 13,
+        fontSize: MediaQuery.of(context).size.width * 0.025,
       ),
     );
 
