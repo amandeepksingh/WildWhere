@@ -982,7 +982,7 @@ describe("deleting posts", () => {
         assert.strictEqual(resp.body.message, `post with pid ${pid} deleted if existed`)
     })
 
-    it("POST: delete post by without id", async () => {
+    it("POST: delete post without ID", async () => {
         await teardown()
         const resp = await request(app).delete('/posts/deletePostByPID')
         assert.strictEqual(resp.status, 400)
