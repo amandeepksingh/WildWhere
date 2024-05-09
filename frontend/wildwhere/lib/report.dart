@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -13,6 +14,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:wildwhere/post.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:wildwhere/animal_pictures.dart';
 
 class ReportPage extends StatefulWidget {
   final Function? onPostCreated; // Callback function to update the map
@@ -28,10 +30,14 @@ class _ReportPageState extends State<ReportPage> {
   String? uid = FirebaseAuth.instance.currentUser?.uid;
   File? selectedImage;
   String? imageLink;
+  String? animalType;
   String? animal;
   int? quantity;
   String? activity;
   bool showError = false;
+  List<String> animalList = [];
+  bool showAnimalRefs = false;
+  Map<String, String> animalPics = animalPictures();
 
   @override
   void initState() {
@@ -91,6 +97,11 @@ class _ReportPageState extends State<ReportPage> {
 
   @override
   Widget build(BuildContext context) {
+    double interfaceHeight = MediaQuery.of(context).size.height * 0.55;
+
+    if(showAnimalRefs){
+      interfaceHeight += 30.0;
+    }
     return Stack(children: [
       const ModalBarrier(
         dismissible:
@@ -103,7 +114,7 @@ class _ReportPageState extends State<ReportPage> {
                   borderRadius: BorderRadius.circular(20),
                   child: SizedBox(
                       width: MediaQuery.of(context).size.width * 0.85,
-                      height: MediaQuery.of(context).size.height * 0.55,
+                      height: interfaceHeight,
                       child: Scaffold(
                           appBar: AppBar(
                             leading: CloseButton(
@@ -196,6 +207,10 @@ class _ReportPageState extends State<ReportPage> {
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
                                   animalTypeButton(),
+                                  Visibility(
+                                    visible: showAnimalRefs,
+                                    child: animalListButton(),
+                                  ),
                                   animalQuantityButton(),
                                   animalActivityButton()
                                 ],
@@ -278,56 +293,169 @@ class _ReportPageState extends State<ReportPage> {
 
   Widget animalTypeButton() {
     return DropdownButton<String>(
-      value: animal,
+      value: animalType,
       isExpanded: true,
       items: <String>[
-        'American Black Bear',
-        'Canada Lynx',
-        'Bobcat',
-        'White-Tailed Deer',
-        'Moose',
-        'American Beaver',
-        'Coyote',
-        'Red Fox',
-        'Gray Fox',
-        'Eastern Cottontail',
-        'New England Cottontail',
-        'Snowshoe Hare',
-        'European Hare',
-        'Black-tailed Jackrabbit',
-        'North American Porcupine',
-        'Virginia Opossum',
-        'Hairy-tailed Mole',
-        'Eastern Mole',
-        'Star-nosed Mole',
-        'Common Raccoon',
-        'Striped Skunk',
-        'American Marten',
-        'Fisher',
-        'Short-tailed Weasel (Ermine)',
-        'Long-tailed Weasel',
-        'American Mink',
-        'River Otter',
-        'Eastern Chipmunk',
-        'Woodchuck',
-        'Eastern Gray Squirrel',
-        'American Red Squirrel',
-        'Northern Flying Squirrel',
-        'Southern Flying Squirrel'
+        'Opossum',
+        'Porcupine',
+        'Dog-like Mammal (Coyote, Fox, etc.)',
+        'Rodent',
+        'Rabbit or Hare',
+        'Bear',
+        'Mustelid (Weasel, Otter, etc.)',
+        'Mole',
+        'Bat',
+        'Skunk',
+        'Raccoon',
+        'Deer or Moose',
+        'Cat'
       ].map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
           child: Text(value),
         );
       }).toList(),
-      onChanged: (String? newAnimal) {
+      onChanged: (String? selectedAnimalType) {
         setState(() {
-          animal = newAnimal;
+          animalType = selectedAnimalType;
+          if (selectedAnimalType != null) {
+            animal = null; // Reset the selected animal when animalType changes
+            showAnimalRefs = true; // Set visibility to true when animalType changes
+          } else {
+            showAnimalRefs = false; // Hide the animalListButton when no animalType is selected
+          }
         });
       },
-      hint: const Text('Select an animal'),
+      hint: const Text('Select animal type'),
     );
   }
+
+  Widget animalListButton() {
+    if (animalType != null) {
+      switch (animalType) {
+        case 'Opossum':
+          animalList = ['Virginia Opossum'];
+          break;
+        case 'Porcupine':
+          animalList = ['North American Porcupine'];
+          break;
+        case 'Dog-like Mammal (Coyote, Fox, etc.)':
+          animalList = ['Eastern Coyote', 'Red Fox', 'Gray Fox'];
+          break;
+        case 'Rodent':
+          animalList = [
+            'Eastern Chipmunk',
+            'Woodchuck',
+            'Eastern Gray Squirrel',
+            'American Red Squirrel',
+            'Northern Flying Squirrel',
+            'Southern Flying Squirrel',
+            'Meadow Jumping Mouse',
+            'Woodland Jumping Mouse',
+          ];
+          break;
+        case 'Rabbit or Hare':
+          animalList = [
+            'Eastern Cottontail',
+            'New England Cottontail',
+            'Snowshoe Hare',
+            'European Hare',
+            'Black-tailed Jackrabbit'
+          ];
+          break;
+        case 'Bear':
+          animalList = ['American Black Bear'];
+          break;
+        case 'Mustelid (Weasel, Otter, etc.)':
+          animalList = [
+            'American Marten',
+            'Fisher',
+            'Short-tailed Weasel',
+            'Long-tailed Weasel',
+            'American Mink',
+            'River Otter',
+            'American Beaver'
+          ];
+          break;
+        case 'Mole':
+          animalList = [
+            'Hairy-tailed Mole',
+            'Eastern Mole',
+            'Star-nosed Mole'
+          ];
+          break;
+        case 'Bat':
+          animalList = [
+            'Eastern Small-footed Myotis',
+            'Little Brown Myotis',
+            'Northern Long-eared Bat', 
+            'Indiana Myotis', 
+            'Silver-haired Bat', 
+            'Eastern Pipistrelle', 
+            'Red Bat', 
+            'Hoary Bat'
+          ]; // Add bat species if needed
+          break;
+        case 'Skunk':
+          animalList = ['Striped Skunk'];
+          break;
+        case 'Raccoon':
+          animalList = ['Common Raccoon'];
+          break;
+        case 'Deer or Moose':
+          animalList = ['White-Tailed Deer', 'Moose'];
+          break;
+        case 'Cat':
+          animalList = ['Canada Lynx', 'Bobcat'];
+          break;
+        default:
+          // Default case: no animal selected or unknown type
+          animalList = [];
+      }
+    }else{
+      showAnimalRefs = false;
+    }
+
+    return SizedBox(
+      height: 60.0,
+      child: DropdownButton<String>(
+        value: animal,
+        isExpanded: true,
+        items: animalList.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Row(
+              children: [
+                // Display the picture
+                if (animalPics.containsKey(value))
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0, bottom: 2.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: Image.asset(
+                        animalPics[value]!,
+                        width: 75, // Adjust the width as needed
+                        height: 75, // Adjust the height as needed
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                // Display the animal name
+                Text(value),
+              ],
+            ),
+          );
+        }).toList(),
+        onChanged: (String? selectedAnimal) {
+          setState(() {
+            animal = selectedAnimal;
+          });
+        },
+        hint: const Text('Select specific animal'),
+      ),
+    );
+  }
+
 
   Widget animalQuantityButton() {
     return DropdownButton<int>(

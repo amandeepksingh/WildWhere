@@ -156,6 +156,30 @@ describe("IMAGES: test post image upload", () => {
         await request(app).delete(`/images/postPic/delete?pid={pid}`)
     });
 
+    it("IMAGES: test select with multiple posts", async () => {
+        await teardown()
+
+        const uid = 'testUID'
+        await request(app).post('/users/createUser').send(`uid=${uid}`)
+
+        const resp1 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(3.6, 5.8)')
+        const pid1 = resp1.body.pid
+        const resp2 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(2.6, 7.5)')
+        const pid2 = resp2.body.pid
+
+        //add img
+        const imgresp = await request(app).post('/images/postPic/upload').field('pid', pid1).attach('img', 'test/testImages/test1.jpg')
+        assert.strictEqual(imgresp.status, 200)
+        const imgresp2 = await request(app).post('/images/postPic/upload').field('pid', pid2).attach('img', 'test/testImages/test1.jpg')
+        assert.strictEqual(imgresp2.status, 200)
+
+        const resp = await request(app).get(`/posts/selectPost`)
+
+        assert.strictEqual(resp.status,200);
+        assert.ok(resp.body.message[0].imglink.includes('http'), "image 1 contains signed url");
+        assert.ok(resp.body.message[1].imglink.includes('http'), "image 2 contains signed url");
+        //console.log(resp.body);
+    })
 })
 
 describe("IMAGES: test user delete image", () => {
@@ -215,31 +239,4 @@ describe("IMAGES: test post delete image", () => {
         assert.strictEqual(resp.status, 400)
         assert.strictEqual(resp.body.message, "pid is required")
     })
-
-    it("POST: test select with multiple posts", async () => {
-        await teardown()
-
-        const uid = 'testUID'
-        await request(app).post('/users/createUser').send(`uid=${uid}`)
-
-        const resp1 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(3.6, 5.8)')
-        const pid1 = resp1.body.pid
-        const resp2 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(2.6, 7.5)')
-        const pid2 = resp2.body.pid
-
-        //add img
-        const imgresp = await request(app).post('/images/postPic/upload').field('pid', pid1).attach('img', 'test/testImages/test1.jpg')
-        assert.strictEqual(imgresp.status, 200)
-        const imgresp2 = await request(app).post('/images/postPic/upload').field('pid', pid2).attach('img', 'test/testImages/test1.jpg')
-        assert.strictEqual(imgresp2.status, 200)
-
-        const resp = await request(app).get(`/posts/selectPost`)
-
-        assert.strictEqual(resp.status,200);
-        assert.ok(resp.body.message[0].imglink.includes('http'), "image 1 contains signed url");
-        assert.ok(resp.body.message[1].imglink.includes('http'), "image 2 contains signed url");
-        //console.log(resp.body);
-
-    })
-
 })

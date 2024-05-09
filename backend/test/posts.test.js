@@ -419,7 +419,7 @@ describe("selecting posts", () => {
         assert.deepStrictEqual(resp3.body.message, [])
     })
 
-    it("selecting with multiple animalNames", async () => {
+    it("POST: selecting with multiple animalNames", async () => {
         await teardown()
 
         const uid = 'testUID'
@@ -476,7 +476,7 @@ describe("selecting posts", () => {
         ])
     })
 
-    it("selecting with multiple quantities", async () => {
+    it("POST: selecting with multiple quantities", async () => {
         await teardown()
 
         const uid = 'testUID'
@@ -521,7 +521,7 @@ describe("selecting posts", () => {
         ])
     })
 
-    it("selecting with multiple activities", async () => {
+    it("POST: selecting with multiple activities", async () => {
         await teardown()
 
         const uid = 'testUID'
@@ -578,7 +578,7 @@ describe("selecting posts", () => {
         ])
     })
 
-    it("selecting with multiple states", async () => {
+    it("POST: selecting with multiple states", async () => {
         await teardown()
 
         const uid = 'testUID'
@@ -635,7 +635,7 @@ describe("selecting posts", () => {
         ])
     })
 
-    it("selecting with multiple cities", async () => {
+    it("POST: selecting with multiple cities", async () => {
         await teardown()
 
         const uid = 'testUID'
@@ -690,20 +690,6 @@ describe("selecting posts", () => {
                 "city": "z"
             }
         ])
-    })
-
-    it("USER: test select with imagelink on multiple posts", async () => {
-        await teardown()
-        const uid = "testUID"
-        await request(app).post('/users/createUser').send(`uid=${uid}`)
-        const pid1 = (await request(app).post('/posts/createPost').send(`uid=${uid}`).send("coordinate=(0,0)")).body.pid
-        await request(app).post('/images/postPic/upload').field('pid', pid1).attach('img', 'test/testImages/test1.jpg')
-        const pid2 = (await request(app).post('/posts/createPost').send(`uid=${uid}`).send("coordinate=(0,0)")).body.pid
-        await request(app).post('/images/postPic/upload').field('pid', pid2).attach('img', 'test/testImages/test1.jpg')
-        const resp = await request(app).get(`/posts/selectPost`)
-        assert.strictEqual(resp.status, 200)
-        assert.ok(resp.body.message[0].imglink.includes('http'))
-        assert.ok(resp.body.message[1].imglink.includes('http'))
     })
 })
 
@@ -982,7 +968,7 @@ describe("deleting posts", () => {
         assert.strictEqual(resp.body.message, `post with pid ${pid} deleted if existed`)
     })
 
-    it("POST: delete post by without id", async () => {
+    it("POST: delete post without ID", async () => {
         await teardown()
         const resp = await request(app).delete('/posts/deletePostByPID')
         assert.strictEqual(resp.status, 400)
