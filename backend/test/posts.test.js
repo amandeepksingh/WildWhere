@@ -419,7 +419,7 @@ describe("selecting posts", () => {
         assert.deepStrictEqual(resp3.body.message, [])
     })
 
-    it("selecting with multiple animalNames", async () => {
+    it("POST: selecting with multiple animalNames", async () => {
         await teardown()
 
         const uid = 'testUID'
@@ -476,7 +476,7 @@ describe("selecting posts", () => {
         ])
     })
 
-    it("selecting with multiple quantities", async () => {
+    it("POST: selecting with multiple quantities", async () => {
         await teardown()
 
         const uid = 'testUID'
@@ -521,7 +521,7 @@ describe("selecting posts", () => {
         ])
     })
 
-    it("selecting with multiple activities", async () => {
+    it("POST: selecting with multiple activities", async () => {
         await teardown()
 
         const uid = 'testUID'
@@ -578,7 +578,7 @@ describe("selecting posts", () => {
         ])
     })
 
-    it("selecting with multiple states", async () => {
+    it("POST: selecting with multiple states", async () => {
         await teardown()
 
         const uid = 'testUID'
@@ -635,7 +635,7 @@ describe("selecting posts", () => {
         ])
     })
 
-    it("selecting with multiple cities", async () => {
+    it("POST: selecting with multiple cities", async () => {
         await teardown()
 
         const uid = 'testUID'
@@ -692,7 +692,7 @@ describe("selecting posts", () => {
         ])
     })
 
-    it("USER: test select with imagelink on multiple posts", async () => {
+    it("POST: test select with imagelink on multiple posts", async () => {
         await teardown()
         const uid = "testUID"
         await request(app).post('/users/createUser').send(`uid=${uid}`)
