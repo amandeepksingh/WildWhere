@@ -37,7 +37,7 @@ class _ReportPageState extends State<ReportPage> {
   bool showError = false;
   List<String> animalList = [];
   bool showAnimalRefs = false;
-  Map<String, String> animalPics = animalPictures();
+  Map<String, String> animalPics = AnimalPictures().animalPictures();
 
   @override
   void initState() {
