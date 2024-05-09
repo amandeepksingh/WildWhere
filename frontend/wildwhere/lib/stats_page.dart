@@ -215,7 +215,7 @@ class _StatsPageState extends State<StatsPage> {
 
     final Widget text = Text(
       titles[value.toInt()],
-      style: const TextStyle(
+      style: TextStyle(
         color: Colors.black,
         fontWeight: FontWeight.bold,
         fontSize: MediaQuery.of(context).size.width * 0.025,
