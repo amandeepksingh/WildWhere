@@ -60,11 +60,11 @@ class MyApp extends StatelessWidget {
                 color: Color.fromARGB(255, 214, 249, 212),
                 foregroundColor: Colors.black),
             floatingActionButtonTheme: const FloatingActionButtonThemeData(
-                backgroundColor: Color.fromARGB(255, 239, 239, 239),
+                backgroundColor: Colors.white,
                 foregroundColor: Colors.black),
             elevatedButtonTheme: ElevatedButtonThemeData(
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 243, 243, 243),
+                    backgroundColor: Colors.white,
                     foregroundColor: Colors.black)),
             sliderTheme: const SliderThemeData(
               activeTrackColor: Color(0xFF5E9040),
