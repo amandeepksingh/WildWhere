@@ -70,7 +70,7 @@ class EditProfileState extends State<EditProfile> {
                   child: Container(
                     height: MediaQuery.of(context).size.height * .17,
                     decoration: BoxDecoration(
-                        color: Colors.grey.shade800,
+                        color: Colors.grey.shade300,
                         borderRadius: BorderRadius.circular(10)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -178,16 +178,16 @@ class EditProfileState extends State<EditProfile> {
                           labelText: 'Bio',
                         ),
                       ),
-                      TextFormField(
-                        controller: _pronounsController,
-                        decoration: const InputDecoration(
-                          border: UnderlineInputBorder(),
-                          labelText: 'Pronouns',
-                        ),
-                      ),
+                      // TextFormField(
+                      //   controller: _pronounsController,
+                      //   decoration: const InputDecoration(
+                      //     border: UnderlineInputBorder(),
+                      //     labelText: 'Pronouns',
+                      //   ),
+                      // ),
                       const SizedBox(height: 30),
                       TextButton(
-                         
+
                           onPressed: () async {
                             handleSave();
                           },

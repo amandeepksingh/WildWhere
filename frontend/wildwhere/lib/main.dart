@@ -60,8 +60,7 @@ class MyApp extends StatelessWidget {
                 color: Color.fromARGB(255, 214, 249, 212),
                 foregroundColor: Colors.black),
             floatingActionButtonTheme: const FloatingActionButtonThemeData(
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.black),
+                backgroundColor: Colors.white, foregroundColor: Colors.black),
             elevatedButtonTheme: ElevatedButtonThemeData(
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
@@ -74,7 +73,7 @@ class MyApp extends StatelessWidget {
             ),
             textButtonTheme: const TextButtonThemeData(
                 style: ButtonStyle(
-              backgroundColor: MaterialStatePropertyAll(Colors.black),
+              foregroundColor: MaterialStatePropertyAll(Colors.black),
             ))),
         darkTheme: ThemeData(
           //settings for dark mode
