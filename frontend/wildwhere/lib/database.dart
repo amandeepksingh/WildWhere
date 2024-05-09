@@ -32,6 +32,26 @@ class Database {
     }
   }
 
+  Future<List<Post>> getPostsInRadius(int radius, Position coordinate) async {
+    var url = Uri.parse('$endpoint/posts/selectPost?coordinate=(${coordinate.longitude},${coordinate.latitude})&radius=$radius');
+    var response = await client.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> data = json.decode(response.body);
+      List<dynamic> postsJson = data['message'];
+      return postsJson.map((json) => Post.fromJson(json)).toList();
+    } else {
+      // Error handling if the request fails
+      throw Exception(
+          'Failed to fetch posts. Server responded with ${response.statusCode}: ${response.body}');
+    }
+  }
+  
   Future<List<Post>> getAllUserPosts(String uid) async {
     var url = Uri.parse('$endpoint/posts/selectPost?uid=$uid');
 
