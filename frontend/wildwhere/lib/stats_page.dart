@@ -164,7 +164,7 @@ class _StatsPageState extends State<StatsPage> {
             barGroups: barData,
             alignment: BarChartAlignment.spaceAround,
             //max y val rounded to closest (higher) multiple of five
-            maxY: (monthCount.values.reduce((a, b) => a > b ? a : b)/5).ceil() * 5).toDouble(),
+            maxY: ((monthCount.values.reduce((a, b) => a > b ? a : b)/5).ceil() * 5).toDouble(),
             groupsSpace: 11,
             titlesData: FlTitlesData(
                 show: true,
