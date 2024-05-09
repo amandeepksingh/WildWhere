@@ -5,9 +5,12 @@ import 'package:wildwhere/database.dart';
 import 'package:wildwhere/post.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:wildwhere/postpage.dart';
+import 'package:wildwhere/user.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({super.key});
+  final String? uid;
+
+  const Profile({Key? key, this.uid}) : super(key: key);
 
   @override
   State<Profile> createState() => _ProfilePageState();
@@ -22,11 +25,18 @@ class _ProfilePageState extends State<Profile> {
   SharedPreferences? prefs;
   Map? user;
   Database db = Database();
+  late String uid; // might need to change 
+  int path = -1; 
 
   @override
   void initState() {
     super.initState();
-    loadProfileData();
+    uid = widget.uid ?? '';
+    if (uid.isEmpty) {
+      loadProfileData();
+    } else {
+      loadUserData(uid);
+    }
   }
 
   void loadProfileData() async {
@@ -44,47 +54,77 @@ class _ProfilePageState extends State<Profile> {
           : prefs!.getString('bio');
       email = prefs?.getString('email') ?? 'Unknown email';
       imageLink = user!['imglink'] ?? '';
+      path = 0;
+    });
+  }
+
+  /*void loadCurrentUserData() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      uid = prefs?.getString('uid') ?? '';
+      username = prefs?.getString('username') ?? 'Unknown';
+      bio = prefs?.getString('bio') ?? 'No bio provided';
+      email = prefs?.getString('email') ?? 'Unknown email';
+      imageLink = prefs?.getString('imgLink') ?? '';
+    });
+  }*/
+
+  void loadUserData(String userId) async {
+    prefs = await SharedPreferences.getInstance();
+    User? user = await db.getUser(uid: userId);  
+    setState(() {
+      uid = user?.uid ?? '';
+      username = user?.username ?? 'Unknown';
+      bio = user?.bio ?? 'No bio provided';
+      email = user?.email ?? 'Unknown email';
+      imageLink = user?.imgLink ?? '';
+      path = 1;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (prefs == null) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
+   // if(path == 0){
+      if (prefs == null) {
+        return const Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      }
+   //}
+
     return Scaffold(
       //creates the top bar format of the user's profile
       appBar: AppBar(
         title: Text('$username'),
         actions: [
-          IconButton(
-            padding: const EdgeInsets.only(right: 10.0),
-            icon: const Icon(Icons.edit_outlined),
-            iconSize: 30.0,
-            onPressed: () async {
-              bool? result = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => EditProfile(prefs: prefs!)),
-              );
-              // If 'result' is true, reload the profile data.
-              if (result == true) {
-                loadProfileData();
-              }
-            },
-          )
+            if (uid == prefs!.getString('uid'))
+            IconButton(
+              padding: const EdgeInsets.only(right: 10.0),
+              icon: const Icon(Icons.edit_outlined),
+              iconSize: 30.0,
+              onPressed: () async {
+                bool? result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => EditProfile(prefs: prefs!)),
+                );
+                // If 'result' is true, reload the profile data.
+                if (result == true) {
+                  loadProfileData();
+                }
+              },
+            )
         ],
         centerTitle: true,
-        elevation: 0.0,
+        elevation: 1.0,
         shadowColor: Colors.black54,
         surfaceTintColor: Colors.transparent,
       ),
       //creates the View Settings and Edit Profile buttons
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -166,7 +206,7 @@ class _ProfilePageState extends State<Profile> {
                 )),
            
             Padding(
-              padding: const EdgeInsets.only(top: 7.0, bottom: 1.0),
+              padding: const EdgeInsets.only(top: 7.0, bottom: 350.0),
               child: userPostsSection(),
             )
           ],
@@ -176,10 +216,17 @@ class _ProfilePageState extends State<Profile> {
   }
 
   Widget userPostsSection() {
-  if (prefs == null) return const CircularProgressIndicator();
-  var uid = prefs!.getString('uid')!;
+  var uid1;
+
+  if (uid.isEmpty) {
+    if (prefs == null) return const CircularProgressIndicator();
+    uid1 = prefs!.getString('uid')!; 
+  }
+  else {
+    uid1 = uid;
+  }
   return FutureBuilder<List<Post>>(
-    future: db.getAllUserPosts(uid),
+    future: db.getAllUserPosts(uid1),
     builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
         return const CircularProgressIndicator();

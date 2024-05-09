@@ -6,6 +6,8 @@ import 'package:wildwhere/post_report.dart';
 import 'package:wildwhere/user.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:wildwhere/profile.dart';
+import 'package:intl/intl.dart';
 
 class PostPage extends StatefulWidget {
   final Post post;
@@ -49,52 +51,93 @@ class _PostPageState extends State<PostPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text(post.animalName ?? 'Post'),
-          actions: <Widget>[PostReport(post: post)]),
+        title: Column(
+          mainAxisAlignment: MainAxisAlignment.center,  
+          crossAxisAlignment: CrossAxisAlignment.center,  
+          children: [
+            Text(
+              user?.username?.toUpperCase() ?? 'UNKNOWN',  
+              style: const TextStyle(
+                fontSize: 13,
+                color: Colors.black54,
+                letterSpacing: 0.5,
+              ),
+            ),
+            const Text(
+              'Post',  // Static text for post
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 18
+              ),
+            ),
+          ],
+        ),
+        centerTitle: true,
+        actions: <Widget>[PostReport(post: post)],
+        elevation: 1.0,
+        shadowColor: Colors.black54,
+        surfaceTintColor: Colors.transparent,
+      ),
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            post.imgLink != null
-                ? Image.network(post.imgLink!)
-                : const Image(
-                    image: AssetImage('assets/images/placeholder.png')),
-            ListTile(
-              title: Text('User:'),
-              subtitle: Text(user?.username ?? 'Unknown'),
-            ),
-            ListTile(
-              title: Text('Animal:'),
-              subtitle: Text(post.animalName ?? 'Unknown'),
-            ),
-            ListTile(
-              title: Text('Quantity:'),
-              subtitle: Text(post.quantity.toString()),
-            ),
-            ListTile(
-              title: Text('Activity:'),
-              subtitle: Text(post.activity),
-            ),
-            FutureBuilder<Placemark>(
-              future: getPlace(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done &&
-                    snapshot.hasData) {
-                  return ListTile(
-                    title: Text('Location'),
-                    subtitle: Text(
-                        "${snapshot.data!.locality}, ${snapshot.data!.administrativeArea}"),
-                  );
-                } else {
-                  return ListTile(
-                    title: Text('Location'),
-                    subtitle: Text('Loading or unavailable'),
-                  );
-                }
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Profile(uid: post.uid),  // Navigate using specific UID
+                  ),
+                );
               },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundImage: NetworkImage(user?.imgLink ?? 'https://via.placeholder.com/150'),
+                      radius: 20,
+                    ),
+                    const SizedBox(width: 10),
+                    Text(user?.username ?? 'Unknown', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14.5)),
+                  ],
+                ),
+              ),
+            ),
+            Image.network(
+              post.imgLink ?? 'https://via.placeholder.com/400x400',
+              fit: BoxFit.cover,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0, right: 12.0, left: 12.0, bottom: 185.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    post.animalName ?? 'Unknown Animal',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800)
+                    ),
+                  Text('Quantity: ${post.quantity}', style: (TextStyle(fontWeight: FontWeight.w400, letterSpacing: 0.3)),),
+                  Text('Activity: ${post.activity}', style: (TextStyle(fontWeight: FontWeight.w400, letterSpacing: 0.3)),),
+                  FutureBuilder<Placemark>(
+                    future: getPlace(),
+                    builder: (context, snapshot) {
+                      return snapshot.connectionState == ConnectionState.done && snapshot.hasData
+                        ? Text('${snapshot.data!.locality}, ${snapshot.data!.administrativeArea}', style: (TextStyle(fontWeight: FontWeight.w400, letterSpacing: 0.3)),)
+                        : Text('Loading location...');
+                    }
+                  ),
+                  Text(DateFormat('yyyy-MM-dd').format(DateTime.parse(post.datetime)), style: (TextStyle(fontWeight: FontWeight.w400, letterSpacing: 0.3)),),
+                ],
+              ),
             ),
           ],
         ),
       ),
     );
   }
+
 }

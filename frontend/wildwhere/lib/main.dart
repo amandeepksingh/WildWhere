@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
             //settings for light mode
             brightness: Brightness.light,
-            fontFamily: 'Open Sans',
+            fontFamily: 'CupertinoSystemText',
             scaffoldBackgroundColor: const Color.fromARGB(255, 214, 249, 212),
             appBarTheme: const AppBarTheme(
                 titleTextStyle: TextStyle(
@@ -79,7 +79,7 @@ class MyApp extends StatelessWidget {
         darkTheme: ThemeData(
           //settings for dark mode
           brightness: Brightness.dark,
-          fontFamily: 'Open Sans',
+          fontFamily: 'CupertinoSystemText',
 
           appBarTheme: AppBarTheme(
               titleTextStyle: TextStyle(

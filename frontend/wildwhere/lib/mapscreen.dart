@@ -31,9 +31,10 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin {
       symbolWidgetPosition; // Stores the position of the pop-up info box relative to the map view.
   Map<String, dynamic> symbolDataMap =
       {}; // Maps each symbol's ID to its data for quick retrieval.
-  Map<String, dynamic>?
+  Post?
       currentPostData; // Data for the currently selected symbol.
   Future<Position>? position;
+  //User? postUser; 
 
   late AnimationController reportanimationController;
   late Animation<double> reportopacityAnimation;
@@ -43,6 +44,7 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin {
   bool isLoadingUser = true;
   String uid = FirebaseAuth.instance.currentUser!.uid;
   localuser.User? user;
+  localuser.User? postUser;
 
   var reportOverlayControl = OverlayPortalController();
 
@@ -52,10 +54,12 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin {
     _fetchUserProfile();
     Timer.periodic(
         const Duration(minutes: 55), (Timer t) => _fetchUserProfile());
+    
     reportanimationController = AnimationController(
       duration: const Duration(milliseconds: 150),
       vsync: this,
     );
+
     reportopacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(
             parent: reportanimationController, curve: Curves.easeIn));
@@ -163,7 +167,7 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin {
         .then((symbol) {
       // Storing post data in the map
       if (post != null) {
-        symbolDataMap[symbol.id] = post.toJson();
+        symbolDataMap[symbol.id] = post;
       }
     });
   }
@@ -180,11 +184,15 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin {
       setState(() {
         selectedSymbol = null;
         currentPostData = null;
+        postUser = null;
       });
     } else {
+      final postData = symbolDataMap[symbol.id];
+      var userData = await Database().getUser(uid: postData!.uid);
       setState(() {
         selectedSymbol = symbol;
         currentPostData = symbolDataMap[symbol.id];
+        postUser = userData;
         _updateSymbolPosition();
       });
       infoBoxAnimationController.forward(
@@ -249,77 +257,86 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin {
               },
             ),
             if (symbolWidgetPosition != null)
-              Positioned(
+              Positioned(  
                 left: symbolWidgetPosition!.dx -
                     MediaQuery.of(context).size.width * .12,
                 top: symbolWidgetPosition!.dy -
-                    MediaQuery.of(context).size.height * .02,
+                    MediaQuery.of(context).size.height * .027,
                 child: _buildInfoBox(),
               ),
             Positioned(
-                right: 10,
-                top: 67,
-                child: SizedBox(
-                    height: 75,
-                    width: 75,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(30),
-                      child: Material(
-                        elevation: 8,
-                        shape: const CircleBorder(),
-                        child: PopupMenuButton<int>(
-                          elevation: 10,
-                          offset: const Offset(-5, 63),
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(15)),
-                          ),
-                          popUpAnimationStyle: AnimationStyle(
-                              curve: Curves.easeInOut,
-                              duration: const Duration(milliseconds: 330)),
-                          onSelected: (item) => onSelected(context, item),
-                          child: ClipOval(
-                              child: isLoadingUser
-                                  ? CircularProgressIndicator()
-                                  : (user?.imgLink == '')
-                                      ? Image.asset('assets/images/profile.png',
-                                          width: 50,
-                                          height: 50,
-                                          fit: BoxFit.cover)
-                                      : Image.network(
-                                          user!.imgLink!,
-                                          fit: BoxFit.cover,
-                                        )),
-                          itemBuilder: (context) => [
-                            const PopupMenuItem(
-                                value: 0,
-                                child: ListTile(
-                                  horizontalTitleGap: 12.0,
-                                  leading: Icon(Icons.person, size: 28),
-                                  title: Text('Profile',
-                                      style: TextStyle(fontSize: 14)),
-                                )),
-                            const PopupMenuItem(
-                                value: 1,
-                                child: ListTile(
-                                  horizontalTitleGap: 12.0,
-                                  leading: Icon(Icons.settings, size: 28),
-                                  title: Text('Settings',
-                                      style: TextStyle(fontSize: 14)),
-                                )),
-                            const PopupMenuItem(
-                                value: 2,
-                                child: ListTile(
-                                  horizontalTitleGap: 12.0,
-                                  leading: Icon(
-                                      Icons.insert_chart_outlined_rounded,
-                                      size: 28),
-                                  title: Text('Data and Stats',
-                                      style: TextStyle(fontSize: 14)),
-                                )),
-                          ],
+              right: 10,
+              top: 67,
+              child: SizedBox(
+                height: 75,
+                width: 75,
+                child: PopupMenuButton<int>(
+                  color: Colors.white,
+                  elevation: 10,
+                  offset: const Offset(-5, 80),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                  ),
+                  popUpAnimationStyle: AnimationStyle(
+                      curve: Curves.easeInOut,
+                      duration: const Duration(milliseconds: 330)),
+                  onSelected: (item) => onSelected(context, item),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.3),
+                          spreadRadius: 0,
+                          blurRadius: 10,
+                          offset: const Offset(0, 4), // changes position of shadow
                         ),
-                      ),
-                    )))
+                      ],
+                    ),
+                    child: ClipOval(
+                      child: isLoadingUser
+                        ? CircularProgressIndicator()
+                        : (user?.imgLink == '')
+                            ? Image.asset('assets/images/profile.png',
+                                width: 50,
+                                height: 50,
+                                fit: BoxFit.cover)
+                            : FadeInImage.assetNetwork(
+                                placeholder: 'assets/images/loading3.gif',
+                                image: user!.imgLink!,
+                                width: 50,
+                                height: 50,
+                                fit: BoxFit.cover,
+                              )
+                    ),
+                  ),
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(
+                        value: 0,
+                        child: ListTile(
+                          horizontalTitleGap: 12.0,
+                          leading: Icon(Icons.person, size: 28),
+                          title: Text('Profile', style: TextStyle(fontSize: 14)),
+                        )),
+                    const PopupMenuItem(
+                        value: 1,
+                        child: ListTile(
+                          horizontalTitleGap: 12.0,
+                          leading: Icon(Icons.settings, size: 28),
+                          title: Text('Settings', style: TextStyle(fontSize: 14)),
+                        )),
+                    const PopupMenuItem(
+                        value: 2,
+                        child: ListTile(
+                          horizontalTitleGap: 12.0,
+                          leading: Icon(Icons.insert_chart_outlined_rounded,
+                              size: 28),
+                          title: Text('Data and Stats', style: TextStyle(fontSize: 14)),
+                        )),
+                  ],
+                ),
+              ),
+            )
           ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -371,20 +388,6 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin {
               elevation: 10,
               child: const Icon(Icons.list),
             )
-            /*FloatingActionButton(
-              onPressed: prefOverlayControl.toggle,
-              shape: const CircleBorder(),
-              elevation: 2,
-              backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-              child: OverlayPortal(
-                controller: prefOverlayControl,
-                overlayChildBuilder: (BuildContext context) {
-                  return const MapPreferences();
-                },
-                child: const Icon(Icons.layers_outlined),
-              ),
-            ),
-            */
           ],
         ),
       ),
@@ -402,155 +405,118 @@ class _MapState extends State<MapScreen> with TickerProviderStateMixin {
   Widget _buildInfoBox() {
     // Generates informational box widget for currently selected marker.
     if (selectedSymbol == null || currentPostData == null) {
-      return const SizedBox
-          .shrink(); // Return an empty container if no symbol is selected
+      return const SizedBox.shrink();
     }
-
-    Map<String, dynamic> data = currentPostData!;
-    /*String infoText = "PID: ${data['pid']}\n"
-        "Animal: ${data['animalName']}\n"
-        "Activity: ${data['activity']}\n"
-        "Quantity: ${data['quantity']}\n";*/
+    Post data = currentPostData!;
+    localuser.User userData = postUser!;
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    return FutureBuilder(
-        future: Future.wait([
-          Database().getPostByPID(data['pid']),
-          Database().getUser(uid: data['uid'])
-        ]),
-        builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator.adaptive());
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else if (snapshot.data == null) {
-            return const Text("Couldn't find post!");
-          } else {
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => PostPage(post: snapshot.data![0])),
-                );
-              },
-              child: AnimatedBuilder(
-                animation: infoBoxAnimationController,
-                builder: (context, child) {
-                  if (infoBoxAnimationController.isDismissed) {
-                    return const SizedBox
-                        .shrink(); // This ensures that widget collapses when the animation is dismissed
-                  }
-                  return SlideTransition(
-                    position: infoBoxPositionAnimation,
-                    child: FadeTransition(
-                      opacity: infoBoxOpacityAnimation,
-                      child: Container(
-                        width: screenWidth * 0.7,
-                        height: screenHeight * 0.155,
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Color.fromARGB(255, 26, 26, 26)
-                              : Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color.fromARGB(255, 29, 29, 29),
-                              offset: Offset(0, 3),
-                              blurRadius: 3.0,
-                              spreadRadius: 0.1,
-                            )
-                          ],
+
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => PostPage(post: data)),
+        );
+      },
+      child: AnimatedBuilder(
+          animation: infoBoxAnimationController,
+          builder: (context, child) {
+            if (infoBoxAnimationController.isDismissed) {
+              return SizedBox.shrink(); // This ensures that widget collapses when the animation is dismissed
+            }
+            return SlideTransition(
+              position: infoBoxPositionAnimation,
+              child: FadeTransition(
+                  opacity: infoBoxOpacityAnimation,
+                  child: Container(
+                    width: screenWidth * 0.7,
+                    height: screenHeight * 0.155,
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black26,
+                            offset: Offset(0, 3),
+                            blurRadius: 3.0,
+                            spreadRadius: 0.1,
+                          )
+                        ]),
+                    child: Row(
+                      children: [
+                        // Image Container
+                        Expanded(
+                          flex: 1, // takes 1/2 of the space
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10.0),
+                            child: Image.network(
+                                data.imgLink ??
+                                    'https://via.placeholder.com/150', // Placeholder if no imgLink is available
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                              // Fallback for when the image fails to load
+                              return const Icon(Icons.image_not_supported);
+                            }),
+                          ),
                         ),
-                        child: Row(
-                          children: [
-                            // Image Container
-                            Expanded(
-                              flex: 1, // takes 1/2 of the space
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10.0),
-                                child: Image.network(
-                                  data['imglink'] ??
-                                      'https://via.placeholder.com/150', // Placeholder if no imgLink is available
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    // Fallback for when the image fails to load
-                                    return const Icon(
-                                        Icons.image_not_supported);
-                                  },
-                                ),
-                              ),
-                            ),
-                            // Text Container
-                            Expanded(
-                              flex: 1, // takes 1/2 of the space
-                              child: Container(
-                                padding: const EdgeInsets.only(left: 10),
-                                alignment: Alignment.topLeft,
-                                child: RichText(
-                                  text: TextSpan(
-                                    style: TextStyle(
-                                      color: Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Color.fromARGB(255, 255, 255, 255)
-                                          : Colors.black,
-                                      fontSize: 13,
-                                      overflow: TextOverflow.ellipsis,
-                                      fontFamily: 'CupertinoSystemText',
-                                      letterSpacing: -0.45,
-                                      height: 1.3,
-                                    ),
-                                    children: <TextSpan>[
-                                      const TextSpan(
+                        // Text Container
+                        Expanded(
+                          flex: 1, // takes 1/2 of the space
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 10),
+                            alignment: Alignment.topLeft,
+                            child: RichText(
+                              text: TextSpan(
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 13,
+                                    overflow: TextOverflow.ellipsis,
+                                    fontFamily: 'CupertinoSystemText',
+                                    letterSpacing: -0.45,
+                                    height: 1.3,
+                                  ),
+                                  children: <TextSpan>[
+                                    const TextSpan(
                                         text: 'User: ',
                                         style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      TextSpan(
-                                          text:
-                                              "${snapshot.data![1].username}\n"),
-                                      const TextSpan(
+                                            fontWeight: FontWeight.bold)),
+                                    TextSpan(text: "${userData.username}\n"),
+                                    const TextSpan(
                                         text: 'Animal: ',
                                         style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      TextSpan(text: "${data['animalName']}\n"),
-                                      const TextSpan(
+                                            fontWeight: FontWeight.bold)),
+                                    TextSpan(text: "${data.animalName}\n"),
+                                    const TextSpan(
                                         text: 'Activity: ',
                                         style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      TextSpan(text: "${data['activity']}\n"),
-                                      const TextSpan(
+                                            fontWeight: FontWeight.bold)),
+                                    TextSpan(text: "${data.activity}\n"),
+                                    const TextSpan(
                                         text: 'Quantity: ',
                                         style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      TextSpan(text: "${data['quantity']}\n"),
-                                      const TextSpan(
+                                            fontWeight: FontWeight.bold)),
+                                    TextSpan(text: "${data.quantity}\n"),
+                                    const TextSpan(
                                         text: 'Date: ',
                                         style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      TextSpan(
+                                            fontWeight: FontWeight.bold)),
+                                    TextSpan(
                                           text: DateFormat('yyyy-MM-dd').format(
-                                              DateTime.parse(data['datetime'])))
-                                    ],
-                                  ),
-                                ),
-                              ),
+                                              DateTime.parse(data.datetime)))
+                                  ]),
                             ),
-                          ],
-                        ),
-                      ),
+                          ),
+                        )
+                      ],
                     ),
-                  );
-                },
-              ),
+                  )),
             );
           }
-        });
+        )
+    );
   }
 }
 
@@ -559,7 +525,7 @@ void onSelected(BuildContext context, int item) {
   switch (item) {
     case 0:
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const Profile()));
+          context, MaterialPageRoute(builder: (context) => Profile(uid: FirebaseAuth.instance.currentUser!.uid )));
       break;
 
     case 1:

@@ -151,7 +151,7 @@ class _ReportPageState extends State<ReportPage> {
                                           color: Theme.of(context).brightness ==
                                                   Brightness.dark
                                               ? Colors.grey.shade700
-                                              : Colors.grey.shade700),
+                                              : Colors.white),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
