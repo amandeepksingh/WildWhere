@@ -1,5 +1,6 @@
 import 'dart:io';
-
+import 'package:wildwhere/stats_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wildwhere/database.dart';
 import 'package:path_provider/path_provider.dart';
@@ -77,94 +78,106 @@ class QueryState extends State<Query> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('New Query'),
-      ),
-      body: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  'Select Animals:',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
+    return DefaultTabController(
+        length: 2,
+        child: Scaffold(
+            appBar: AppBar(
+              title: const Text('Data & Statistics'),
+              bottom: const TabBar(
+                tabs: [
+                  Tab(icon: Icon(CupertinoIcons.arrow_down_doc_fill)),
+                  Tab(icon: Icon(Icons.insert_chart_rounded)),
+                ],
               ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: animals.length,
-                  itemBuilder: (context, index) {
-                    final animal = animals[index];
-                    return CheckboxListTile(
-                      title: Text(animal),
-                      value: selectedAnimals.contains(animal),
-                      onChanged: (value) {
-                        toggleSelection(animal);
-                      },
-                    );
-                  },
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  'Select Date Range:',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: ListTile(
-                        title: const Text('Start Date:'),
-                        subtitle: startDate != null
-                            ? Text(
-                                '${startDate!.year}-${startDate!.month}-${startDate!.day}')
-                            : const Text('YYYY/MM/DD'),
-                        onTap: () async {
-                          final selectedDate = await showDatePicker(
-                            context: context,
-                            firstDate: DateTime(2020),
-                            lastDate: DateTime(2030),
-                          );
-                          if (selectedDate != null) {
-                            setState(() {
-                              startDate = selectedDate;
-                            });
-                          }
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      child: ListTile(
-                        title: const Text('End Date:'),
-                        subtitle: endDate != null
-                            ? Text(
-                                '${endDate!.year}-${endDate!.month}-${endDate!.day}')
-                            : const Text('YYYY/MM/DD'),
-                        onTap: () async {
-                          final selectedDate = await showDatePicker(
-                            context: context,
-                            firstDate: DateTime(2020),
-                            lastDate: DateTime(2030),
-                          );
-                          if (selectedDate != null) {
-                            setState(() {
-                              endDate = selectedDate;
-                            });
-                          }
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              /*const Padding(
+            ),
+            body: TabBarView(children: [
+              Stack(children: [
+                Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            'Select Animals:',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: animals.length,
+                            itemBuilder: (context, index) {
+                              final animal = animals[index];
+                              return CheckboxListTile(
+                                title: Text(animal),
+                                value: selectedAnimals.contains(animal),
+                                onChanged: (value) {
+                                  toggleSelection(animal);
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            'Select Date Range:',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: ListTile(
+                                  title: const Text('Start Date:'),
+                                  subtitle: startDate != null
+                                      ? Text(
+                                          '${startDate!.year}-${startDate!.month}-${startDate!.day}')
+                                      : const Text('YYYY/MM/DD'),
+                                  onTap: () async {
+                                    final selectedDate = await showDatePicker(
+                                      context: context,
+                                      firstDate: DateTime(2020),
+                                      lastDate: DateTime(2030),
+                                    );
+                                    if (selectedDate != null) {
+                                      setState(() {
+                                        startDate = selectedDate;
+                                      });
+                                    }
+                                  },
+                                ),
+                              ),
+                              Expanded(
+                                child: ListTile(
+                                  title: const Text('End Date:'),
+                                  subtitle: endDate != null
+                                      ? Text(
+                                          '${endDate!.year}-${endDate!.month}-${endDate!.day}')
+                                      : const Text('YYYY/MM/DD'),
+                                  onTap: () async {
+                                    final selectedDate = await showDatePicker(
+                                      context: context,
+                                      firstDate: DateTime(2020),
+                                      lastDate: DateTime(2030),
+                                    );
+                                    if (selectedDate != null) {
+                                      setState(() {
+                                        endDate = selectedDate;
+                                      });
+                                    }
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        /*const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Text(
                   'Select Time Range:',
@@ -216,19 +229,21 @@ class QueryState extends State<Query> {
                   ],
                 ),
               ),*/
-            ],
-          )),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          var query =
-              await Database().getQuery(selectedAnimals, startDate, endDate);
-          var formattedQuery = formatQuery(query);
-          String filePath = await saveToFile(formattedQuery);
-          shareFile(filePath);
-        },
-        child: const Icon(Icons.send),
-      ),
-    );
+                      ],
+                    )),
+                FloatingActionButton(
+                  onPressed: () async {
+                    var query = await Database()
+                        .getQuery(selectedAnimals, startDate, endDate);
+                    var formattedQuery = formatQuery(query);
+                    String filePath = await saveToFile(formattedQuery);
+                    shareFile(filePath);
+                  },
+                  child: const Icon(Icons.send),
+                ),
+              ]),
+              StatsPage()
+            ])));
   }
 
   void shareFile(String filePath) {
