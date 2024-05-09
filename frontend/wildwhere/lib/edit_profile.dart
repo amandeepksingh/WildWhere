@@ -48,7 +48,8 @@ class EditProfileState extends State<EditProfile> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Profile'),
-        leading: widget.firstTimeSignin == null
+        leading: (widget.firstTimeSignin == null ||
+                widget.prefs.getString('username') == null)
             ? BackButton(onPressed: () {
                 final NavigatorState? navigator = Navigator.maybeOf(context);
                 if (navigator!.canPop()) {
@@ -187,7 +188,6 @@ class EditProfileState extends State<EditProfile> {
                       // ),
                       const SizedBox(height: 30),
                       TextButton(
-
                           onPressed: () async {
                             handleSave();
                           },
