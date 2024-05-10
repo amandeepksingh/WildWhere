@@ -257,14 +257,11 @@ class _ProfilePageState extends State<Profile> {
                       ? Colors.grey.shade800
                       : Colors.white,
                   borderRadius: BorderRadius.circular(15),
-                  
-                  
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Container(
-                     // margin: const EdgeInsets.only(left: 5, top: 5, bottom: 5),
                       padding: const EdgeInsets.all(10),
                       width: 130,
                       height: 105,
@@ -293,14 +290,29 @@ class _ProfilePageState extends State<Profile> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(
-                              post.animalName ?? 'Unknown Animal',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    post.animalName ?? 'Unknown Animal',
+                                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                if (uid == prefs!.getString('uid')) // Conditional rendering of the delete button
+                                  IconButton(
+                                    icon: const Icon(Icons.delete, color: Colors.black, size: 18),
+                                    onPressed: snapshot.data != null && index < snapshot.data!.length ? () async {
+                                      await db.deletePostByPID(pid: post.pid!);
+                                      setState(() {
+                                        snapshot.data!.removeAt(index);
+                                      });
+                                    } : null,
+                                  ),
+                              ],
                             ),
-                            const SizedBox(height: 5),
+                            // Additional text and controls might go here
                             FutureBuilder<Placemark>(
                               future: getCityState(post.coordinate['y'], post.coordinate['x']),
                               builder: (context, snapshot) {
@@ -308,9 +320,7 @@ class _ProfilePageState extends State<Profile> {
                                   return const Text("Loading location...");
                                 } else if (snapshot.hasData) {
                                   Placemark place = snapshot.data!;
-                                  return Text(
-                                    "Location: ${place.locality}, ${place.administrativeArea}",
-                                  );
+                                  return Text("Location: ${place.locality}, ${place.administrativeArea}");
                                 } else {
                                   return const Text("Location unknown");
                                 }
