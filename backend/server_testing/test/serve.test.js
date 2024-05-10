@@ -89,7 +89,9 @@ describe("select users", () => {
                 "superuser": null,
                 "locationperm": null,
                 "notificationperm": null,
-                "colorblindrating": null
+                "colorblindrating": null,
+                "curloc": null,
+                "deviceid": null
             }
         ])
         
@@ -119,7 +121,9 @@ describe("select users", () => {
                 "superuser": null,
                 "locationperm": null,
                 "notificationperm": null,
-                "colorblindrating": null
+                "colorblindrating": null,
+                "curloc": null,
+                "deviceid": null
             },
             {
                 "uid": uid2,
@@ -130,7 +134,9 @@ describe("select users", () => {
                 "superuser": null,
                 "locationperm": null,
                 "notificationperm": null,
-                "colorblindrating": null
+                "colorblindrating": null,
+                "curloc": null,
+                "deviceid": null
             }
         ])
 
@@ -204,7 +210,9 @@ describe("creating users", () => {
             superuser: false,
             locationperm: false,
             notificationperm: true,
-            colorblindrating: 2
+            colorblindrating: 2,
+                curloc: null,
+                deviceid: null
         }]) 
 
         await request(app).delete(`/users/deleteUserByUID?uid=${testInput.uid}`)
@@ -319,7 +327,9 @@ describe("updating users", () => {
                     "superuser": null,
                     "locationperm": null,
                     "notificationperm": null,
-                    "colorblindrating": null
+                    "colorblindrating": null,
+                    "curloc": null,
+                    "deviceid": null
                 }
             ]
         ) 
@@ -351,7 +361,9 @@ describe("updating users", () => {
                     "superuser": null,
                     "locationperm": null,
                     "notificationperm": null,
-                    "colorblindrating": null
+                    "colorblindrating": null,
+                    "curloc": null,
+                    "deviceid": null
                 }
             ]
         )
@@ -383,7 +395,9 @@ describe("updating users", () => {
                     "superuser": true,
                     "locationperm": true,
                     "notificationperm": true,
-                    "colorblindrating": 10
+                    "colorblindrating": 10,
+                    "curloc": null,
+                    "deviceid": null
                 }
             ]
         ) 
