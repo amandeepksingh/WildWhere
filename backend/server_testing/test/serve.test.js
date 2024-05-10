@@ -292,7 +292,7 @@ describe("creating users", () => {
         }
         const resp = await request(app)
         .post('/users/createUser')
-        .send('uid=ffd             ')
+        .send('uid=781')
         .send(`email=${testInput.email}`)
         .send(`username=${testInput.username}`)
         .send(`imglink=${testInput.imglink}`)
@@ -302,7 +302,7 @@ describe("creating users", () => {
         assert.strictEqual(resp.status, 200)
 
         //MAY NOT WORK <----------------------------------------------------------------------------------------------------
-        const respDel = await request(app).delete(`/users/deleteUserByUID?uid=ffd             `)
+        const respDel = await request(app).delete(`/users/deleteUserByUID?uid=781`)
         assert.strictEqual(respDel.status, 200)
     });
 });
