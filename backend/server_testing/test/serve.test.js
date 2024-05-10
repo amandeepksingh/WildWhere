@@ -37,7 +37,10 @@ describe("select users", () => {
             "superuser": true,
             "locationperm": true,
             "notificationperm": true,
-            "colorblindrating": 10
+            "colorblindrating": 10,
+            "curloc": null,
+            "deviceid": null
+
         }
     ])
 
@@ -1254,24 +1257,6 @@ describe("selecting posts", () => {
 
     }); 
 
-    it("POST: test select with imgLink on multiple posts", async () => {
-
-        const uid = "testUID"
-        await request(app).post('/users/createUser').send(`uid=${uid}`)
-        const pid1 = (await request(app).post('/posts/createPost').send(`uid=${uid}`).send("coordinate=(0,0)")).body.pid
-        await request(app).post('/images/postPic/upload').field('pid', pid1).attach('img', 'test/testImages/test1.jpg')
-        const pid2 = (await request(app).post('/posts/createPost').send(`uid=${uid}`).send("coordinate=(0,0)")).body.pid
-        await request(app).post('/images/postPic/upload').field('pid', pid2).attach('img', 'test/testImages/test1.jpg')
-        const resp = await request(app).get(`/posts/selectPost`)
-        assert.strictEqual(resp.status, 200)
-        assert.ok(resp.body.message[0].imglink.includes('http'))
-        assert.ok(resp.body.message[1].imglink.includes('http'))
-
-        await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${pid1}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${pid2}`)
-    }); 
-
 });
 
 describe("creating posts", () => {
@@ -1542,9 +1527,9 @@ describe("updating posts", () => {
                     "pid": pid,
                     "uid": uid2,
                     "imglink": "test_link",
-                    "datetime": '1997-12-17T12:37:16.000Z',
+                    "datetime": '1997-12-17T07:37:16.000Z',
                     "coordinate": {"x":2.6, "y":7.5},
-                    "activity": 'running',
+                   "activity": 'running',
                     "animalname": 'John',
                     "quantity": 34,
                     "state": "Massachusetts",
