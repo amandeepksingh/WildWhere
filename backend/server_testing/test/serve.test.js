@@ -298,7 +298,7 @@ describe("creating users", () => {
         assert.strictEqual(resp.status, 200)
 
         //MAY NOT WORK <----------------------------------------------------------------------------------------------------
-        await request(app).delete(`/users/deleteUserByUID?uid=uid=ffd             `)
+        await request(app).delete(`/users/deleteUserByUID?uid=ffd             `)
 
     });
 });
