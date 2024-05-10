@@ -1,165 +1,789 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="Mocha Tests" time="8.340" tests="80" failures="0">
-  <testsuite name="" timestamp="2024-05-08T11:33:04" tests="80" time="8.337" failures="0">
-    <testcase name="HELP: test help method" time="0.004" classname="">
-    </testcase>
-    <testcase name="HELP: check every endpoint&apos;s other methods" time="0.145" classname="">
-    </testcase>
-    <testcase name="HELP: check every other endpoint" time="0.020" classname="">
-    </testcase>
-    <testcase name="IMAGES: test user normal functionality" time="1.201" classname="">
-    </testcase>
-    <testcase name="IMAGES: test user profile picture upload missing uid" time="0.017" classname="">
-    </testcase>
-    <testcase name="IMAGES: test user upload missing img" time="0.008" classname="">
-    </testcase>
-    <testcase name="IMAGES: test user override" time="0.855" classname="">
-    </testcase>
-    <testcase name="IMAGES: test post normal functionality" time="0.748" classname="">
-    </testcase>
-    <testcase name="IMAGES: test post profile picture upload missing pid" time="0.018" classname="">
-    </testcase>
-    <testcase name="IMAGES: test post upload missing img" time="0.008" classname="">
-    </testcase>
-    <testcase name="IMAGES: test post override" time="0.856" classname="">
-    </testcase>
-    <testcase name="IMAGES: test user delete normal" time="0.460" classname="">
-    </testcase>
-    <testcase name="IMAGES: test user delete missing uid" time="0.004" classname="">
-    </testcase>
-    <testcase name="IMAGES: test post delete normal" time="0.530" classname="">
-    </testcase>
-    <testcase name="IMAGES: test post delete missing pid" time="0.004" classname="">
-    </testcase>
-    <testcase name="POST: test select with multiple posts" time="0.734" classname="">
-    </testcase>
-    <testcase name="POST: test select with empty" time="0.051" classname="">
-    </testcase>
-    <testcase name="POST: test select with too strict constraints" time="0.013" classname="">
-    </testcase>
-    <testcase name="POST: test select with few constraints" time="0.015" classname="">
-    </testcase>
-    <testcase name="POST: test select with radius but no coord" time="0.005" classname="">
-    </testcase>
-    <testcase name="POST: test select with ALL constraints (minus datetime and radius)" time="0.015" classname="">
-    </testcase>
-    <testcase name="POST: test select with multiple posts" time="0.017" classname="">
-    </testcase>
-    <testcase name="POST: null radius" time="0.017" classname="">
-    </testcase>
-    <testcase name="POST: zero radius" time="0.018" classname="">
-    </testcase>
-    <testcase name="POST: non-zero radius" time="0.025" classname="">
-    </testcase>
-    <testcase name="POST: after a time" time="0.026" classname="">
-    </testcase>
-    <testcase name="POST: before a time" time="0.020" classname="">
-    </testcase>
-    <testcase name="POST: between a time" time="0.025" classname="">
-    </testcase>
-    <testcase name="POST: camel instead of lowercase times" time="0.025" classname="">
-    </testcase>
-    <testcase name="POST: lowercase animalName" time="0.031" classname="">
-    </testcase>
-    <testcase name="selecting with multiple animalNames" time="0.041" classname="">
-    </testcase>
-    <testcase name="selecting with multiple quantities" time="0.036" classname="">
-    </testcase>
-    <testcase name="selecting with multiple activities" time="0.024" classname="">
-    </testcase>
-    <testcase name="selecting with multiple states" time="0.025" classname="">
-    </testcase>
-    <testcase name="selecting with multiple cities" time="0.034" classname="">
-    </testcase>
-    <testcase name="USER: test select with imagelink on multiple posts" time="0.628" classname="">
-    </testcase>
-    <testcase name="POST: test create without uid" time="0.005" classname="">
-    </testcase>
-    <testcase name="POST: test create without coordinates" time="0.009" classname="">
-    </testcase>
-    <testcase name="POST: test create with only uid and coordinates" time="0.012" classname="">
-    </testcase>
-    <testcase name="POST: test create post with all params" time="0.017" classname="">
-    </testcase>
-    <testcase name="POST: test create with some but not all params" time="0.018" classname="">
-    </testcase>
-    <testcase name="POST: update post with imgLink" time="0.023" classname="">
-    </testcase>
-    <testcase name="POST: update post with empty imgLink" time="0.024" classname="">
-    </testcase>
-    <testcase name="POST: update post without pid" time="0.011" classname="">
-    </testcase>
-    <testcase name="POST: update post without updates" time="0.015" classname="">
-    </testcase>
-    <testcase name="POST: update post, update with camelcase" time="0.023" classname="">
-    </testcase>
-    <testcase name="POST: update post, update with lowercase" time="0.020" classname="">
-    </testcase>
-    <testcase name="POST: update post with all" time="0.026" classname="">
-    </testcase>
-    <testcase name="POST: delete post by PID" time="0.021" classname="">
-    </testcase>
-    <testcase name="POST: delete post by ID where ID not listed" time="0.006" classname="">
-    </testcase>
-    <testcase name="POST: delete post by without id" time="0.004" classname="">
-    </testcase>
-    <testcase name="REPORTS: normal functionality with single post" time="0.129" classname="">
-    </testcase>
-    <testcase name="REPORTS: normal functionality too strict" time="0.043" classname="">
-    </testcase>
-    <testcase name="REPORTS: normal functionality multiple posts" time="0.037" classname="">
-    </testcase>
-    <testcase name="REPORTS: normal functionality" time="0.018" classname="">
-    </testcase>
-    <testcase name="REPORTS: missing pid" time="0.017" classname="">
-    </testcase>
-    <testcase name="REPORTS: missing uid" time="0.015" classname="">
-    </testcase>
-    <testcase name="REPORTS: missing reason" time="0.012" classname="">
-    </testcase>
-    <testcase name="USER: test select with empty" time="0.072" classname="">
-    </testcase>
-    <testcase name="USER: test select with no matching criteria" time="0.017" classname="">
-    </testcase>
-    <testcase name="USER: test select with some constraints" time="0.022" classname="">
-    </testcase>
-    <testcase name="USER: test select with ALL constraints" time="0.069" classname="">
-    </testcase>
-    <testcase name="USER: test select with many users" time="0.029" classname="">
-    </testcase>
-    <testcase name="USER: test create" time="0.011" classname="">
-    </testcase>
-    <testcase name="USER: test create without uid" time="0.007" classname="">
-    </testcase>
-    <testcase name="USER: test create with all params" time="0.018" classname="">
-    </testcase>
-    <testcase name="USER: test create with camel case qualifiers" time="0.020" classname="">
-    </testcase>
-    <testcase name="USER: test create with lower case qualifiers" time="0.016" classname="">
-    </testcase>
-    <testcase name="USER: test create with some but not all params" time="0.016" classname="">
-    </testcase>
-    <testcase name="USER: test select with imagelink on multiple users" time="0.574" classname="">
-    </testcase>
-    <testcase name="USER: update user with email" time="0.028" classname="">
-    </testcase>
-    <testcase name="USER: update user, set field to empty string" time="0.032" classname="">
-    </testcase>
-    <testcase name="USER: update user, update all fields" time="0.027" classname="">
-    </testcase>
-    <testcase name="USER: update user, update with camelcase" time="0.022" classname="">
-    </testcase>
-    <testcase name="USER: update user, update with lowercase" time="0.024" classname="">
-    </testcase>
-    <testcase name="USER: update user without updates" time="0.017" classname="">
-    </testcase>
-    <testcase name="USER: update user without uid" time="0.019" classname="">
-    </testcase>
-    <testcase name="USER: delete user by ID" time="0.025" classname="">
-    </testcase>
-    <testcase name="USER: delete user by ID where ID not listed" time="0.009" classname="">
-    </testcase>
-    <testcase name="USER: delete user by ID without uid" time="0.005" classname="">
+<testsuites name="Mocha Tests" time="1.817" tests="56" failures="56">
+  <testsuite name="" timestamp="2024-05-10T19:18:17" tests="56" time="1.816" failures="56">
+    <testcase name="USER: test select with ALL constraints" time="0.040" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="USER: test select with empty" time="0.033" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="USER: test select with no matching criteria" time="0.031" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="USER: test select with with some constraints" time="0.030" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="USER: test select with many users" time="0.032" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="USER: test create" time="0.031" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="USER: test create without uid" time="0.031" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="USER: test create with all params" time="0.029" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="USER: test create with camel case qualifiers" time="0.033" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="USER: test create with lower case qualifiers" time="0.030" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="USER: test create some but not all params" time="0.031" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="USER: update user with email" time="0.033" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="USER: update user, set field to empty string" time="0.031" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="USER: update user, update all fields" time="0.032" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="USER: update user, update with camel case" time="0.033" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="USER: update user, update with lower case" time="0.035" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="USER: update user without updates" time="0.041" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="USER: update user without uid" time="0.032" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="USER: delete user by ID" time="0.031" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="USER: delete user by ID where ID not listed" time="0.040" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="USER: delete user by ID without uid" time="0.031" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: test select with empty" time="0.028" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: test select with too strict constraints" time="0.031" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: test select with few constraints" time="0.028" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: test select with radius but no coord" time="0.032" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: test select with ALL constraints (minus datetime and radius)" time="0.030" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: test select with multiple posts" time="0.030" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: null radius" time="0.032" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: zero radius" time="0.032" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: non-zero radius" time="0.032" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: after a time" time="0.030" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: before a time" time="0.033" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: between a time" time="0.034" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: camel instead of lowercase times" time="0.031" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: lowercase animalName" time="0.027" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: selecting with multiple animalNames" time="0.030" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: selecting with multiple quantities" time="0.031" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: selecting with multiple activities" time="0.031" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: selecting with multiple states" time="0.031" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: selecting with multiple cities" time="0.031" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: test select with imgLink on multiple posts" time="0.039" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: test create without uid" time="0.035" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: test create without coordinates" time="0.028" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: test create with only uid and coordinates" time="0.037" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: test create post with all params" time="0.034" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: test create with some but not all params" time="0.028" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: update post with imgLink" time="0.028" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: update post with empty imgLink" time="0.029" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: update post without pid" time="0.030" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: update post without updates" time="0.032" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: update post, update with camelcase" time="0.035" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: update post, update with lowercase" time="0.031" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: update post with all" time="0.029" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: delete post by PID" time="0.030" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: delete post by PID where PID not listed" time="0.032" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
+    </testcase>
+    <testcase name="POST: delete post without PID" time="0.031" classname="">
+      <failure message="ECONNREFUSED: Connection refused" type="Error"><![CDATA[Error: ECONNREFUSED: Connection refused
+    at Test.assert (node_modules/supertest/lib/test.js:156:20)
+    at localAssert (node_modules/supertest/lib/test.js:120:14)
+    at /Users/vishweshpalani/Documents/s24/320/WildWhere/backend/node_modules/supertest/lib/test.js:125:7
+    at Request.callback (node_modules/superagent/lib/node/index.js:867:3)
+    at ClientRequest.<anonymous> (node_modules/superagent/lib/node/index.js:789:10)
+    at ClientRequest.emit (node:events:519:28)
+    at Socket.socketErrorListener (node:_http_client:500:9)
+    at Socket.emit (node:events:519:28)
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)]]></failure>
     </testcase>
   </testsuite>
 </testsuites>
