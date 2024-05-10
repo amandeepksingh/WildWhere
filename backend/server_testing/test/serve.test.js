@@ -37,7 +37,9 @@ describe("select users and posts", () => {
             "superuser": true,
             "locationperm": true,
             "notificationperm": true,
-            "colorblindrating": 10
+            "colorblindrating": 10,
+            "curloc": null,
+            "deviceid": null
         }
     ])
   });
