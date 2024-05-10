@@ -48,7 +48,16 @@ class _StatsPageState extends State<StatsPage> {
           SizedBox(
             width: MediaQuery.of(context).size.width * 0.8,
             height: MediaQuery.of(context).size.height * 0.35,
-            child: barChart(),
+            //horizontal scroll for graph
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                SizedBox(
+                  width: 500,
+                  child: barChart(),
+                )
+              ],
+            ),
           ),
           const SizedBox(height: 20),
           const Text("Number of Sightings Each Month"),
