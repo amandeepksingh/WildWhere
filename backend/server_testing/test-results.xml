@@ -1,165 +1,2007 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="Mocha Tests" time="8.340" tests="80" failures="0">
-  <testsuite name="" timestamp="2024-05-08T11:33:04" tests="80" time="8.337" failures="0">
-    <testcase name="HELP: test help method" time="0.004" classname="">
+<testsuites name="Mocha Tests" time="5.091" tests="79" failures="29">
+  <testsuite name="" timestamp="2024-05-10T22:30:31" tests="79" time="5.090" failures="29">
+    <testcase name="HELP: test help method" time="0.001" classname="">
     </testcase>
-    <testcase name="HELP: check every endpoint&apos;s other methods" time="0.145" classname="">
+    <testcase name="HELP: check every endpoint&apos;s other methods" time="0.026" classname="">
     </testcase>
-    <testcase name="HELP: check every other endpoint" time="0.020" classname="">
+    <testcase name="HELP: check every other endpoint" time="0.004" classname="">
     </testcase>
-    <testcase name="IMAGES: test user normal functionality" time="1.201" classname="">
+    <testcase name="IMAGES: test user normal functionality" time="0.771" classname="">
     </testcase>
-    <testcase name="IMAGES: test user profile picture upload missing uid" time="0.017" classname="">
+    <testcase name="IMAGES: test user profile picture upload missing uid" time="0.003" classname="">
     </testcase>
-    <testcase name="IMAGES: test user upload missing img" time="0.008" classname="">
+    <testcase name="IMAGES: test user upload missing img" time="0.002" classname="">
     </testcase>
-    <testcase name="IMAGES: test user override" time="0.855" classname="">
+    <testcase name="IMAGES: test user override" time="0.691" classname="">
     </testcase>
-    <testcase name="IMAGES: test post normal functionality" time="0.748" classname="">
+    <testcase name="IMAGES: test post normal functionality" time="0.491" classname="">
     </testcase>
-    <testcase name="IMAGES: test post profile picture upload missing pid" time="0.018" classname="">
+    <testcase name="IMAGES: test post profile picture upload missing pid" time="0.003" classname="">
     </testcase>
-    <testcase name="IMAGES: test post upload missing img" time="0.008" classname="">
+    <testcase name="IMAGES: test post upload missing img" time="0.001" classname="">
     </testcase>
-    <testcase name="IMAGES: test post override" time="0.856" classname="">
+    <testcase name="IMAGES: test post override" time="0.674" classname="">
     </testcase>
-    <testcase name="IMAGES: test user delete normal" time="0.460" classname="">
+    <testcase name="IMAGES: test select with multiple posts" time="0.553" classname="">
     </testcase>
-    <testcase name="IMAGES: test user delete missing uid" time="0.004" classname="">
+    <testcase name="IMAGES: test user delete normal" time="0.419" classname="">
     </testcase>
-    <testcase name="IMAGES: test post delete normal" time="0.530" classname="">
+    <testcase name="IMAGES: test user delete missing uid" time="0.002" classname="">
     </testcase>
-    <testcase name="IMAGES: test post delete missing pid" time="0.004" classname="">
+    <testcase name="IMAGES: test post delete normal" time="0.431" classname="">
     </testcase>
-    <testcase name="POST: test select with multiple posts" time="0.734" classname="">
+    <testcase name="IMAGES: test post delete missing pid" time="0.002" classname="">
     </testcase>
-    <testcase name="POST: test select with empty" time="0.051" classname="">
+    <testcase name="POST: test select with empty" time="0.053" classname="">
     </testcase>
-    <testcase name="POST: test select with too strict constraints" time="0.013" classname="">
+    <testcase name="POST: test select with too strict constraints" time="0.009" classname="">
     </testcase>
-    <testcase name="POST: test select with few constraints" time="0.015" classname="">
+    <testcase name="POST: test select with few constraints" time="0.011" classname="">
+      <failure message="Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+  [
+    {
+      activity: null,
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 0,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: &apos;A3AmnrKrEk4564zP&apos;,
+[32m+[39m     quantity: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 0,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: &apos;A3AmnrKrEk4564zP&apos;,
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+      uid: &apos;testUID&apos;
+    }
+  ]" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+  [
+    {
+      activity: null,
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 0,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: 'A3AmnrKrEk4564zP',
+[32m+[39m     quantity: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 0,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: 'A3AmnrKrEk4564zP',
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+      uid: 'testUID'
+    }
+  ]
+    at Context.<anonymous> (test/posts.test.js:65:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+       [
+         {
+           "activity": [null]
+           "animalname": [null]
+      +    "city": [null]
+           "coordinate": {
+             "x": 0
+             "y": 0
+           }
+           "datetime": [null]
+           "imglink": [null]
+           "pid": "A3AmnrKrEk4564zP"
+           "quantity": [null]
+      +    "state": [null]
+           "uid": "testUID"
+         }
+       ]
+      ]]></failure>
     </testcase>
-    <testcase name="POST: test select with radius but no coord" time="0.005" classname="">
+    <testcase name="POST: test select with radius but no coord" time="0.003" classname="">
     </testcase>
     <testcase name="POST: test select with ALL constraints (minus datetime and radius)" time="0.015" classname="">
+      <failure message="Expected values to be strictly equal:
+
+400 !== 200
+" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+400 !== 200
+
+    at Context.<anonymous> (test/posts.test.js:102:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -400
+      +200
+      ]]></failure>
     </testcase>
-    <testcase name="POST: test select with multiple posts" time="0.017" classname="">
+    <testcase name="POST: test select with multiple posts" time="0.016" classname="">
+      <failure message="Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+  [
+    {
+      activity: null,
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 3.6,
+[32m+[39m       y: 5.8
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: &apos;5E58cUvpFPMG3GpG&apos;,
+[32m+[39m     quantity: null,
+[32m+[39m     uid: &apos;testUID&apos;
+[32m+[39m   },
+[32m+[39m   {
+[32m+[39m     activity: null,
+[32m+[39m     animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 2.6,
+[32m+[39m       y: 7.5
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: &apos;IJtXnvpCE5bLe07O&apos;,
+[32m+[39m     quantity: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 3.6,
+[31m-[39m       y: 5.8
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: &apos;5E58cUvpFPMG3GpG&apos;,
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+[31m-[39m     uid: &apos;testUID&apos;
+[31m-[39m   },
+[31m-[39m   {
+[31m-[39m     activity: null,
+[31m-[39m     animalname: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 2.6,
+[31m-[39m       y: 7.5
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: &apos;IJtXnvpCE5bLe07O&apos;,
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+      uid: &apos;testUID&apos;
+    }
+  ]" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+  [
+    {
+      activity: null,
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 3.6,
+[32m+[39m       y: 5.8
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: '5E58cUvpFPMG3GpG',
+[32m+[39m     quantity: null,
+[32m+[39m     uid: 'testUID'
+[32m+[39m   },
+[32m+[39m   {
+[32m+[39m     activity: null,
+[32m+[39m     animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 2.6,
+[32m+[39m       y: 7.5
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: 'IJtXnvpCE5bLe07O',
+[32m+[39m     quantity: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 3.6,
+[31m-[39m       y: 5.8
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: '5E58cUvpFPMG3GpG',
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+[31m-[39m     uid: 'testUID'
+[31m-[39m   },
+[31m-[39m   {
+[31m-[39m     activity: null,
+[31m-[39m     animalname: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 2.6,
+[31m-[39m       y: 7.5
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: 'IJtXnvpCE5bLe07O',
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+      uid: 'testUID'
+    }
+  ]
+    at Context.<anonymous> (test/posts.test.js:132:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+       [
+         {
+           "activity": [null]
+           "animalname": [null]
+      +    "city": [null]
+           "coordinate": {
+             "x": 3.6
+             "y": 5.8
+           }
+           "datetime": [null]
+           "imglink": [null]
+           "pid": "5E58cUvpFPMG3GpG"
+           "quantity": [null]
+      +    "state": [null]
+           "uid": "testUID"
+         }
+         {
+           "activity": [null]
+           "animalname": [null]
+      +    "city": [null]
+           "coordinate": {
+             "x": 2.6
+             "y": 7.5
+           }
+           "datetime": [null]
+           "imglink": [null]
+           "pid": "IJtXnvpCE5bLe07O"
+           "quantity": [null]
+      +    "state": [null]
+           "uid": "testUID"
+         }
+       ]
+      ]]></failure>
     </testcase>
-    <testcase name="POST: null radius" time="0.017" classname="">
+    <testcase name="POST: null radius" time="0.009" classname="">
+      <failure message="Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+  [
+    {
+      activity: null,
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 177,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: &apos;5Ti0NKqqAyKFLAOb&apos;,
+[32m+[39m     quantity: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 177,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: &apos;5Ti0NKqqAyKFLAOb&apos;,
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+      uid: &apos;testUID&apos;
+    }
+  ]" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+  [
+    {
+      activity: null,
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 177,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: '5Ti0NKqqAyKFLAOb',
+[32m+[39m     quantity: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 177,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: '5Ti0NKqqAyKFLAOb',
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+      uid: 'testUID'
+    }
+  ]
+    at Context.<anonymous> (test/posts.test.js:173:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+       [
+         {
+           "activity": [null]
+           "animalname": [null]
+      +    "city": [null]
+           "coordinate": {
+             "x": 177
+             "y": 0
+           }
+           "datetime": [null]
+           "imglink": [null]
+           "pid": "5Ti0NKqqAyKFLAOb"
+           "quantity": [null]
+      +    "state": [null]
+           "uid": "testUID"
+         }
+       ]
+      ]]></failure>
     </testcase>
-    <testcase name="POST: zero radius" time="0.018" classname="">
+    <testcase name="POST: zero radius" time="0.009" classname="">
+      <failure message="Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+  [
+    {
+      activity: null,
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 177,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: &apos;lwYGPaRhwI5OFx59&apos;,
+[32m+[39m     quantity: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 177,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: &apos;lwYGPaRhwI5OFx59&apos;,
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+      uid: &apos;testUID&apos;
+    }
+  ]" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+  [
+    {
+      activity: null,
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 177,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: 'lwYGPaRhwI5OFx59',
+[32m+[39m     quantity: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 177,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: 'lwYGPaRhwI5OFx59',
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+      uid: 'testUID'
+    }
+  ]
+    at Context.<anonymous> (test/posts.test.js:202:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+       [
+         {
+           "activity": [null]
+           "animalname": [null]
+      +    "city": [null]
+           "coordinate": {
+             "x": 177
+             "y": 0
+           }
+           "datetime": [null]
+           "imglink": [null]
+           "pid": "lwYGPaRhwI5OFx59"
+           "quantity": [null]
+      +    "state": [null]
+           "uid": "testUID"
+         }
+       ]
+      ]]></failure>
     </testcase>
-    <testcase name="POST: non-zero radius" time="0.025" classname="">
+    <testcase name="POST: non-zero radius" time="0.011" classname="">
+      <failure message="Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m [34m...[39m Lines skipped
+
+  [
+    {
+      activity: null,
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 177,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: &apos;eRITE47ztLirpWRk&apos;,
+[32m+[39m     quantity: null,
+[32m+[39m     uid: &apos;testUID&apos;
+[32m+[39m   },
+[32m+[39m   {
+[32m+[39m     activity: null,
+[32m+[39m     animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 50,
+[32m+[39m       y: 50
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: &apos;NR9ja8qLFh2eGB4g&apos;,
+[32m+[39m     quantity: null,
+[32m+[39m     uid: &apos;testUID&apos;
+[32m+[39m   },
+[32m+[39m   {
+[34m...[39m
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 177,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: &apos;eRITE47ztLirpWRk&apos;,
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+[31m-[39m     uid: &apos;testUID&apos;
+[31m-[39m   },
+[31m-[39m   {
+[31m-[39m     activity: null,
+[31m-[39m     animalname: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 50,
+[31m-[39m       y: 50
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: &apos;NR9ja8qLFh2eGB4g&apos;,
+[31m-[39m     quantity: null,
+[34m...[39m" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m [34m...[39m Lines skipped
+
+  [
+    {
+      activity: null,
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 177,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: 'eRITE47ztLirpWRk',
+[32m+[39m     quantity: null,
+[32m+[39m     uid: 'testUID'
+[32m+[39m   },
+[32m+[39m   {
+[32m+[39m     activity: null,
+[32m+[39m     animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 50,
+[32m+[39m       y: 50
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: 'NR9ja8qLFh2eGB4g',
+[32m+[39m     quantity: null,
+[32m+[39m     uid: 'testUID'
+[32m+[39m   },
+[32m+[39m   {
+[34m...[39m
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 177,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: 'eRITE47ztLirpWRk',
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+[31m-[39m     uid: 'testUID'
+[31m-[39m   },
+[31m-[39m   {
+[31m-[39m     activity: null,
+[31m-[39m     animalname: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 50,
+[31m-[39m       y: 50
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: 'NR9ja8qLFh2eGB4g',
+[31m-[39m     quantity: null,
+[34m...[39m
+    at Context.<anonymous> (test/posts.test.js:235:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+       [
+         {
+           "activity": [null]
+           "animalname": [null]
+      +    "city": [null]
+           "coordinate": {
+             "x": 177
+             "y": 0
+           }
+           "datetime": [null]
+           "imglink": [null]
+           "pid": "eRITE47ztLirpWRk"
+           "quantity": [null]
+      +    "state": [null]
+           "uid": "testUID"
+         }
+         {
+           "activity": [null]
+           "animalname": [null]
+      +    "city": [null]
+           "coordinate": {
+             "x": 50
+             "y": 50
+           }
+           "datetime": [null]
+           "imglink": [null]
+           "pid": "NR9ja8qLFh2eGB4g"
+           "quantity": [null]
+      +    "state": [null]
+           "uid": "testUID"
+         }
+         {
+           "activity": [null]
+           "animalname": [null]
+      +    "city": [null]
+           "coordinate": {
+             "x": 100
+             "y": 0
+           }
+           "datetime": [null]
+           "imglink": [null]
+           "pid": "fP1bDoY3543GSuxW"
+           "quantity": [null]
+      +    "state": [null]
+           "uid": "testUID"
+         }
+       ]
+      ]]></failure>
     </testcase>
-    <testcase name="POST: after a time" time="0.026" classname="">
+    <testcase name="POST: after a time" time="0.024" classname="">
+      <failure message="Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+  [
+    {
+      activity: null,
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 2.6,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: &apos;2008-12-17T12:37:16.000Z&apos;,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: &apos;xNJNif3btcgXB9hW&apos;,
+[32m+[39m     quantity: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 2.6,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: &apos;2008-12-17T12:37:16.000Z&apos;,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: &apos;xNJNif3btcgXB9hW&apos;,
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+      uid: &apos;testUID&apos;
+    }
+  ]" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+  [
+    {
+      activity: null,
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 2.6,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: '2008-12-17T12:37:16.000Z',
+[32m+[39m     imglink: null,
+[32m+[39m     pid: 'xNJNif3btcgXB9hW',
+[32m+[39m     quantity: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 2.6,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: '2008-12-17T12:37:16.000Z',
+[31m-[39m     imglink: null,
+[31m-[39m     pid: 'xNJNif3btcgXB9hW',
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+      uid: 'testUID'
+    }
+  ]
+    at Context.<anonymous> (test/posts.test.js:288:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+       [
+         {
+           "activity": [null]
+           "animalname": [null]
+      +    "city": [null]
+           "coordinate": {
+             "x": 2.6
+             "y": 0
+           }
+           "datetime": "2008-12-17T12:37:16.000Z"
+           "imglink": [null]
+           "pid": "xNJNif3btcgXB9hW"
+           "quantity": [null]
+      +    "state": [null]
+           "uid": "testUID"
+         }
+       ]
+      ]]></failure>
     </testcase>
-    <testcase name="POST: before a time" time="0.020" classname="">
+    <testcase name="POST: before a time" time="0.019" classname="">
+      <failure message="Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+  [
+    {
+      activity: null,
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 177,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: &apos;1997-12-17T12:37:16.000Z&apos;,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: &apos;UAKmgnPjfFsyPr7F&apos;,
+[32m+[39m     quantity: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 177,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: &apos;1997-12-17T12:37:16.000Z&apos;,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: &apos;UAKmgnPjfFsyPr7F&apos;,
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+      uid: &apos;testUID&apos;
+    }
+  ]" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+  [
+    {
+      activity: null,
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 177,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: '1997-12-17T12:37:16.000Z',
+[32m+[39m     imglink: null,
+[32m+[39m     pid: 'UAKmgnPjfFsyPr7F',
+[32m+[39m     quantity: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 177,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: '1997-12-17T12:37:16.000Z',
+[31m-[39m     imglink: null,
+[31m-[39m     pid: 'UAKmgnPjfFsyPr7F',
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+      uid: 'testUID'
+    }
+  ]
+    at Context.<anonymous> (test/posts.test.js:317:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+       [
+         {
+           "activity": [null]
+           "animalname": [null]
+      +    "city": [null]
+           "coordinate": {
+             "x": 177
+             "y": 0
+           }
+           "datetime": "1997-12-17T12:37:16.000Z"
+           "imglink": [null]
+           "pid": "UAKmgnPjfFsyPr7F"
+           "quantity": [null]
+      +    "state": [null]
+           "uid": "testUID"
+         }
+       ]
+      ]]></failure>
     </testcase>
-    <testcase name="POST: between a time" time="0.025" classname="">
+    <testcase name="POST: between a time" time="0.011" classname="">
+      <failure message="Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+  [
+    {
+      activity: null,
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 2.6,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: &apos;2008-12-17T12:37:16.000Z&apos;,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: &apos;kHchhifVrl31vEmW&apos;,
+[32m+[39m     quantity: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 2.6,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: &apos;2008-12-17T12:37:16.000Z&apos;,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: &apos;kHchhifVrl31vEmW&apos;,
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+      uid: &apos;testUID&apos;
+    }
+  ]" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+  [
+    {
+      activity: null,
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 2.6,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: '2008-12-17T12:37:16.000Z',
+[32m+[39m     imglink: null,
+[32m+[39m     pid: 'kHchhifVrl31vEmW',
+[32m+[39m     quantity: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 2.6,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: '2008-12-17T12:37:16.000Z',
+[31m-[39m     imglink: null,
+[31m-[39m     pid: 'kHchhifVrl31vEmW',
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+      uid: 'testUID'
+    }
+  ]
+    at Context.<anonymous> (test/posts.test.js:347:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+       [
+         {
+           "activity": [null]
+           "animalname": [null]
+      +    "city": [null]
+           "coordinate": {
+             "x": 2.6
+             "y": 0
+           }
+           "datetime": "2008-12-17T12:37:16.000Z"
+           "imglink": [null]
+           "pid": "kHchhifVrl31vEmW"
+           "quantity": [null]
+      +    "state": [null]
+           "uid": "testUID"
+         }
+       ]
+      ]]></failure>
     </testcase>
-    <testcase name="POST: camel instead of lowercase times" time="0.025" classname="">
+    <testcase name="POST: camel instead of lowercase times" time="0.008" classname="">
+      <failure message="Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+  [
+    {
+      activity: null,
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 2.6,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: &apos;2008-12-17T12:37:16.000Z&apos;,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: &apos;LVD3fbe23txYjVIm&apos;,
+[32m+[39m     quantity: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 2.6,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: &apos;2008-12-17T12:37:16.000Z&apos;,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: &apos;LVD3fbe23txYjVIm&apos;,
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+      uid: &apos;testUID&apos;
+    }
+  ]" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+  [
+    {
+      activity: null,
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 2.6,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: '2008-12-17T12:37:16.000Z',
+[32m+[39m     imglink: null,
+[32m+[39m     pid: 'LVD3fbe23txYjVIm',
+[32m+[39m     quantity: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 2.6,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: '2008-12-17T12:37:16.000Z',
+[31m-[39m     imglink: null,
+[31m-[39m     pid: 'LVD3fbe23txYjVIm',
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+      uid: 'testUID'
+    }
+  ]
+    at Context.<anonymous> (test/posts.test.js:376:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+       [
+         {
+           "activity": [null]
+           "animalname": [null]
+      +    "city": [null]
+           "coordinate": {
+             "x": 2.6
+             "y": 0
+           }
+           "datetime": "2008-12-17T12:37:16.000Z"
+           "imglink": [null]
+           "pid": "LVD3fbe23txYjVIm"
+           "quantity": [null]
+      +    "state": [null]
+           "uid": "testUID"
+         }
+       ]
+      ]]></failure>
     </testcase>
-    <testcase name="POST: lowercase animalName" time="0.031" classname="">
+    <testcase name="POST: lowercase animalName" time="0.005" classname="">
+      <failure message="Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+  [
+    {
+      activity: null,
+      animalname: &apos;tyrone&apos;,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 177,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: &apos;LN1jpDQDcPZQUmcW&apos;,
+[32m+[39m     quantity: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 177,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: &apos;LN1jpDQDcPZQUmcW&apos;,
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+      uid: &apos;testUID&apos;
+    }
+  ]" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+  [
+    {
+      activity: null,
+      animalname: 'tyrone',
+[32m+[39m     coordinate: {
+[32m+[39m       x: 177,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: 'LN1jpDQDcPZQUmcW',
+[32m+[39m     quantity: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 177,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: 'LN1jpDQDcPZQUmcW',
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+      uid: 'testUID'
+    }
+  ]
+    at Context.<anonymous> (test/posts.test.js:402:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+       [
+         {
+           "activity": [null]
+           "animalname": "tyrone"
+      +    "city": [null]
+           "coordinate": {
+             "x": 177
+             "y": 0
+           }
+           "datetime": [null]
+           "imglink": [null]
+           "pid": "LN1jpDQDcPZQUmcW"
+           "quantity": [null]
+      +    "state": [null]
+           "uid": "testUID"
+         }
+       ]
+      ]]></failure>
     </testcase>
-    <testcase name="selecting with multiple animalNames" time="0.041" classname="">
+    <testcase name="POST: selecting with multiple animalNames" time="0.010" classname="">
+      <failure message="Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m [34m...[39m Lines skipped
+
+  [
+    {
+      activity: null,
+      animalname: &apos;x&apos;,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 0,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: &apos;TdWRT1MaUXPTvtQN&apos;,
+[32m+[39m     quantity: null,
+[32m+[39m     uid: &apos;testUID&apos;
+[32m+[39m   },
+[32m+[39m   {
+[32m+[39m     activity: null,
+[32m+[39m     animalname: &apos;y&apos;,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 0,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: &apos;QF28Iisp60cNulDl&apos;,
+[32m+[39m     quantity: null,
+[32m+[39m     uid: &apos;testUID&apos;
+[32m+[39m   },
+[32m+[39m   {
+[34m...[39m
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 0,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: &apos;TdWRT1MaUXPTvtQN&apos;,
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+[31m-[39m     uid: &apos;testUID&apos;
+[31m-[39m   },
+[31m-[39m   {
+[31m-[39m     activity: null,
+[31m-[39m     animalname: &apos;y&apos;,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 0,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: &apos;QF28Iisp60cNulDl&apos;,
+[31m-[39m     quantity: null,
+[34m...[39m" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m [34m...[39m Lines skipped
+
+  [
+    {
+      activity: null,
+      animalname: 'x',
+[32m+[39m     coordinate: {
+[32m+[39m       x: 0,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: 'TdWRT1MaUXPTvtQN',
+[32m+[39m     quantity: null,
+[32m+[39m     uid: 'testUID'
+[32m+[39m   },
+[32m+[39m   {
+[32m+[39m     activity: null,
+[32m+[39m     animalname: 'y',
+[32m+[39m     coordinate: {
+[32m+[39m       x: 0,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: 'QF28Iisp60cNulDl',
+[32m+[39m     quantity: null,
+[32m+[39m     uid: 'testUID'
+[32m+[39m   },
+[32m+[39m   {
+[34m...[39m
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 0,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: 'TdWRT1MaUXPTvtQN',
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+[31m-[39m     uid: 'testUID'
+[31m-[39m   },
+[31m-[39m   {
+[31m-[39m     activity: null,
+[31m-[39m     animalname: 'y',
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 0,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: 'QF28Iisp60cNulDl',
+[31m-[39m     quantity: null,
+[34m...[39m
+    at Context.<anonymous> (test/posts.test.js:439:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+       [
+         {
+           "activity": [null]
+           "animalname": "x"
+      +    "city": [null]
+           "coordinate": {
+             "x": 0
+             "y": 0
+           }
+           "datetime": [null]
+           "imglink": [null]
+           "pid": "TdWRT1MaUXPTvtQN"
+           "quantity": [null]
+      +    "state": [null]
+           "uid": "testUID"
+         }
+         {
+           "activity": [null]
+           "animalname": "y"
+      +    "city": [null]
+           "coordinate": {
+             "x": 0
+             "y": 0
+           }
+           "datetime": [null]
+           "imglink": [null]
+           "pid": "QF28Iisp60cNulDl"
+           "quantity": [null]
+      +    "state": [null]
+           "uid": "testUID"
+         }
+         {
+           "activity": [null]
+           "animalname": "z"
+      +    "city": [null]
+           "coordinate": {
+             "x": 0
+             "y": 0
+           }
+           "datetime": [null]
+           "imglink": [null]
+           "pid": "N2SERC1kJEubcxEP"
+           "quantity": [null]
+      +    "state": [null]
+           "uid": "testUID"
+         }
+       ]
+      ]]></failure>
     </testcase>
-    <testcase name="selecting with multiple quantities" time="0.036" classname="">
+    <testcase name="POST: selecting with multiple quantities" time="0.008" classname="">
+      <failure message="Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+  [
+    {
+      activity: null,
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 0,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: &apos;i1ToTzkXD4A5p0rZ&apos;,
+[32m+[39m     quantity: 2,
+[32m+[39m     uid: &apos;testUID&apos;
+[32m+[39m   },
+[32m+[39m   {
+[32m+[39m     activity: null,
+[32m+[39m     animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 0,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: &apos;kZB89Ajsx8IAad2x&apos;,
+[32m+[39m     quantity: 3,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 0,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: &apos;i1ToTzkXD4A5p0rZ&apos;,
+[31m-[39m     quantity: 2,
+[31m-[39m     state: null,
+[31m-[39m     uid: &apos;testUID&apos;
+[31m-[39m   },
+[31m-[39m   {
+[31m-[39m     activity: null,
+[31m-[39m     animalname: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 0,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: &apos;kZB89Ajsx8IAad2x&apos;,
+[31m-[39m     quantity: 3,
+[31m-[39m     state: null,
+      uid: &apos;testUID&apos;
+    }
+  ]" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+  [
+    {
+      activity: null,
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 0,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: 'i1ToTzkXD4A5p0rZ',
+[32m+[39m     quantity: 2,
+[32m+[39m     uid: 'testUID'
+[32m+[39m   },
+[32m+[39m   {
+[32m+[39m     activity: null,
+[32m+[39m     animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 0,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: 'kZB89Ajsx8IAad2x',
+[32m+[39m     quantity: 3,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 0,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: 'i1ToTzkXD4A5p0rZ',
+[31m-[39m     quantity: 2,
+[31m-[39m     state: null,
+[31m-[39m     uid: 'testUID'
+[31m-[39m   },
+[31m-[39m   {
+[31m-[39m     activity: null,
+[31m-[39m     animalname: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 0,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: 'kZB89Ajsx8IAad2x',
+[31m-[39m     quantity: 3,
+[31m-[39m     state: null,
+      uid: 'testUID'
+    }
+  ]
+    at Context.<anonymous> (test/posts.test.js:496:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+       [
+         {
+           "activity": [null]
+           "animalname": [null]
+      +    "city": [null]
+           "coordinate": {
+             "x": 0
+             "y": 0
+           }
+           "datetime": [null]
+           "imglink": [null]
+           "pid": "i1ToTzkXD4A5p0rZ"
+           "quantity": 2
+      +    "state": [null]
+           "uid": "testUID"
+         }
+         {
+           "activity": [null]
+           "animalname": [null]
+      +    "city": [null]
+           "coordinate": {
+             "x": 0
+             "y": 0
+           }
+           "datetime": [null]
+           "imglink": [null]
+           "pid": "kZB89Ajsx8IAad2x"
+           "quantity": 3
+      +    "state": [null]
+           "uid": "testUID"
+         }
+       ]
+      ]]></failure>
     </testcase>
-    <testcase name="selecting with multiple activities" time="0.024" classname="">
+    <testcase name="POST: selecting with multiple activities" time="0.009" classname="">
+      <failure message="Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m [34m...[39m Lines skipped
+
+  [
+    {
+      activity: &apos;x&apos;,
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 0,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: &apos;SKf83U8kp0OuHqE8&apos;,
+[32m+[39m     quantity: null,
+[32m+[39m     uid: &apos;testUID&apos;
+[32m+[39m   },
+[32m+[39m   {
+[32m+[39m     activity: &apos;y&apos;,
+[32m+[39m     animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 0,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: &apos;gqbtc505pmpU71bv&apos;,
+[32m+[39m     quantity: null,
+[32m+[39m     uid: &apos;testUID&apos;
+[32m+[39m   },
+[32m+[39m   {
+[34m...[39m
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 0,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: &apos;SKf83U8kp0OuHqE8&apos;,
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+[31m-[39m     uid: &apos;testUID&apos;
+[31m-[39m   },
+[31m-[39m   {
+[31m-[39m     activity: &apos;y&apos;,
+[31m-[39m     animalname: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 0,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: &apos;gqbtc505pmpU71bv&apos;,
+[31m-[39m     quantity: null,
+[34m...[39m" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m [34m...[39m Lines skipped
+
+  [
+    {
+      activity: 'x',
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 0,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: 'SKf83U8kp0OuHqE8',
+[32m+[39m     quantity: null,
+[32m+[39m     uid: 'testUID'
+[32m+[39m   },
+[32m+[39m   {
+[32m+[39m     activity: 'y',
+[32m+[39m     animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 0,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: null,
+[32m+[39m     pid: 'gqbtc505pmpU71bv',
+[32m+[39m     quantity: null,
+[32m+[39m     uid: 'testUID'
+[32m+[39m   },
+[32m+[39m   {
+[34m...[39m
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 0,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: 'SKf83U8kp0OuHqE8',
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+[31m-[39m     uid: 'testUID'
+[31m-[39m   },
+[31m-[39m   {
+[31m-[39m     activity: 'y',
+[31m-[39m     animalname: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 0,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: null,
+[31m-[39m     pid: 'gqbtc505pmpU71bv',
+[31m-[39m     quantity: null,
+[34m...[39m
+    at Context.<anonymous> (test/posts.test.js:541:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+       [
+         {
+           "activity": "x"
+           "animalname": [null]
+      +    "city": [null]
+           "coordinate": {
+             "x": 0
+             "y": 0
+           }
+           "datetime": [null]
+           "imglink": [null]
+           "pid": "SKf83U8kp0OuHqE8"
+           "quantity": [null]
+      +    "state": [null]
+           "uid": "testUID"
+         }
+         {
+           "activity": "y"
+           "animalname": [null]
+      +    "city": [null]
+           "coordinate": {
+             "x": 0
+             "y": 0
+           }
+           "datetime": [null]
+           "imglink": [null]
+           "pid": "gqbtc505pmpU71bv"
+           "quantity": [null]
+      +    "state": [null]
+           "uid": "testUID"
+         }
+         {
+           "activity": "z"
+           "animalname": [null]
+      +    "city": [null]
+           "coordinate": {
+             "x": 0
+             "y": 0
+           }
+           "datetime": [null]
+           "imglink": [null]
+           "pid": "HYZbyvw0hKEjDQFY"
+           "quantity": [null]
+      +    "state": [null]
+           "uid": "testUID"
+         }
+       ]
+      ]]></failure>
     </testcase>
-    <testcase name="selecting with multiple states" time="0.025" classname="">
+    <testcase name="POST: selecting with multiple states" time="0.027" classname="">
+      <failure message="Expected values to be strictly equal:
+
+400 !== 200
+" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+400 !== 200
+
+    at Context.<anonymous> (test/posts.test.js:597:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -400
+      +200
+      ]]></failure>
     </testcase>
-    <testcase name="selecting with multiple cities" time="0.034" classname="">
+    <testcase name="POST: selecting with multiple cities" time="0.026" classname="">
+      <failure message="Expected values to be strictly equal:
+
+400 !== 200
+" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+400 !== 200
+
+    at Context.<anonymous> (test/posts.test.js:654:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -400
+      +200
+      ]]></failure>
     </testcase>
-    <testcase name="USER: test select with imagelink on multiple posts" time="0.628" classname="">
+    <testcase name="POST: test create without uid" time="0.002" classname="">
     </testcase>
-    <testcase name="POST: test create without uid" time="0.005" classname="">
+    <testcase name="POST: test create without coordinates" time="0.002" classname="">
     </testcase>
-    <testcase name="POST: test create without coordinates" time="0.009" classname="">
+    <testcase name="POST: test create with only uid and coordinates" time="0.008" classname="">
     </testcase>
-    <testcase name="POST: test create with only uid and coordinates" time="0.012" classname="">
+    <testcase name="POST: test create post with all params" time="0.002" classname="">
+      <failure message="Expected values to be strictly equal:
+[32m+ actual[39m [31m- expected[39m
+
+[32m+[39m &apos;column &quot;state&quot; of relation &quot;posts&quot; does not exist&apos;
+[31m-[39m &apos;post created&apos;" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+[32m+ actual[39m [31m- expected[39m
+
+[32m+[39m 'column "state" of relation "posts" does not exist'
+[31m-[39m 'post created'
+    at Context.<anonymous> (test/posts.test.js:734:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -column "state" of relation "posts" does not exist
+      +post created
+      ]]></failure>
     </testcase>
-    <testcase name="POST: test create post with all params" time="0.017" classname="">
+    <testcase name="POST: test create with some but not all params" time="0.006" classname="">
     </testcase>
-    <testcase name="POST: test create with some but not all params" time="0.018" classname="">
+    <testcase name="POST: update post with imgLink" time="0.006" classname="">
+      <failure message="Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+  [
+    {
+      activity: null,
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 2.6,
+[32m+[39m       y: 7.5
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: &apos;test_link&apos;,
+[32m+[39m     pid: &apos;lFgTNaRnZPnpqQGX&apos;,
+[32m+[39m     quantity: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 2.6,
+[31m-[39m       y: 7.5
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: &apos;test_link&apos;,
+[31m-[39m     pid: &apos;lFgTNaRnZPnpqQGX&apos;,
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+      uid: &apos;testUID&apos;
+    }
+  ]" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+  [
+    {
+      activity: null,
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 2.6,
+[32m+[39m       y: 7.5
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: 'test_link',
+[32m+[39m     pid: 'lFgTNaRnZPnpqQGX',
+[32m+[39m     quantity: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 2.6,
+[31m-[39m       y: 7.5
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: 'test_link',
+[31m-[39m     pid: 'lFgTNaRnZPnpqQGX',
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+      uid: 'testUID'
+    }
+  ]
+    at Context.<anonymous> (test/posts.test.js:766:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+       [
+         {
+           "activity": [null]
+           "animalname": [null]
+      +    "city": [null]
+           "coordinate": {
+             "x": 2.6
+             "y": 7.5
+           }
+           "datetime": [null]
+           "imglink": "test_link"
+           "pid": "lFgTNaRnZPnpqQGX"
+           "quantity": [null]
+      +    "state": [null]
+           "uid": "testUID"
+         }
+       ]
+      ]]></failure>
     </testcase>
-    <testcase name="POST: update post with imgLink" time="0.023" classname="">
+    <testcase name="POST: update post with empty imgLink" time="0.005" classname="">
+      <failure message="Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+  [
+    {
+      activity: null,
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 0,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: &apos;&apos;,
+[32m+[39m     pid: &apos;b1xmvgrWyX63jcDK&apos;,
+[32m+[39m     quantity: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 0,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: &apos;&apos;,
+[31m-[39m     pid: &apos;b1xmvgrWyX63jcDK&apos;,
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+      uid: &apos;testUID&apos;
+    }
+  ]" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+  [
+    {
+      activity: null,
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 0,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: '',
+[32m+[39m     pid: 'b1xmvgrWyX63jcDK',
+[32m+[39m     quantity: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 0,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: '',
+[31m-[39m     pid: 'b1xmvgrWyX63jcDK',
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+      uid: 'testUID'
+    }
+  ]
+    at Context.<anonymous> (test/posts.test.js:800:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+       [
+         {
+           "activity": [null]
+           "animalname": [null]
+      +    "city": [null]
+           "coordinate": {
+             "x": 0
+             "y": 0
+           }
+           "datetime": [null]
+           "imglink": ""
+           "pid": "b1xmvgrWyX63jcDK"
+           "quantity": [null]
+      +    "state": [null]
+           "uid": "testUID"
+         }
+       ]
+      ]]></failure>
     </testcase>
-    <testcase name="POST: update post with empty imgLink" time="0.024" classname="">
+    <testcase name="POST: update post without pid" time="0.003" classname="">
     </testcase>
-    <testcase name="POST: update post without pid" time="0.011" classname="">
+    <testcase name="POST: update post without updates" time="0.003" classname="">
     </testcase>
-    <testcase name="POST: update post without updates" time="0.015" classname="">
+    <testcase name="POST: update post, update with camelcase" time="0.006" classname="">
+      <failure message="Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+  [
+    {
+      activity: null,
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 0,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: &apos;tempLink&apos;,
+[32m+[39m     pid: &apos;ZEqaW4Bz7c0FvxjL&apos;,
+[32m+[39m     quantity: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 0,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: &apos;tempLink&apos;,
+[31m-[39m     pid: &apos;ZEqaW4Bz7c0FvxjL&apos;,
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+      uid: &apos;testUID&apos;
+    }
+  ]" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+  [
+    {
+      activity: null,
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 0,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: 'tempLink',
+[32m+[39m     pid: 'ZEqaW4Bz7c0FvxjL',
+[32m+[39m     quantity: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 0,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: 'tempLink',
+[31m-[39m     pid: 'ZEqaW4Bz7c0FvxjL',
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+      uid: 'testUID'
+    }
+  ]
+    at Context.<anonymous> (test/posts.test.js:856:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+       [
+         {
+           "activity": [null]
+           "animalname": [null]
+      +    "city": [null]
+           "coordinate": {
+             "x": 0
+             "y": 0
+           }
+           "datetime": [null]
+           "imglink": "tempLink"
+           "pid": "ZEqaW4Bz7c0FvxjL"
+           "quantity": [null]
+      +    "state": [null]
+           "uid": "testUID"
+         }
+       ]
+      ]]></failure>
     </testcase>
-    <testcase name="POST: update post, update with camelcase" time="0.023" classname="">
+    <testcase name="POST: update post, update with lowercase" time="0.005" classname="">
+      <failure message="Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+  [
+    {
+      activity: null,
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 0,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: &apos;tempLink&apos;,
+[32m+[39m     pid: &apos;bQB8x0CASqa2yHeL&apos;,
+[32m+[39m     quantity: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 0,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: &apos;tempLink&apos;,
+[31m-[39m     pid: &apos;bQB8x0CASqa2yHeL&apos;,
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+      uid: &apos;testUID&apos;
+    }
+  ]" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+[32m+ actual[39m [31m- expected[39m
+
+  [
+    {
+      activity: null,
+      animalname: null,
+[32m+[39m     coordinate: {
+[32m+[39m       x: 0,
+[32m+[39m       y: 0
+[32m+[39m     },
+[32m+[39m     datetime: null,
+[32m+[39m     imglink: 'tempLink',
+[32m+[39m     pid: 'bQB8x0CASqa2yHeL',
+[32m+[39m     quantity: null,
+[31m-[39m     city: null,
+[31m-[39m     coordinate: {
+[31m-[39m       x: 0,
+[31m-[39m       y: 0
+[31m-[39m     },
+[31m-[39m     datetime: null,
+[31m-[39m     imglink: 'tempLink',
+[31m-[39m     pid: 'bQB8x0CASqa2yHeL',
+[31m-[39m     quantity: null,
+[31m-[39m     state: null,
+      uid: 'testUID'
+    }
+  ]
+    at Context.<anonymous> (test/posts.test.js:888:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+       [
+         {
+           "activity": [null]
+           "animalname": [null]
+      +    "city": [null]
+           "coordinate": {
+             "x": 0
+             "y": 0
+           }
+           "datetime": [null]
+           "imglink": "tempLink"
+           "pid": "bQB8x0CASqa2yHeL"
+           "quantity": [null]
+      +    "state": [null]
+           "uid": "testUID"
+         }
+       ]
+      ]]></failure>
     </testcase>
-    <testcase name="POST: update post, update with lowercase" time="0.020" classname="">
+    <testcase name="POST: update post with all" time="0.005" classname="">
+      <failure message="Expected values to be strictly equal:
+
+400 !== 200
+" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+400 !== 200
+
+    at Context.<anonymous> (test/posts.test.js:920:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+      + expected - actual
+
+      -400
+      +200
+      ]]></failure>
     </testcase>
-    <testcase name="POST: update post with all" time="0.026" classname="">
+    <testcase name="POST: delete post by PID" time="0.013" classname="">
     </testcase>
-    <testcase name="POST: delete post by PID" time="0.021" classname="">
+    <testcase name="POST: delete post by ID where ID not listed" time="0.002" classname="">
     </testcase>
-    <testcase name="POST: delete post by ID where ID not listed" time="0.006" classname="">
+    <testcase name="POST: delete post without ID" time="0.001" classname="">
     </testcase>
-    <testcase name="POST: delete post by without id" time="0.004" classname="">
+    <testcase name="REPORTS: normal functionality with single post" time="0.006" classname="">
+      <failure message="relation &quot;reports&quot; does not exist" type="error"><![CDATA[error: relation "reports" does not exist
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/reports.test.js:25:5)
+    at async Context.<anonymous> (test/reports.test.js:30:9)]]></failure>
     </testcase>
-    <testcase name="REPORTS: normal functionality with single post" time="0.129" classname="">
+    <testcase name="REPORTS: normal functionality too strict" time="0.005" classname="">
+      <failure message="relation &quot;reports&quot; does not exist" type="error"><![CDATA[error: relation "reports" does not exist
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/reports.test.js:25:5)
+    at async Context.<anonymous> (test/reports.test.js:51:9)]]></failure>
     </testcase>
-    <testcase name="REPORTS: normal functionality too strict" time="0.043" classname="">
+    <testcase name="REPORTS: normal functionality multiple posts" time="0.004" classname="">
+      <failure message="relation &quot;reports&quot; does not exist" type="error"><![CDATA[error: relation "reports" does not exist
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/reports.test.js:25:5)
+    at async Context.<anonymous> (test/reports.test.js:73:9)]]></failure>
     </testcase>
-    <testcase name="REPORTS: normal functionality multiple posts" time="0.037" classname="">
+    <testcase name="REPORTS: normal functionality" time="0.003" classname="">
+      <failure message="relation &quot;reports&quot; does not exist" type="error"><![CDATA[error: relation "reports" does not exist
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/reports.test.js:25:5)
+    at async Context.<anonymous> (test/reports.test.js:105:9)]]></failure>
     </testcase>
-    <testcase name="REPORTS: normal functionality" time="0.018" classname="">
+    <testcase name="REPORTS: missing pid" time="0.003" classname="">
+      <failure message="relation &quot;reports&quot; does not exist" type="error"><![CDATA[error: relation "reports" does not exist
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/reports.test.js:25:5)
+    at async Context.<anonymous> (test/reports.test.js:118:9)]]></failure>
     </testcase>
-    <testcase name="REPORTS: missing pid" time="0.017" classname="">
+    <testcase name="REPORTS: missing uid" time="0.003" classname="">
+      <failure message="relation &quot;reports&quot; does not exist" type="error"><![CDATA[error: relation "reports" does not exist
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/reports.test.js:25:5)
+    at async Context.<anonymous> (test/reports.test.js:131:9)]]></failure>
     </testcase>
-    <testcase name="REPORTS: missing uid" time="0.015" classname="">
+    <testcase name="REPORTS: missing reason" time="0.004" classname="">
+      <failure message="relation &quot;reports&quot; does not exist" type="error"><![CDATA[error: relation "reports" does not exist
+    at /Users/andrewli/Documents/spring2024/320/WildWhere/backend/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async teardown (test/reports.test.js:25:5)
+    at async Context.<anonymous> (test/reports.test.js:144:9)]]></failure>
     </testcase>
-    <testcase name="REPORTS: missing reason" time="0.012" classname="">
+    <testcase name="USER: test select with empty" time="0.004" classname="">
     </testcase>
-    <testcase name="USER: test select with empty" time="0.072" classname="">
+    <testcase name="USER: test select with no matching criteria" time="0.003" classname="">
     </testcase>
-    <testcase name="USER: test select with no matching criteria" time="0.017" classname="">
+    <testcase name="USER: test select with some constraints" time="0.004" classname="">
     </testcase>
-    <testcase name="USER: test select with some constraints" time="0.022" classname="">
+    <testcase name="USER: test select with ALL constraints" time="0.009" classname="">
     </testcase>
-    <testcase name="USER: test select with ALL constraints" time="0.069" classname="">
+    <testcase name="USER: test select with many users" time="0.004" classname="">
     </testcase>
-    <testcase name="USER: test select with many users" time="0.029" classname="">
+    <testcase name="USER: test create" time="0.002" classname="">
     </testcase>
-    <testcase name="USER: test create" time="0.011" classname="">
+    <testcase name="USER: test create without uid" time="0.001" classname="">
     </testcase>
-    <testcase name="USER: test create without uid" time="0.007" classname="">
+    <testcase name="USER: test create with all params" time="0.002" classname="">
     </testcase>
-    <testcase name="USER: test create with all params" time="0.018" classname="">
+    <testcase name="USER: test create with camel case qualifiers" time="0.003" classname="">
     </testcase>
-    <testcase name="USER: test create with camel case qualifiers" time="0.020" classname="">
+    <testcase name="USER: test create with lower case qualifiers" time="0.002" classname="">
     </testcase>
-    <testcase name="USER: test create with lower case qualifiers" time="0.016" classname="">
+    <testcase name="USER: test create with some but not all params" time="0.001" classname="">
     </testcase>
-    <testcase name="USER: test create with some but not all params" time="0.016" classname="">
+    <testcase name="USER: test select with imagelink on multiple users" time="0.534" classname="">
     </testcase>
-    <testcase name="USER: test select with imagelink on multiple users" time="0.574" classname="">
+    <testcase name="USER: update user with email" time="0.009" classname="">
     </testcase>
-    <testcase name="USER: update user with email" time="0.028" classname="">
+    <testcase name="USER: update user, set field to empty string" time="0.006" classname="">
     </testcase>
-    <testcase name="USER: update user, set field to empty string" time="0.032" classname="">
+    <testcase name="USER: update user, update all fields" time="0.006" classname="">
     </testcase>
-    <testcase name="USER: update user, update all fields" time="0.027" classname="">
+    <testcase name="USER: update user, update with camelcase" time="0.006" classname="">
     </testcase>
-    <testcase name="USER: update user, update with camelcase" time="0.022" classname="">
+    <testcase name="USER: update user, update with lowercase" time="0.007" classname="">
     </testcase>
-    <testcase name="USER: update user, update with lowercase" time="0.024" classname="">
+    <testcase name="USER: update user without updates" time="0.007" classname="">
     </testcase>
-    <testcase name="USER: update user without updates" time="0.017" classname="">
+    <testcase name="USER: update user without uid" time="0.003" classname="">
     </testcase>
-    <testcase name="USER: update user without uid" time="0.019" classname="">
+    <testcase name="USER: delete user by ID" time="0.007" classname="">
     </testcase>
-    <testcase name="USER: delete user by ID" time="0.025" classname="">
+    <testcase name="USER: delete user by ID where ID not listed" time="0.002" classname="">
     </testcase>
-    <testcase name="USER: delete user by ID where ID not listed" time="0.009" classname="">
-    </testcase>
-    <testcase name="USER: delete user by ID without uid" time="0.005" classname="">
+    <testcase name="USER: delete user by ID without uid" time="0.001" classname="">
     </testcase>
   </testsuite>
 </testsuites>

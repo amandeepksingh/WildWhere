@@ -117,6 +117,7 @@ pipeline {
                                     }
                                     sh '''
                                         ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com 'mv WWBUILD_PRE WWBUILD'
+                                        ssh -o StrictHostKeyChecking=no -i $SSH_D_KEY ec2-user@ec2-3-23-98-233.us-east-2.compute.amazonaws.com 'sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json'
                                     '''
 
                                 } else {

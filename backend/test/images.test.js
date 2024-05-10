@@ -43,7 +43,7 @@ describe("IMAGES: test user image upload", () => {
         
         const url2 = resp2.body.message[0].imglink
         assert.ok(url2.includes('http'), "valid url put to database by upload")
-
+        console.log(url2);
         //check url from s3 matching one in db
         assert.strictEqual(url1, url2, 'same url from upload put to database')
 

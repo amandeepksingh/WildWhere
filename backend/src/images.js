@@ -298,6 +298,7 @@ class imgFuncs {
             const url = toks != null ? await s3Helpers.s3GetSignedURL(toks[0], toks[1], toks[2]): ""; 
             responseJson = {message: url};
             logger.logResponse(responseStatus, responseJson)
+            console.log(responseJson);
             return res.status(responseStatus).json(responseJson)
         })
     }
