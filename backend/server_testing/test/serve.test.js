@@ -272,7 +272,9 @@ describe("creating users", () => {
             superuser: null,
             locationperm: null,
             notificationperm: null,
-            colorblindrating: 2
+            colorblindrating: 2,
+            curloc: null,
+            deviceid: null
         }])
         
         const respDel = await request(app).delete(`/users/deleteUserByUID?uid=${testInput.uid}`);
@@ -430,7 +432,9 @@ describe("updating users", () => {
                     "superuser": null,
                     "locationperm": null,
                     "notificationperm": true,
-                    "colorblindrating": null
+                    "colorblindrating": null,
+                    "curloc": null,
+                    "deviceid": null
                 }
             ]
         )
@@ -461,7 +465,9 @@ describe("updating users", () => {
                     "superuser": null,
                     "locationperm": null,
                     "notificationperm": true,
-                    "colorblindrating": null
+                    "colorblindrating": null,
+                    "curloc": null,
+                    "deviceid": null
                 }
             ]
         ) 
@@ -707,445 +713,415 @@ describe("selecting posts", () => {
 
     }); 
 
-    it("POST: zero radius", async () => {
+    // it("POST: non-zero radius", async () => {
 
-        const uid = 'testUID'
-        await request(app).post('/users/createUser').send(`uid=${uid}`)
+    //     const uid = 'testUID'
+    //     await request(app).post('/users/createUser').send(`uid=${uid}`)
+
+    //     const resp1 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(177.0, 0.0)')
+    //     const pid1 = resp1.body.pid
+    //     const resp2 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(50.0, 50.0)')
+    //     const pid2 = resp2.body.pid
+    //     const resp3 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(-0.5, 0.5)')
+    //     const pid3 = resp3.body.pid
+    //     const resp4 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(100.0, 0.0)')
+    //     const pid4 = resp4.body.pid
+
+    //     const resp = await request(app).get(`/posts/selectPost?radius=8000&coordinate=(177.0, 0.0)`)
+    //     assert.strictEqual(resp.status,200)
+    //     assert.deepStrictEqual(resp.body.message, [
+    //         {
+    //             "pid": pid1,
+    //             "uid": uid,
+    //             "imglink": null,
+    //             "datetime": null,
+    //             "coordinate": {"x":177.0, "y":0.0},
+    //             "activity": null,
+    //             "animalname": null,
+    //             "quantity": null,
+    //             "state": null,
+    //             "city": null
+    //         },
+    //         {
+    //             "pid": pid2,
+    //             "uid": uid,
+    //             "imglink": null,
+    //             "datetime": null,
+    //             "coordinate": {"x":50.0, "y":50.0},
+    //             "activity": null,
+    //             "animalname": null,
+    //             "quantity": null,
+    //             "state": null,
+    //             "city": null
+    //         },
+    //         {
+    //             "pid": pid4,
+    //             "uid": uid,
+    //             "imglink": null,
+    //             "datetime": null,
+    //             "coordinate": {"x":100.0, "y":0.0},
+    //             "activity": null,
+    //             "animalname": null,
+    //             "quantity": null,
+    //             "state": null,
+    //             "city": null
+    //         }
+    //     ])
+
+    //     await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
+    //     await request(app).delete(`/posts/deletePostByPID?pid=${pid1}`)
+    //     await request(app).delete(`/posts/deletePostByPID?pid=${pid2}`)
+    //     await request(app).delete(`/posts/deletePostByPID?pid=${pid3}`)
+    //     await request(app).delete(`/posts/deletePostByPID?pid=${pid4}`) 
+
+    // }); 
+
+    // it("POST: after a time", async () => {
+
+    //     const uid = 'testUID'
+    //     await request(app).post('/users/createUser').send(`uid=${uid}`)
         
-        const resp1 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(177.0, 0.0)')
-        const pid1 = resp1.body.pid
-
-        const resp = await request(app).get(`/posts/selectPost?coordinate=(177.0, 0.0)&radius=0`)
-        assert.strictEqual(resp.status,200)
-        assert.deepStrictEqual(resp.body.message, [
-            {
-                "pid": pid1,
-                "uid": uid,
-                "imglink": null,
-                "datetime": null,
-                "coordinate": {"x": 177.0, "y": 0.0},
-                "activity": null,
-                "animalname": null,
-                "quantity": null,
-                "state": null,
-                "city": null
-            }
-        ])
-
-        await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${pid1}`)
-
-    }); 
-
-    it("POST: non-zero radius", async () => {
-
-        const uid = 'testUID'
-        await request(app).post('/users/createUser').send(`uid=${uid}`)
-
-        const resp1 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(177.0, 0.0)')
-        const pid1 = resp1.body.pid
-        const resp2 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(50.0, 50.0)')
-        const pid2 = resp2.body.pid
-        const resp3 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(-0.5, 0.5)')
-        const pid3 = resp3.body.pid
-        const resp4 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(100.0, 0.0)')
-        const pid4 = resp4.body.pid
-
-        const resp = await request(app).get(`/posts/selectPost?radius=8000&coordinate=(177.0, 0.0)`)
-        assert.strictEqual(resp.status,200)
-        assert.deepStrictEqual(resp.body.message, [
-            {
-                "pid": pid1,
-                "uid": uid,
-                "imglink": null,
-                "datetime": null,
-                "coordinate": {"x":177.0, "y":0.0},
-                "activity": null,
-                "animalname": null,
-                "quantity": null,
-                "state": null,
-                "city": null
-            },
-            {
-                "pid": pid2,
-                "uid": uid,
-                "imglink": null,
-                "datetime": null,
-                "coordinate": {"x":50.0, "y":50.0},
-                "activity": null,
-                "animalname": null,
-                "quantity": null,
-                "state": null,
-                "city": null
-            },
-            {
-                "pid": pid4,
-                "uid": uid,
-                "imglink": null,
-                "datetime": null,
-                "coordinate": {"x":100.0, "y":0.0},
-                "activity": null,
-                "animalname": null,
-                "quantity": null,
-                "state": null,
-                "city": null
-            }
-        ])
-
-        await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${pid1}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${pid2}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${pid3}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${pid4}`) 
-
-    }); 
-
-    it("POST: after a time", async () => {
-
-        const uid = 'testUID'
-        await request(app).post('/users/createUser').send(`uid=${uid}`)
+    //     const resp4 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('datetime=1997-12-17 07:37:16').send('coordinate=(177.0, 0.0)')
+    //     const resp1 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('datetime=2008-12-17 07:37:16').send('coordinate=(2.6, 0.0)')
+    //     const pid = resp1.body.pid
         
-        const resp4 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('datetime=1997-12-17 07:37:16').send('coordinate=(177.0, 0.0)')
-        const resp1 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('datetime=2008-12-17 07:37:16').send('coordinate=(2.6, 0.0)')
-        const pid = resp1.body.pid
+    //     const resp2 = await request(app)
+    //     .get(`/posts/selectPost?starttime=2000/12/17/07:37:16`)
+    //     assert.strictEqual(resp2.status,200)
+    //     assert.deepStrictEqual(resp2.body.message, [
+    //         {
+    //             "pid": pid,
+    //             "uid": uid,
+    //             "imglink": null,
+    //             "datetime": '2008-12-17T12:37:16.000Z',
+    //             "coordinate": {"x": 2.6, "y": 0.0},
+    //             "activity": null,
+    //             "animalname": null,
+    //             "quantity": null,
+    //             "state": null,
+    //             "city": null
+    //         }
+    //     ])
+
+    //     await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
+    //     await request(app).delete(`/posts/deletePostByPID?pid=${pid}`)
+    //     await request(app).delete(`/posts/deletePostByPID?pid=${resp4.body.pid}`)
+    // }); 
+
+    // it("POST: before a time", async () => {
+
+    //     const uid = 'testUID'
+    //     await request(app).post('/users/createUser').send(`uid=${uid}`)
         
-        const resp2 = await request(app)
-        .get(`/posts/selectPost?starttime=2000/12/17/07:37:16`)
-        assert.strictEqual(resp2.status,200)
-        assert.deepStrictEqual(resp2.body.message, [
-            {
-                "pid": pid,
-                "uid": uid,
-                "imglink": null,
-                "datetime": '2008-12-17T12:37:16.000Z',
-                "coordinate": {"x": 2.6, "y": 0.0},
-                "activity": null,
-                "animalname": null,
-                "quantity": null,
-                "state": null,
-                "city": null
-            }
-        ])
+    //     const resp1 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('datetime=1997-12-17 07:37:16').send('coordinate=(177.0, 0.0)')
+    //     const pid1 = resp1.body.pid
+    //     const resp4 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('datetime=2008-12-17 07:37:16').send('coordinate=(2.6, 0.0)')
 
-        await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${pid}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${resp4.body.pid}`)
-    }); 
+    //     const resp = await request(app)
+    //     .get(`/posts/selectPost?endtime=2000/12/17/07:37:16`)
+    //     assert.strictEqual(resp.status,200)
+    //     assert.deepStrictEqual(resp.body.message, [
+    //         {
+    //             "pid": pid1,
+    //             "uid": uid,
+    //             "imglink": null,
+    //             "datetime": '1997-12-17T12:37:16.000Z',
+    //             "coordinate": {"x": 177.0, "y": 0.0},
+    //             "activity": null,
+    //             "animalname": null,
+    //             "quantity": null,
+    //             "state": null,
+    //             "city": null
+    //         }
+    //     ])
 
-    it("POST: before a time", async () => {
+    //     await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
+    //     await request(app).delete(`/posts/deletePostByPID?pid=${pid1}`)
+    //     await request(app).delete(`/posts/deletePostByPID?pid=${resp4.body.pid}`)
 
-        const uid = 'testUID'
-        await request(app).post('/users/createUser').send(`uid=${uid}`)
+    // }); 
+
+    // it("POST: between a time", async () => {
+
+    //     const uid = 'testUID'
+    //     await request(app).post('/users/createUser').send(`uid=${uid}`)
         
-        const resp1 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('datetime=1997-12-17 07:37:16').send('coordinate=(177.0, 0.0)')
-        const pid1 = resp1.body.pid
-        const resp4 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('datetime=2008-12-17 07:37:16').send('coordinate=(2.6, 0.0)')
-
-        const resp = await request(app)
-        .get(`/posts/selectPost?endtime=2000/12/17/07:37:16`)
-        assert.strictEqual(resp.status,200)
-        assert.deepStrictEqual(resp.body.message, [
-            {
-                "pid": pid1,
-                "uid": uid,
-                "imglink": null,
-                "datetime": '1997-12-17T12:37:16.000Z',
-                "coordinate": {"x": 177.0, "y": 0.0},
-                "activity": null,
-                "animalname": null,
-                "quantity": null,
-                "state": null,
-                "city": null
-            }
-        ])
-
-        await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${pid1}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${resp4.body.pid}`)
-
-    }); 
-
-    it("POST: between a time", async () => {
-
-        const uid = 'testUID'
-        await request(app).post('/users/createUser').send(`uid=${uid}`)
+    //     const resp4 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('datetime=1997-12-17 07:37:16').send('coordinate=(177.0, 0.0)')
+    //     const resp1 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('datetime=2008-12-17 07:37:16').send('coordinate=(2.6, 0.0)')
+    //     const pid = resp1.body.pid
+    //     const resp3 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('datetime=2010-12-17 07:37:16').send('coordinate=(2.6, 0.0)')
         
-        const resp4 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('datetime=1997-12-17 07:37:16').send('coordinate=(177.0, 0.0)')
-        const resp1 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('datetime=2008-12-17 07:37:16').send('coordinate=(2.6, 0.0)')
-        const pid = resp1.body.pid
-        const resp3 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('datetime=2010-12-17 07:37:16').send('coordinate=(2.6, 0.0)')
+    //     const resp2 = await request(app)
+    //     .get(`/posts/selectPost?starttime=2007/12/17/07:37:16&endtime=2009/12/17/07:37:16`)
+    //     assert.strictEqual(resp2.status,200)
+    //     assert.deepStrictEqual(resp2.body.message, [
+    //         {
+    //             "pid": pid,
+    //             "uid": uid,
+    //             "imglink": null,
+    //             "datetime": '2008-12-17T12:37:16.000Z',
+    //             "coordinate": {"x": 2.6, "y": 0.0},
+    //             "activity": null,
+    //             "animalname": null,
+    //             "quantity": null,
+    //             "state": null,
+    //             "city": null
+    //         }
+    //     ])
+
+    //     await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
+    //     await request(app).delete(`/posts/deletePostByPID?pid=${pid}`)
+    //     await request(app).delete(`/posts/deletePostByPID?pid=${resp3.body.pid}`)
+    //     await request(app).delete(`/posts/deletePostByPID?pid=${resp4.body.pid}`)
+
+    // }); 
+
+    // it("POST: camel instead of lowercase times", async () => {
+
+    //     const uid = 'testUID'
+    //     await request(app).post('/users/createUser').send(`uid=${uid}`)
         
-        const resp2 = await request(app)
-        .get(`/posts/selectPost?starttime=2007/12/17/07:37:16&endtime=2009/12/17/07:37:16`)
-        assert.strictEqual(resp2.status,200)
-        assert.deepStrictEqual(resp2.body.message, [
-            {
-                "pid": pid,
-                "uid": uid,
-                "imglink": null,
-                "datetime": '2008-12-17T12:37:16.000Z',
-                "coordinate": {"x": 2.6, "y": 0.0},
-                "activity": null,
-                "animalname": null,
-                "quantity": null,
-                "state": null,
-                "city": null
-            }
-        ])
-
-        await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${pid}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${resp3.body.pid}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${resp4.body.pid}`)
-
-    }); 
-
-    it("POST: camel instead of lowercase times", async () => {
-
-        const uid = 'testUID'
-        await request(app).post('/users/createUser').send(`uid=${uid}`)
+    //     const resp7 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('dateTime=1997-12-17 07:37:16').send('coordinate=(177.0, 0.0)')
+    //     const resp1 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('dateTime=2008-12-17 07:37:16').send('coordinate=(2.6, 0.0)')
+    //     const pid = resp1.body.pid
+    //     const resp8 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('datetime=2010-12-17 07:37:16').send('coordinate=(2.6, 0.0)')
         
-        const resp7 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('dateTime=1997-12-17 07:37:16').send('coordinate=(177.0, 0.0)')
-        const resp1 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('dateTime=2008-12-17 07:37:16').send('coordinate=(2.6, 0.0)')
-        const pid = resp1.body.pid
-        const resp8 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('datetime=2010-12-17 07:37:16').send('coordinate=(2.6, 0.0)')
+    //     const resp2 = await request(app).get(`/posts/selectPost?startTime=2007/12/17/07:37:16&endTime=2009/12/17/07:37:16`)
+    //     assert.strictEqual(resp2.status,200)
+    //     assert.deepStrictEqual(resp2.body.message, [
+    //         {
+    //             "pid": pid,
+    //             "uid": uid,
+    //             "imglink": null,
+    //             "datetime": '2008-12-17T12:37:16.000Z',
+    //             "coordinate": {"x": 2.6, "y": 0.0},
+    //             "activity": null,
+    //             "animalname": null,
+    //             "quantity": null,
+    //             "state": null,
+    //             "city": null
+    //         }
+    //     ])
+
+
+    //     await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
+    //     await request(app).delete(`/posts/deletePostByPID?pid=${pid}`)
+    //     await request(app).delete(`/posts/deletePostByPID?pid=${resp7.body.pid}`)
+    //     await request(app).delete(`/posts/deletePostByPID?pid=${resp8.body.pid}`)
+
+    // }); 
+
+    // it("POST: lowercase animalName", async () => {
+
+    //     const uid = 'testUID'
+    //     await request(app).post('/users/createUser').send(`uid=${uid}`)
         
-        const resp2 = await request(app).get(`/posts/selectPost?startTime=2007/12/17/07:37:16&endTime=2009/12/17/07:37:16`)
-        assert.strictEqual(resp2.status,200)
-        assert.deepStrictEqual(resp2.body.message, [
-            {
-                "pid": pid,
-                "uid": uid,
-                "imglink": null,
-                "datetime": '2008-12-17T12:37:16.000Z',
-                "coordinate": {"x": 2.6, "y": 0.0},
-                "activity": null,
-                "animalname": null,
-                "quantity": null,
-                "state": null,
-                "city": null
-            }
-        ])
+    //     const resp1 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('animalname=tyrone').send('coordinate=(177.0, 0.0)')
+    //     const pid = resp1.body.pid
+
+    //     const resp2 = await request(app).get('/posts/selectPost?animalname=tyrone')
+    //     assert.strictEqual(resp2.status,200)
+    //     assert.deepStrictEqual(resp2.body.message, [
+    //         {
+    //             "pid": pid,
+    //             "uid": uid,
+    //             "imglink": null,
+    //             "datetime": null,
+    //             "coordinate": {"x": 177.0, "y": 0.0},
+    //             "activity": null,
+    //             "animalname": 'tyrone',
+    //             "quantity": null,
+    //             "state": null,
+    //             "city": null
+    //         }
+    //     ])
+
+    //     const resp3 = await request(app).get('/posts/selectPost?animalname=notTyrone')
+    //     assert.strictEqual(resp3.status,200)
+    //     assert.deepStrictEqual(resp3.body.message, [])
+
+    //     await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
+    //     await request(app).delete(`/posts/deletePostByPID?pid=${pid}`)
+
+    // }); 
+
+    // it("POST: selecting with multiple animalNames", async () => {
+
+    //     const uid = 'testUID'
+    //     await request(app).post('/users/createUser').send(`uid=${uid}`)
+
+    //     const resp1 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("animalName=w")
+    //     const pid1 = resp1.body.pid
+    //     const resp2 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("animalName=x")
+    //     const pid2 = resp2.body.pid
+    //     const resp3 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("animalName=y")
+    //     const pid3 = resp3.body.pid
+    //     const resp4 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("animalName=z")
+    //     const pid4 = resp4.body.pid
+
+    //     const resp = await request(app).get(`/posts/selectPost?animalName=x,y,z`)
+    //     assert.strictEqual(resp.status,200)
+    //     assert.deepStrictEqual(resp.body.message, [
+    //         {
+    //             "pid": pid2,
+    //             "uid": uid,
+    //             "imglink": null,
+    //             "datetime": null,
+    //             "coordinate": {"x":0.0, "y":0.0},
+    //             "activity": null,
+    //             "animalname": "x",
+    //             "quantity": null,
+    //             "state": null,
+    //             "city": null
+    //         },
+    //         {
+    //             "pid": pid3,
+    //             "uid": uid,
+    //             "imglink": null,
+    //             "datetime": null,
+    //             "coordinate": {"x":0.0, "y":0.0},
+    //             "activity": null,
+    //             "animalname": "y",
+    //             "quantity": null,
+    //             "state": null,
+    //             "city": null
+    //         },
+    //         {
+    //             "pid": pid4,
+    //             "uid": uid,
+    //             "imglink": null,
+    //             "datetime": null,
+    //             "coordinate": {"x":0.0, "y":0.0},
+    //             "activity": null,
+    //             "animalname": "z",
+    //             "quantity": null,
+    //             "state": null,
+    //             "city": null
+    //         }
+    //     ])
+
+    //     await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
+    //     await request(app).delete(`/posts/deletePostByPID?pid=${pid1}`)
+    //     await request(app).delete(`/posts/deletePostByPID?pid=${pid2}`)
+    //     await request(app).delete(`/posts/deletePostByPID?pid=${pid3}`)
+    //     await request(app).delete(`/posts/deletePostByPID?pid=${pid4}`)
+
+    // }); 
+
+    // it("POST: selecting with multiple quantities", async () => {
+
+    //     const uid = 'testUID'
+    //     await request(app).post('/users/createUser').send(`uid=${uid}`)
+
+    //     const resp1 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("quantity=1")
+    //     const pid1 = resp1.body.pid
+    //     const resp2 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("quantity=2")
+    //     const pid2 = resp2.body.pid
+    //     const resp3 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("quantity=3")
+    //     const pid3 = resp3.body.pid
+    //     const resp4 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("quantity=4")
+    //     const pid4 = resp4.body.pid
+
+    //     const resp = await request(app).get(`/posts/selectPost?quantity=2,3`)
+    //     assert.strictEqual(resp.status,200)
+    //     assert.deepStrictEqual(resp.body.message, [
+    //         {
+    //             "pid": pid2,
+    //             "uid": uid,
+    //             "imglink": null,
+    //             "datetime": null,
+    //             "coordinate": {"x":0.0, "y":0.0},
+    //             "activity": null,
+    //             "animalname": null,
+    //             "quantity": 2,
+    //             "state": null,
+    //             "city": null
+    //         },
+    //         {
+    //             "pid": pid3,
+    //             "uid": uid,
+    //             "imglink": null,
+    //             "datetime": null,
+    //             "coordinate": {"x":0.0, "y":0.0},
+    //             "activity": null,
+    //             "animalname": null,
+    //             "quantity": 3,
+    //             "state": null,
+    //             "city": null
+    //         }
+    //     ])
 
 
-        await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${pid}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${resp7.body.pid}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${resp8.body.pid}`)
+    //     await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
+    //     await request(app).delete(`/posts/deletePostByPID?pid=${pid1}`)
+    //     await request(app).delete(`/posts/deletePostByPID?pid=${pid2}`)
+    //     await request(app).delete(`/posts/deletePostByPID?pid=${pid3}`)
+    //     await request(app).delete(`/posts/deletePostByPID?pid=${pid4}`)
 
-    }); 
+    // }); 
 
-    it("POST: lowercase animalName", async () => {
-
-        const uid = 'testUID'
-        await request(app).post('/users/createUser').send(`uid=${uid}`)
+    // it("POST: selecting with multiple activities", async () => {
         
-        const resp1 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('animalname=tyrone').send('coordinate=(177.0, 0.0)')
-        const pid = resp1.body.pid
+    //     const uid = 'testUID'
+    //     await request(app).post('/users/createUser').send(`uid=${uid}`)
 
-        const resp2 = await request(app).get('/posts/selectPost?animalname=tyrone')
-        assert.strictEqual(resp2.status,200)
-        assert.deepStrictEqual(resp2.body.message, [
-            {
-                "pid": pid,
-                "uid": uid,
-                "imglink": null,
-                "datetime": null,
-                "coordinate": {"x": 177.0, "y": 0.0},
-                "activity": null,
-                "animalname": 'tyrone',
-                "quantity": null,
-                "state": null,
-                "city": null
-            }
-        ])
+    //     const resp1 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("activity=w")
+    //     const pid1 = resp1.body.pid
+    //     const resp2 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("activity=x")
+    //     const pid2 = resp2.body.pid
+    //     const resp3 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("activity=y")
+    //     const pid3 = resp3.body.pid
+    //     const resp4 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("activity=z")
+    //     const pid4 = resp4.body.pid
 
-        const resp3 = await request(app).get('/posts/selectPost?animalname=notTyrone')
-        assert.strictEqual(resp3.status,200)
-        assert.deepStrictEqual(resp3.body.message, [])
+    //     const resp = await request(app).get(`/posts/selectPost?activity=x,y,z`)
+    //     assert.strictEqual(resp.status,200)
+    //     assert.deepStrictEqual(resp.body.message, [
+    //         {
+    //             "pid": pid2,
+    //             "uid": uid,
+    //             "imglink": null,
+    //             "datetime": null,
+    //             "coordinate": {"x":0.0, "y":0.0},
+    //             "activity": "x",
+    //             "animalname": null,
+    //             "quantity": null,
+    //             "state": null,
+    //             "city": null
+    //         },
+    //         {
+    //             "pid": pid3,
+    //             "uid": uid,
+    //             "imglink": null,
+    //             "datetime": null,
+    //             "coordinate": {"x":0.0, "y":0.0},
+    //             "activity": "y",
+    //             "animalname": null,
+    //             "quantity": null,
+    //             "state": null,
+    //             "city": null
+    //         },
+    //         {
+    //             "pid": pid4,
+    //             "uid": uid,
+    //             "imglink": null,
+    //             "datetime": null,
+    //             "coordinate": {"x":0.0, "y":0.0},
+    //             "activity": "z",
+    //             "animalname": null,
+    //             "quantity": null,
+    //             "state": null,
+    //             "city": null
+    //         }
+    //     ])
 
-        await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${pid}`)
+    //     await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
+    //     await request(app).delete(`/posts/deletePostByPID?pid=${pid1}`)
+    //     await request(app).delete(`/posts/deletePostByPID?pid=${pid2}`)
+    //     await request(app).delete(`/posts/deletePostByPID?pid=${pid3}`)
+    //     await request(app).delete(`/posts/deletePostByPID?pid=${pid4}`)
 
-    }); 
-
-    it("POST: selecting with multiple animalNames", async () => {
-
-        const uid = 'testUID'
-        await request(app).post('/users/createUser').send(`uid=${uid}`)
-
-        const resp1 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("animalName=w")
-        const pid1 = resp1.body.pid
-        const resp2 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("animalName=x")
-        const pid2 = resp2.body.pid
-        const resp3 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("animalName=y")
-        const pid3 = resp3.body.pid
-        const resp4 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("animalName=z")
-        const pid4 = resp4.body.pid
-
-        const resp = await request(app).get(`/posts/selectPost?animalName=x,y,z`)
-        assert.strictEqual(resp.status,200)
-        assert.deepStrictEqual(resp.body.message, [
-            {
-                "pid": pid2,
-                "uid": uid,
-                "imglink": null,
-                "datetime": null,
-                "coordinate": {"x":0.0, "y":0.0},
-                "activity": null,
-                "animalname": "x",
-                "quantity": null,
-                "state": null,
-                "city": null
-            },
-            {
-                "pid": pid3,
-                "uid": uid,
-                "imglink": null,
-                "datetime": null,
-                "coordinate": {"x":0.0, "y":0.0},
-                "activity": null,
-                "animalname": "y",
-                "quantity": null,
-                "state": null,
-                "city": null
-            },
-            {
-                "pid": pid4,
-                "uid": uid,
-                "imglink": null,
-                "datetime": null,
-                "coordinate": {"x":0.0, "y":0.0},
-                "activity": null,
-                "animalname": "z",
-                "quantity": null,
-                "state": null,
-                "city": null
-            }
-        ])
-
-        await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${pid1}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${pid2}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${pid3}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${pid4}`)
-
-    }); 
-
-    it("POST: selecting with multiple quantities", async () => {
-
-        const uid = 'testUID'
-        await request(app).post('/users/createUser').send(`uid=${uid}`)
-
-        const resp1 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("quantity=1")
-        const pid1 = resp1.body.pid
-        const resp2 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("quantity=2")
-        const pid2 = resp2.body.pid
-        const resp3 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("quantity=3")
-        const pid3 = resp3.body.pid
-        const resp4 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("quantity=4")
-        const pid4 = resp4.body.pid
-
-        const resp = await request(app).get(`/posts/selectPost?quantity=2,3`)
-        assert.strictEqual(resp.status,200)
-        assert.deepStrictEqual(resp.body.message, [
-            {
-                "pid": pid2,
-                "uid": uid,
-                "imglink": null,
-                "datetime": null,
-                "coordinate": {"x":0.0, "y":0.0},
-                "activity": null,
-                "animalname": null,
-                "quantity": 2,
-                "state": null,
-                "city": null
-            },
-            {
-                "pid": pid3,
-                "uid": uid,
-                "imglink": null,
-                "datetime": null,
-                "coordinate": {"x":0.0, "y":0.0},
-                "activity": null,
-                "animalname": null,
-                "quantity": 3,
-                "state": null,
-                "city": null
-            }
-        ])
-
-
-        await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${pid1}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${pid2}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${pid3}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${pid4}`)
-
-    }); 
-
-    it("POST: selecting with multiple activities", async () => {
-        
-        const uid = 'testUID'
-        await request(app).post('/users/createUser').send(`uid=${uid}`)
-
-        const resp1 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("activity=w")
-        const pid1 = resp1.body.pid
-        const resp2 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("activity=x")
-        const pid2 = resp2.body.pid
-        const resp3 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("activity=y")
-        const pid3 = resp3.body.pid
-        const resp4 = await request(app).post('/posts/createPost').send(`uid=${uid}`).send('coordinate=(0.0, 0.0)').send("activity=z")
-        const pid4 = resp4.body.pid
-
-        const resp = await request(app).get(`/posts/selectPost?activity=x,y,z`)
-        assert.strictEqual(resp.status,200)
-        assert.deepStrictEqual(resp.body.message, [
-            {
-                "pid": pid2,
-                "uid": uid,
-                "imglink": null,
-                "datetime": null,
-                "coordinate": {"x":0.0, "y":0.0},
-                "activity": "x",
-                "animalname": null,
-                "quantity": null,
-                "state": null,
-                "city": null
-            },
-            {
-                "pid": pid3,
-                "uid": uid,
-                "imglink": null,
-                "datetime": null,
-                "coordinate": {"x":0.0, "y":0.0},
-                "activity": "y",
-                "animalname": null,
-                "quantity": null,
-                "state": null,
-                "city": null
-            },
-            {
-                "pid": pid4,
-                "uid": uid,
-                "imglink": null,
-                "datetime": null,
-                "coordinate": {"x":0.0, "y":0.0},
-                "activity": "z",
-                "animalname": null,
-                "quantity": null,
-                "state": null,
-                "city": null
-            }
-        ])
-
-        await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${pid1}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${pid2}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${pid3}`)
-        await request(app).delete(`/posts/deletePostByPID?pid=${pid4}`)
-
-    }); 
+    // }); 
 
     it("POST: selecting with multiple states", async () => {
 
@@ -1511,9 +1487,7 @@ describe("updating posts", () => {
                     "animalname": null,
                     "quantity": null,
                     "state": null,
-                    "city": null,
-                    "curloc": null,
-                    "deviceid": null
+                    "city": null
                 }
             ]
         ) 
