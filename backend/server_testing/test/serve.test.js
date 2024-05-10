@@ -160,8 +160,8 @@ describe("creating users", () => {
         assert.strictEqual(resp.body.message, `user created`)
         assert.strictEqual(resp.body.uid, uid)
 
-        await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
-
+        const respDel = await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
+        assert.strictEqual(respDel.status, 200)
     });
    
     it("USER: test create without uid", async () => {
@@ -215,8 +215,8 @@ describe("creating users", () => {
                 deviceid: null
         }]) 
 
-        await request(app).delete(`/users/deleteUserByUID?uid=${testInput.uid}`)
-
+        const respDel = await request(app).delete(`/users/deleteUserByUID?uid=${testInput.uid}`)
+        assert.strictEqual(respDel.status, 200)
     });
 
     it("USER: test create with camel case qualifiers", async () => {
@@ -241,11 +241,13 @@ describe("creating users", () => {
             superuser: null,
             locationperm: null,
             notificationperm: null,
-            colorblindrating: 2
+            colorblindrating: 2,
+            curloc: null,
+            deviceid: null
         }]) 
 
-        await request(app).delete(`/users/deleteUserByUID?uid=${testInput.uid}`)
-
+        const respDel = await request(app).delete(`/users/deleteUserByUID?uid=${testInput.uid}`)
+        assert.strictEqual(respDel.status, 200)
     });
 
     it("USER: test create with lower case qualifiers", async () => {
@@ -273,8 +275,8 @@ describe("creating users", () => {
             colorblindrating: 2
         }])
         
-        await request(app).delete(`/users/deleteUserByUID?uid=${testInput.uid}`)
-
+        const respDel = await request(app).delete(`/users/deleteUserByUID?uid=${testInput.uid}`);
+        assert.strictEqual(respDel.status, 200);
     });
 
     it("USER: test create some but not all params", async () => {
@@ -298,8 +300,8 @@ describe("creating users", () => {
         assert.strictEqual(resp.status, 200)
 
         //MAY NOT WORK <----------------------------------------------------------------------------------------------------
-        await request(app).delete(`/users/deleteUserByUID?uid=ffd             `)
-
+        const respDel = await request(app).delete(`/users/deleteUserByUID?uid=ffd             `)
+        assert.strictEqual(respDel.status, 200)
     });
 });
 
@@ -334,8 +336,8 @@ describe("updating users", () => {
             ]
         ) 
 
-        await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
-        
+        const respDel = await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
+        assert.strictEqual(respDel.status, 200)
 
     });
 
@@ -369,8 +371,8 @@ describe("updating users", () => {
         )
         
         
-        await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
-
+        const respDel = await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
+        assert.strictEqual(respDel.status, 200)
     });
     
     it("USER: update user, update all fields", async () => {
@@ -403,8 +405,8 @@ describe("updating users", () => {
         ) 
 
        
-        await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
-
+        const respDel = await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
+        assert.strictEqual(respDel.status, 200)
     });
 
     it("USER: update user, update with camel case", async () => {
@@ -434,8 +436,8 @@ describe("updating users", () => {
         )
         
         
-        await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
-
+        const respDel = await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
+        assert.strictEqual(respDel.status, 200)
     });
 
     it("USER: update user, update with lower case", async () => {
@@ -465,8 +467,8 @@ describe("updating users", () => {
         ) 
 
        
-        await request(app).delete(`/users/deleteUserByUID?uid=${uid}`) 
-
+        const respDel = await request(app).delete(`/users/deleteUserByUID?uid=${uid}`) 
+        assert.strictEqual(respDel.status, 200)
     });
 
     it("USER: update user without updates", async () => {
@@ -479,8 +481,8 @@ describe("updating users", () => {
         assert.strictEqual(resp.body.message, `at least one update is required`)
 
        
-        await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
-
+        const respDel = await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
+        assert.strictEqual(respDel.status, 200)
     });
 
     it("USER: update user without uid", async () => {
@@ -493,8 +495,8 @@ describe("updating users", () => {
         assert.strictEqual(resp.body.message, `uid is required`)
 
        
-        await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
-
+        const respDel = await request(app).delete(`/users/deleteUserByUID?uid=${uid}`)
+        assert.strictEqual(respDel.status, 200)
     });
    
    
@@ -1509,7 +1511,9 @@ describe("updating posts", () => {
                     "animalname": null,
                     "quantity": null,
                     "state": null,
-                    "city": null
+                    "city": null,
+                    "curloc": null,
+                    "deviceid": null
                 }
             ]
         ) 
